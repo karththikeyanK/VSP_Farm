@@ -1,0 +1,54 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+android {
+    namespace 'com.karththi.vsp_farm'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.karththi.vsp_farm"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'armeabi' //, 'x86', ' 'x86_64', 'arm64-v8a'//如果你设备其它架构，默认不添加，否则会出错
+        }
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs/']
+        }
+
+    }
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    implementation libs.recyclerview
+    implementation libs.cardview
+
+    implementation files('libs/ePOS2.jar')
+}
