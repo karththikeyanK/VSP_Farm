@@ -32,6 +32,10 @@
         <activity android:name=".page.CreateUserActivity"/>
         <activity android:name=".page.admin.item.AddItemActivity"/>
         <activity android:name=".page.admin.item.ItemListActivity"/>
+        <activity android:name=".page.admin.item.EditItemActivity"/>
+        <activity android:name=".page.admin.item.SubItemListActivity"/>
+        <activity android:name=".page.admin.item.AddSubItemActivity"/>
+        <activity android:name=".page.admin.item.EditSubItemActivity"/>
 
 
 

@@ -53,6 +53,23 @@ public class ItemRepository {
         db.close();
     }
 
+    public Item getById(int id) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(AppConstant.ITEM_TABLE, null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            try {
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String measurement = cursor.getString(cursor.getColumnIndexOrThrow("measurement"));
+                byte[] image = cursor.getBlob(cursor.getColumnIndexOrThrow("image"));
+                cursor.close();
+                return new Item(id, name, Measurement.valueOf(measurement), image);
+            } catch (IllegalArgumentException e) {
+                Log.e("ItemRepository", "Column does not exist", e);
+            }
+        }
+        return null;
+    }
+
     public Item getItemByName(String name) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(AppConstant.ITEM_TABLE, null, "name = ?", new String[]{name}, null, null, null);

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Sub-Item Name Input -->
+    <EditText
+        android:id="@+id/subItemNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Sub-Item Name"
+        android:textSize="16sp"
+        android:inputType="text"/>
+
+    <!-- Sub-Item Price Input -->
+    <EditText
+        android:id="@+id/subItemPriceEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Sub-Item Price"
+        android:textSize="16sp"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Save Sub-Item Button -->
+    <Button
+        android:id="@+id/saveSubItemButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Sub-Item"
+        android:layout_gravity="end"
+        android:layout_marginTop="24dp"/>
+</LinearLayout>

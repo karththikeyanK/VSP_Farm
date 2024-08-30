@@ -79,7 +79,7 @@ public class AddItemActivity extends AppCompatActivity {
         }
 
         itemService.addItem(new Item(0, name, measurement, image));
-        finish();
+
     }
 
     private void selectImage() {

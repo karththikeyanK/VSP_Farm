@@ -19,17 +19,15 @@ public class SubItemRepository {
         dbHelper = new DbHelper(context);
     }
 
-    public void addSubItemList(List<SubItem> subItems) {
+    public void addSubItemList(SubItem subItem) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
-            for (SubItem subItem : subItems) {
-                ContentValues values = new ContentValues();
-                values.put("item_id", subItem.getItemId());
-                values.put("name", subItem.getSubItemName());
-                values.put("price", subItem.getPrice());
-                db.insert(AppConstant.SUB_ITEM_TABLE, null, values);
-            }
+            ContentValues values = new ContentValues();
+            values.put("item_id", subItem.getItemId());
+            values.put("name", subItem.getSubItemName());
+            values.put("price", subItem.getPrice());
+            db.insert(AppConstant.SUB_ITEM_TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,16 +53,17 @@ public class SubItemRepository {
         db.close();
     }
 
-    public SubItem getSubItemByName(String name) {
+    public SubItem getSubItemById(int id) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(AppConstant.SUB_ITEM_TABLE, null, "name = ?", new String[]{name}, null, null, null);
+        Cursor cursor = db.query(AppConstant.SUB_ITEM_TABLE, null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             try {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                int subItemId = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 Double price = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
                 int itemId = cursor.getInt(cursor.getColumnIndexOrThrow("item_id"));
                 cursor.close();
-                return new SubItem(id, name, price, itemId);
+                return new SubItem(subItemId, name, price, itemId);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
