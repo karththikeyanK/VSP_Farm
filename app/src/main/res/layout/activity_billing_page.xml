@@ -1,36 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".page.cashier.BillingPageActivity">
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textColor="@android:color/black"
+        android:background="@drawable/button"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="80dp">
+        android:padding="16dp">
 
-        <!-- First Section: Items Display -->
-        <GridView
+        <Spinner
+            android:id="@+id/customerSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/itemsGridView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:numColumns="5"
-            android:verticalSpacing="10dp"
-            android:horizontalSpacing="10dp"
-            android:stretchMode="columnWidth"
-            android:layout_weight="1" />
+            android:layout_marginBottom="16dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="5" />
+
 
         <!-- Second Section: Billing Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:background="@drawable/border"
+            android:padding="16dp">
 
             <!-- Billing Header -->
             <TextView
@@ -40,7 +56,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
-                android:paddingBottom="10dp" />
+                android:layout_marginBottom="16dp" />
 
             <!-- List of Selected Items -->
             <TableLayout
@@ -49,13 +65,7 @@
                 android:layout_height="wrap_content"
                 android:stretchColumns="1">
 
-                <!-- Table Header -->
-                <TableRow>
-                    <TextView android:text="Item" android:padding="5dp" android:textStyle="bold"/>
-                    <TextView android:text="Price/kg/pc/L" android:padding="5dp" android:textStyle="bold"/>
-                    <TextView android:text="Qty" android:padding="5dp" android:textStyle="bold"/>
-                    <TextView android:text="Total" android:padding="5dp" android:textStyle="bold"/>
-                </TableRow>
+
 
                 <!-- Dynamic Rows: Will be added programmatically -->
             </TableLayout>
@@ -84,12 +94,18 @@
                 android:orientation="vertical"
                 android:paddingTop="10dp">
 
-                <EditText
-                    android:id="@+id/inputAmountEditText"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter amount paid"
-                    android:inputType="numberDecimal" />
+                    android:hint="Enter amount paid">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/inputAmountEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:inputType="numberDecimal" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/balanceTextView"
@@ -100,16 +116,14 @@
             </LinearLayout>
 
             <!-- Print Button -->
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/printBillButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Print Bill"
                 android:layout_gravity="end"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
         </LinearLayout>
     </LinearLayout>
-
-
-
 </LinearLayout>

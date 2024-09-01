@@ -1,13 +1,13 @@
 package com.karththi.vsp_farm.model;
 
 
-public class Bill {
-    private int id;
-    private Double totalAmount;
-    private int customerId;
-    private int userId;
+    public class Bill {
+        private int id;
+        private Double totalAmount;
+        private int customerId;
+        private int userId;
 
-    private String status;  // DELETED, MODIFIED,MODIFIED_ORIGINAL, NEW
+        private String status;  // DELETED, MODIFIED,MODIFIED_ORIGINAL, NEW
 
     public Bill() {
     }

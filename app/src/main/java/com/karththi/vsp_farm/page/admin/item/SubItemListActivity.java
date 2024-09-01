@@ -58,7 +58,8 @@ public class SubItemListActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+               Intent intent = new Intent(SubItemListActivity.this, ItemListActivity.class);
+                startActivity(intent);
             }
         });
 

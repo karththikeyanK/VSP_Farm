@@ -1,7 +1,11 @@
 package com.karththi.vsp_farm.page.admin;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -36,7 +40,8 @@ public class CreateCustomerActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish(); // Closes the activity and returns to the previous screen
+                Intent intent = new Intent(CreateCustomerActivity.this, AdminDashboardActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -60,6 +65,37 @@ public class CreateCustomerActivity extends AppCompatActivity {
     public void onBackPressed() {
         Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
         // Optionally, you could add additional logic here
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        // Get the view that has focus
+        View view = getCurrentFocus();
+
+        // Check if the touch event is outside the focused view (keyboard is open)
+        if (view != null && ev.getAction() == MotionEvent.ACTION_DOWN) {
+            if (view instanceof EditText) {
+                int[] location = new int[2];
+                view.getLocationOnScreen(location);
+                float x = ev.getRawX() + view.getLeft() - location[0];
+                float y = ev.getRawY() + view.getTop() - location[1];
+
+                // If the touch is outside the EditText, hide the keyboard
+                if (x < view.getLeft() || x > view.getRight() || y < view.getTop() || y > view.getBottom()) {
+                    hideKeyboard(view);
+                    view.clearFocus();
+                }
+            }
+        }
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 

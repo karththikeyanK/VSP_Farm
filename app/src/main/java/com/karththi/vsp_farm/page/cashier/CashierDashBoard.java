@@ -30,7 +30,16 @@ public class CashierDashBoard extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         appConstant.ConfirmAlert("Logout", "Are you sure you want to logout?",() ->startActivity(intent) );
     }
-    
+
+    public void openBillingPage(View view){
+        Intent intent = new Intent(this, BillingPageActivity.class);
+        startActivity(intent);
+    }
+
+    public void openBillHistory(View view){
+    }
+
+
     @Override
     public void onBackPressed() {
         Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();

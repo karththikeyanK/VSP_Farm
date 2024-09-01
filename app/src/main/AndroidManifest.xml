@@ -19,6 +19,7 @@
 
         <activity
             android:name=".page.LoginActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
 
             <intent-filter>
@@ -40,7 +41,10 @@
         <activity android:name=".page.admin.CustomerListActivity"/>
         <activity android:name=".page.admin.EditCustomerActivity"/>
         <activity android:name=".page.cashier.CashierDashBoard"/>
-        <activity android:name=".page.cashier.BillingPageActivity"/>
+        <activity
+            android:name=".page.cashier.BillingPageActivity"
+            android:windowSoftInputMode="adjustPan"
+            />
 
 
 

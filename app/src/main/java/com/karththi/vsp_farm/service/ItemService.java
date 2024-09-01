@@ -14,6 +14,7 @@ import com.karththi.vsp_farm.page.admin.item.ItemListActivity;
 import com.karththi.vsp_farm.repo.ItemRepository;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 public class ItemService {
 
@@ -80,6 +81,14 @@ public class ItemService {
         Item item = itemRepository.getById(id);
         Log.i("ItemService", "ItemService::getById():: is successfully fetched");
         return item;
+    }
+
+    // get all items
+    public List<Item> getAllItems() {
+        Log.i("ItemService", "ItemService::getAllItems():: is called");
+        List<Item> items = itemRepository.getAllItems();
+        Log.i("ItemService", "ItemService::getAllItems():: is successfully fetched");
+        return items;
     }
 
 

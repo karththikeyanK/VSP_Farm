@@ -4,4 +4,5 @@
         <item>ADMIN</item>
         <item>CASHIER</item>
     </string-array>
+    <string name="delete_item">delete</string>
 </resources>
