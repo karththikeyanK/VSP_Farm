@@ -7,9 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="100dp"
-    tools:context=".page.CreateUserActivity">
-
-
+    tools:context=".page.admin.CreateCustomerActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,24 +35,12 @@
             android:id="@+id/heading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign Up for SVM Farm"
+            android:text="Create Customer"
             android:textSize="24sp"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_marginBottom="32dp"/>
-
-        <!-- Username Input -->
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:hint="Username"
-            android:inputType="number"
-            android:background="@drawable/border"
-            android:padding="12dp"/>
 
         <!-- Name Input -->
         <EditText
@@ -63,59 +49,46 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:hint="Name"
+            android:hint="Customer Name"
             android:inputType="textPersonName"
             android:background="@drawable/border"
             android:padding="12dp"/>
 
-        <!-- Password Input with Eye Icon -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:hint="Password"
-                android:inputType="numberPassword"
-                android:background="@drawable/border"
-                android:padding="12dp"
-                android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/togglePasswordVisibility" />
-
-            <ImageView
-                android:id="@+id/togglePasswordVisibility"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:padding="12dp"
-                android:src="@drawable/ic_eye_open"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="Toggle password visibility" />
-        </RelativeLayout>
-
-        <!-- Role Selection -->
-        <Spinner
-            android:id="@+id/role"
+        <!-- Mobile Input -->
+        <EditText
+            android:id="@+id/mobile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:hint="Mobile Number"
+            android:inputType="phone"
             android:background="@drawable/border"
             android:padding="12dp"/>
 
-        <!-- Signup Button -->
+        <!-- Description Input -->
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:background="@drawable/border"
+            android:padding="12dp"/>
+
+        <!-- Save Button -->
         <Button
-            android:id="@+id/signupButton"
+            android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign Up"
-            android:backgroundTint="@android:color/holo_blue_dark"
-            android:textColor="@android:color/white"
-            android:gravity="center"/>
+            android:onClick="addCustomer"
+        android:text="Save"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
+        android:gravity="center"/>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

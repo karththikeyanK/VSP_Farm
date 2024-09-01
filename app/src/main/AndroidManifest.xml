@@ -36,6 +36,11 @@
         <activity android:name=".page.admin.item.SubItemListActivity"/>
         <activity android:name=".page.admin.item.AddSubItemActivity"/>
         <activity android:name=".page.admin.item.EditSubItemActivity"/>
+        <activity android:name=".page.admin.CreateCustomerActivity"/>
+        <activity android:name=".page.admin.CustomerListActivity"/>
+        <activity android:name=".page.admin.EditCustomerActivity"/>
+        <activity android:name=".page.cashier.CashierDashBoard"/>
+        <activity android:name=".page.cashier.BillingPageActivity"/>
 
 
 

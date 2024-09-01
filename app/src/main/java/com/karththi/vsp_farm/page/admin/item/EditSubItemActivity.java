@@ -1,5 +1,6 @@
 package com.karththi.vsp_farm.page.admin.item;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -58,8 +59,17 @@ public class EditSubItemActivity extends AppCompatActivity {
                 subItemService.update(subItem);
 
                 Toast.makeText(EditSubItemActivity.this, "Sub-Item updated", Toast.LENGTH_SHORT).show();
-                finish();
+                Intent intent = new Intent(EditSubItemActivity.this, SubItemListActivity.class);
+                intent.putExtra("ITEM_ID", subItem.getItemId());
+                startActivity(intent);
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+        // Optionally, you could add additional logic here
+    }
+
 }

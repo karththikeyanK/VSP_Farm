@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".page.admin.item.ItemListActivity">
+    tools:context=".page.admin.AdminDashboardActivity">
 
-    <!-- Custom Toolbar -->
     <LinearLayout
         android:id="@+id/toolbarLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
@@ -24,6 +24,7 @@
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:text="Back"
             android:textColor="@android:color/white"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -49,35 +50,49 @@
             android:text="User Name"
             android:textSize="18sp"
             android:textColor="@android:color/white" />
-    </LinearLayout>
 
-    <!-- List of Items -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:padding="20dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- List of Items -->
-        <ListView
-            android:id="@+id/itemListView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- Add New Item Button -->
+        <!-- Logout Button -->
         <Button
-            android:id="@+id/addNewItemButton"
+            android:id="@+id/logoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add New Item"
-            android:layout_gravity="end"
-            android:layout_marginBottom="16dp"/>
+            android:text="logout"
+            android:textSize="18dp"
+            android:onClick="logout"
+            android:textColor="@android:color/white"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="100dp">
+
+        <!-- Billing Page Button -->
+        <Button
+            android:id="@+id/billingPageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Billing Page"
+            android:textSize="18dp"
+            android:onClick="openBillingPage"
+            android:textColor="@android:color/black"
+            android:background="@drawable/border" />
+
+        <!-- Bill History Button -->
+        <Button
+            android:id="@+id/billHistoryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bill History"
+            android:textSize="18dp"
+            android:onClick="openBillHistory"
+            android:textColor="@android:color/black"
+            android:background="@drawable/border"
+            android:layout_marginLeft="16dp" />
+    </LinearLayout>
+
+</LinearLayout>

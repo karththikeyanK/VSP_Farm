@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.model.Item;
 import com.karththi.vsp_farm.page.admin.item.EditItemActivity;
+import com.karththi.vsp_farm.page.admin.item.SubItemListActivity;
 import com.karththi.vsp_farm.service.ItemService;
 
 import java.util.List;
@@ -30,11 +32,14 @@ public class ItemListAdapter extends BaseAdapter {
 
     private ItemService itemService;
 
+    private LinearLayout itemLayout;
+
     public ItemListAdapter(Context context, List<Item> items) {
         this.context = context;
         this.items = items;
         this.inflater = LayoutInflater.from(context);
         this.itemService = new ItemService(context);
+        itemLayout = new LinearLayout(context);
     }
 
     @Override
@@ -62,6 +67,7 @@ public class ItemListAdapter extends BaseAdapter {
         TextView itemNameTextView = convertView.findViewById(R.id.itemNameTextView);
         Button editButton = convertView.findViewById(R.id.editButton);
         Button deleteButton = convertView.findViewById(R.id.deleteButton);
+        itemLayout = convertView.findViewById(R.id.itemListRowLayout);
 
         final Item item = items.get(position);
 
@@ -75,6 +81,17 @@ public class ItemListAdapter extends BaseAdapter {
         // Set item name
         itemNameTextView.setText(item.getName());
 
+        itemLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SubItemListActivity.class);
+                intent.putExtra("ITEM_ID", item.getId());
+                context.startActivity(intent);
+            }
+        });
+
+
+
         // Edit button functionality
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +102,6 @@ public class ItemListAdapter extends BaseAdapter {
             }
         });
 
-        // Delete button functionality
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

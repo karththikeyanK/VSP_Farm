@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".page.cashier.BillingPageActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="80dp">
+
+        <!-- First Section: Items Display -->
+        <GridView
+            android:id="@+id/itemsGridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="5"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:layout_weight="1" />
+
+        <!-- Second Section: Billing Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <!-- Billing Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Billing Section"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:paddingBottom="10dp" />
+
+            <!-- List of Selected Items -->
+            <TableLayout
+                android:id="@+id/billingTableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1">
+
+                <!-- Table Header -->
+                <TableRow>
+                    <TextView android:text="Item" android:padding="5dp" android:textStyle="bold"/>
+                    <TextView android:text="Price/kg/pc/L" android:padding="5dp" android:textStyle="bold"/>
+                    <TextView android:text="Qty" android:padding="5dp" android:textStyle="bold"/>
+                    <TextView android:text="Total" android:padding="5dp" android:textStyle="bold"/>
+                </TableRow>
+
+                <!-- Dynamic Rows: Will be added programmatically -->
+            </TableLayout>
+
+            <!-- Total Price Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/totalPriceTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total: 0.00"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Input Amount & Balance -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
+
+                <EditText
+                    android:id="@+id/inputAmountEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter amount paid"
+                    android:inputType="numberDecimal" />
+
+                <TextView
+                    android:id="@+id/balanceTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Balance: 0.00"
+                    android:paddingTop="10dp" />
+            </LinearLayout>
+
+            <!-- Print Button -->
+            <Button
+                android:id="@+id/printBillButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Print Bill"
+                android:layout_gravity="end"
+                android:layout_marginTop="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>

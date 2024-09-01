@@ -44,7 +44,7 @@ public class ItemService {
         Log.i("ItemService", "ItemService::addItem():: is successfully added");
     }
 
-    public void update(String name, String measurement, Drawable itemImageView, Item item){
+    public void update(String name, Measurement measurement, Drawable itemImageView, Item item){
         Log.i("ItemService", "ItemService::update():: is called");
         if (itemRepository.isItemExists(name)) {
             Log.i("ItemService", "ItemService::addItem():: item already exists");
@@ -52,7 +52,7 @@ public class ItemService {
             return;
         }
         item.setName(name);
-        item.setMeasurement(Measurement.valueOf(measurement.toUpperCase()));
+        item.setMeasurement(measurement);
 
         Bitmap bitmap = ((BitmapDrawable) itemImageView).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

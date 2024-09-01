@@ -30,6 +30,8 @@ public class CreateUserActivity extends AppCompatActivity {
 
     private UserService userService;
 
+    private Button backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,14 @@ public class CreateUserActivity extends AppCompatActivity {
         roleSpinner = findViewById(R.id.role);
         signupButton = findViewById(R.id.signupButton);
         togglePasswordVisibility = findViewById(R.id.togglePasswordVisibility);
+        backButton = findViewById(R.id.backButton);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         // Setup the role spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -90,5 +100,12 @@ public class CreateUserActivity extends AppCompatActivity {
         userService.addUser(new User(username, name, password, role));
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+        // Optionally, you could add additional logic here
+    }
+
 
 }

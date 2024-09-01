@@ -5,27 +5,33 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.model.Item;
+import com.karththi.vsp_farm.model.Measurement;
 import com.karththi.vsp_farm.service.ItemService;
 
 public class EditItemActivity extends AppCompatActivity {
 
     private EditText itemNameEditText;
-    private EditText itemMeasurementEditText;
     private ImageView itemImageView;
     private Button saveButton;
     private Button changeImageButton;
 
+    private Spinner measurementSpinner;
+
     private ItemService itemService;
     private Item item;
+
+    private Button backButton;
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -35,10 +41,22 @@ public class EditItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_item);
 
         itemNameEditText = findViewById(R.id.itemNameEditText);
-        itemMeasurementEditText = findViewById(R.id.itemMeasurementEditText);
+        measurementSpinner = findViewById(R.id.measurementSpinner);
         itemImageView = findViewById(R.id.itemImageView);
         saveButton = findViewById(R.id.saveButton);
         changeImageButton = findViewById(R.id.changeImageButton);
+        backButton = findViewById(R.id.backButton);
+
+        ArrayAdapter<Measurement> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Measurement.values());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        measurementSpinner.setAdapter(adapter);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         itemService = new ItemService(this);
 
@@ -47,7 +65,14 @@ public class EditItemActivity extends AppCompatActivity {
 
         if (item != null) {
             itemNameEditText.setText(item.getName());
-            itemMeasurementEditText.setText(item.getMeasurement().toString());
+
+            // Set the spinner to the item's measurement
+            for (int i = 0; i < Measurement.values().length; i++) {
+                if (Measurement.values()[i] == item.getMeasurement()) {
+                    measurementSpinner.setSelection(i);
+                    break;
+                }
+            }
 
             byte[] imageBytes = item.getImage();
             if (imageBytes != null) {
@@ -76,12 +101,7 @@ public class EditItemActivity extends AppCompatActivity {
 
     private void saveItem() {
         String name = itemNameEditText.getText().toString();
-        String measurement = itemMeasurementEditText.getText().toString();
-
-        if (name.isEmpty() || measurement.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        Measurement measurement = (Measurement) measurementSpinner.getSelectedItem();
 
         itemService.update(name, measurement, itemImageView.getDrawable(), item);
     }
@@ -99,4 +119,11 @@ public class EditItemActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+        // Optionally, you could add additional logic here
+    }
+
 }

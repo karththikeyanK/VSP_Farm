@@ -15,6 +15,12 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String USER_TABLE = AppConstant.USER_TABLE;
     public static final String SUB_ITEM_TABLE = AppConstant.SUB_ITEM_TABLE;
 
+    public static final String BILL_TABLE = AppConstant.BILL_TABLE;
+
+    public static final String CUSTOMER_TABLE = AppConstant.CUSTOMER_TABLE;
+
+    public static final String BILL_ITEM_TABLE = AppConstant.BILL_ITEM_TABLE;
+
     public DbHelper(Context context) {
         super(context, AppConstant.DATABASE_NAME, null, AppConstant.DATABASE_VERSION);
     }
@@ -38,14 +44,52 @@ public class DbHelper extends SQLiteOpenHelper {
             "username TEXT, " +
             "name TEXT, " +
             "password TEXT, " +
-            "role TEXT)"; // Added role column
+            "role TEXT)";
+
+    private static final String CREATE_BILL_TABLE = "CREATE TABLE "+BILL_TABLE+" (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "status TEXT, " +
+            "total_amount DOUBLE, " +
+            "customer_id INTEGER, " +
+            "user_id INTEGER, " +
+            "created_at TEXT, " +
+            "updated_at TEXT, " +
+            "modified_by TEXT, " +
+            "FOREIGN KEY(customer_id) REFERENCES Customer(id) " +
+            "ON DELETE CASCADE ON UPDATE CASCADE, " +
+            "FOREIGN KEY(user_id) REFERENCES " + USER_TABLE + "(id) " +
+            "ON DELETE CASCADE ON UPDATE CASCADE)";
+
+
+    private static final String CREATE_CUSTOMER_TABLE = "CREATE TABLE " + CUSTOMER_TABLE + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "name TEXT, " +
+            "description TEXT, " +
+            "mobile TEXT)";
+
+    private static final String CREATE_BILL_ITEM_TABLE = "CREATE TABLE "+BILL_ITEM_TABLE+" (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "billId INTEGER, " +
+            "subItemId INTEGER, " +
+            "quantity REAL, " +
+            "price REAL, " +
+            "FOREIGN KEY(billId) REFERENCES Bill(id) " +
+            "ON DELETE CASCADE ON UPDATE CASCADE)";
+
+
+
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_ITEMS_TABLE);
         db.execSQL(CREATE_SUB_ITEMS_TABLE);
         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_CUSTOMER_TABLE);
+        db.execSQL(CREATE_BILL_TABLE);
+        db.execSQL(CREATE_BILL_ITEM_TABLE);
         createDefaultAdminUser(db);
+        insertDefaultCustomer(db);
     }
 
     @Override
@@ -53,6 +97,9 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SUB_ITEM_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+CUSTOMER_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+BILL_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+BILL_ITEM_TABLE);
         onCreate(db);
     }
 
@@ -76,5 +123,25 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put("password", hash_password); // Consider hashing passwords for security
         values.put("role", "ADMIN"); // Set role to ADMIN
         db.insert(USER_TABLE, null, values);
+    }
+
+    public void insertDefaultCustomer(SQLiteDatabase db) {
+        // Check if the default customer already exists
+        String checkDefaultCustomerQuery = "SELECT COUNT(*) FROM " + CUSTOMER_TABLE + " WHERE name = ?";
+        Cursor cursor = db.rawQuery(checkDefaultCustomerQuery, new String[]{"Default Customer"});
+        if (cursor != null && cursor.moveToFirst()) {
+            int count = cursor.getInt(0);
+            cursor.close();
+            if (count > 0) {
+                return; // Default customer already exists
+            }
+        }
+
+        // Insert default customer
+        ContentValues values = new ContentValues();
+        values.put("name", "DEFAULT");
+        values.put("description", "Default Customer");
+        values.put("mobile", "0000000000");
+        db.insert(CUSTOMER_TABLE, null, values);
     }
 }

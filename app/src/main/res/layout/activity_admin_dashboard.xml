@@ -1,100 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
     tools:context=".page.admin.AdminDashboardActivity">
 
-    <TextView
-        android:id="@+id/welcomeTextView"
-        android:layout_width="wrap_content"
+
+<LinearLayout
+        android:id="@+id/toolbarLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome to the Admin Dashboard!"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:background="?attr/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- User Section -->
-    <TextView
-        android:id="@+id/userSectionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/welcomeTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"/>
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="Back"
+            android:textColor="@android:color/white"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_gravity="center_vertical" />
 
+        <!-- App Name -->
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:text="VSP FARM"
+            android:textSize="18sp"
+            android:textColor="@android:color/white" />
+
+        <!-- User Name -->
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="User Name"
+            android:textSize="18sp"
+            android:textColor="@android:color/white" />
     <Button
-        android:id="@+id/createUserButton"
+        android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create User"
-        app:layout_constraintTop_toBottomOf="@id/userSectionTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:onClick="createUser"
-        android:layout_marginTop="8dp"/>
+        android:text="logout"
+        android:textSize="18dp"
+        android:onClick="logout"
+        android:textColor="@android:color/white"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_gravity="center_vertical" />
+    </LinearLayout>
 
-    <!-- Items Section -->
-    <Button
-        android:id="@+id/viewUserButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:text="View User"
-        android:onClick="viewUsers"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/createUserButton" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="100dp">
 
-    <TextView
-        android:id="@+id/itemsSectionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Items"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/viewUserButton"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/addItemsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Items"
-        android:onClick="viewItems"
-        app:layout_constraintTop_toBottomOf="@id/itemsSectionTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="8dp"/>
+            <!-- Welcome Message -->
+            <TextView
+                style="@style/HeaderTextView"
+                android:id="@+id/welcomeTextView"
+                android:text="Welcome to the Admin Dashboard!"
+                android:layout_marginBottom="24dp" />
 
+            <!-- User Section -->
+            <TextView
+                style="@style/SectionTextView"
+                android:id="@+id/userSectionTextView"
+                android:text="User Management"
+                android:layout_marginBottom="8dp" />
 
+            <!-- Buttons for User Management -->
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/createUserButton"
+                android:text="Create User"
+                android:onClick="createUser" />
 
-    <!-- Reports Section -->
-    <TextView
-        android:id="@+id/reportsSectionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reports"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/addItemsButton"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"/>
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewUserButton"
+                android:text="View User"
+                android:onClick="viewUsers" />
 
-    <Button
-        android:id="@+id/viewReportButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Report"
-        app:layout_constraintTop_toBottomOf="@id/reportsSectionTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="8dp"/>
+            <!-- New Buttons for Customer Management -->
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/addCustomerButton"
+                android:text="Add Customer"
+                android:onClick="addCustomer" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewCustomerButton"
+                android:text="View Customer"
+                android:onClick="viewCustomers" />
+
+            <!-- Items Section -->
+            <TextView
+                style="@style/SectionTextView"
+                android:id="@+id/itemsSectionTextView"
+                android:text="Items Management"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/addItemsButton"
+                android:text="View Items"
+                android:onClick="viewItems" />
+
+            <!-- Reports Section -->
+            <TextView
+                style="@style/SectionTextView"
+                android:id="@+id/reportsSectionTextView"
+                android:text="Reports"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewReportButton"
+                android:text="View Report"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

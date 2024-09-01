@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="0dp">
+    tools:context=".page.admin.CustomerListActivity">
 
+    <!-- Custom Toolbar -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/toolbarLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
-        android:background="?attr/colorPrimary">
+        android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Back Button -->
         <Button
@@ -19,7 +25,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
-            android:textSize="16dp"
             android:textColor="@android:color/white"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_gravity="center_vertical" />
@@ -46,29 +51,33 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
 
-    <!-- List of Sub-Items -->
+    <!-- List of Customers -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        android:paddingHorizontal="100dp"
-        android:paddingVertical="16dp"
-        >
-        >
+        android:padding="20dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- ListView for displaying customers -->
         <ListView
-            android:id="@+id/subItemListView"
+            android:id="@+id/customerListView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"/>
 
-        <!-- Add New Sub-Item Button -->
+        <!-- Add New Customer Button -->
         <Button
-            android:id="@+id/addNewSubItemButton"
+            android:id="@+id/addNewCustomerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add New Sub-Item"
-            android:layout_gravity="end"/>
-
-
+            android:text="Add New Customer"
+            android:layout_gravity="end"
+            android:layout_marginBottom="16dp"/>
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

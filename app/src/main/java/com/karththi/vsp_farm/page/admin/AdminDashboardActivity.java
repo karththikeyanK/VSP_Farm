@@ -5,13 +5,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.page.CreateUserActivity;
+import com.karththi.vsp_farm.page.LoginActivity;
 import com.karththi.vsp_farm.page.admin.item.ItemListActivity;
 
 public class AdminDashboardActivity extends AppCompatActivity {
+
+    private AppConstant appConstant;
+
+    private TextView userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +30,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
         // Example: Display a welcome message
         TextView welcomeTextView = findViewById(R.id.welcomeTextView);
         welcomeTextView.setText("Welcome to the Admin Dashboard!");
+        appConstant = new AppConstant(this);
+        userName = findViewById(R.id.userNameTextView);
+        userName.setText(AppConstant.USER_NAME);
+
     }
 
     public void createUser(View view){
@@ -40,4 +53,28 @@ public class AdminDashboardActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ItemListActivity.class);
         startActivity(intent);
     }
+
+    public void addCustomer(View view) {
+        Log.d("AdminDashboardActivity", "AdminDashboardActivity::viewCustomers():: is started");
+        Intent intent = new Intent(this, CreateCustomerActivity.class);
+        startActivity(intent);
+    }
+
+    public void viewCustomers(View view) {
+        Log.d("AdminDashboardActivity", "AdminDashboardActivity::viewCustomers():: is started");
+        Intent intent = new Intent(this, CustomerListActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+        // Optionally, you could add additional logic here
+    }
+
+    public void logout(View view){
+        Intent intent = new Intent(this, LoginActivity.class);
+        appConstant.ConfirmAlert("Logout", "Are you sure you want to logout?",() ->startActivity(intent) );
+    }
+
 }

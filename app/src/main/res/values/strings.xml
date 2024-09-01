@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">VSP_Farm</string>
     <string-array name="roles_array">
-        <item>Admin</item>
-        <item>Cashier</item>
+        <item>ADMIN</item>
+        <item>CASHIER</item>
     </string-array>
 </resources>

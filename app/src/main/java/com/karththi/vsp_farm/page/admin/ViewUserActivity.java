@@ -2,6 +2,8 @@ package com.karththi.vsp_farm.page.admin;
 
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +23,8 @@ public class ViewUserActivity extends AppCompatActivity {
     private UserAdapter userAdapter;
     private UserRepository userRepository;
 
+    private Button backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +32,15 @@ public class ViewUserActivity extends AppCompatActivity {
 
         // Initialize views
         userRecyclerView = findViewById(R.id.userRecyclerView);
+
+        backButton = findViewById(R.id.backButton);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         // Initialize repository
         userRepository = new UserRepository(this);
@@ -45,5 +58,16 @@ public class ViewUserActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No users found", Toast.LENGTH_SHORT).show();
         }
+
     }
+
+    @Override
+    @SuppressWarnings("MissingSuperCall")
+    public void onBackPressed() {
+        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+    }
+
+
+
+
 }

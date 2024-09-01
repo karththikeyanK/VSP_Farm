@@ -6,9 +6,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.adapter.ItemListAdapter;
 import com.karththi.vsp_farm.model.Item;
 import com.karththi.vsp_farm.repo.ItemRepository;
@@ -20,6 +24,9 @@ public class ItemListActivity extends AppCompatActivity {
     private ListView itemListView;
     private Button addNewItemButton;
     private ItemRepository itemRepository;
+
+    private Button backButton;
+    private TextView userNameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,17 @@ public class ItemListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        backButton = findViewById(R.id.backButton);
+        userNameTextView = findViewById(R.id.userNameTextView);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        userNameTextView.setText(AppConstant.USER_NAME);
     }
 
     private void displayItems() {
@@ -56,4 +74,12 @@ public class ItemListActivity extends AppCompatActivity {
         ItemListAdapter adapter = new ItemListAdapter(this, items);
         itemListView.setAdapter(adapter);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+        // Optionally, you could add additional logic here
+    }
+
 }

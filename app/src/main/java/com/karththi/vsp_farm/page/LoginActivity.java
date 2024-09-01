@@ -2,6 +2,7 @@ package com.karththi.vsp_farm.page;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,9 +11,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.PasswordUtils;
 import com.karththi.vsp_farm.model.User;
 import com.karththi.vsp_farm.page.admin.AdminDashboardActivity;
+import com.karththi.vsp_farm.page.cashier.CashierDashBoard;
 import com.karththi.vsp_farm.page.cashier.ItemPageActivity;
 import com.karththi.vsp_farm.repo.UserRepository;
 
@@ -25,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
 
     private UserRepository userRepository;
+
+    private AppConstant appConstant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
                 performLogin();
             }
         });
+
+
     }
 
     private void performLogin() {
@@ -63,15 +70,18 @@ public class LoginActivity extends AppCompatActivity {
         User user = userRepository.getUserByUsername(username);
 
         if (user != null && PasswordUtils.hashPassword(password).equals(user.getPassword())) {
-            // Check the user's role and navigate accordingly
-            if (user.getRole().equals("ADMIN")) {
+
+            appConstant.USER_ID = user.getUsername();
+            appConstant.USER_NAME = user.getName();
+            appConstant.USER_ROLE = user.getRole();
+            if (user.getRole().equals(AppConstant.ADMIN)) {
                 // Navigate to Admin Dashboard
                 Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
                 startActivity(intent);
                 finish();
-            } else if (user.getRole().equals("CASHIER")) {
+            } else if (user.getRole().equals(AppConstant.CASHIER)) {
                 // Navigate to Item Page
-                Intent intent = new Intent(LoginActivity.this, ItemPageActivity.class);
+                Intent intent = new Intent(LoginActivity.this, CashierDashBoard.class);
                 startActivity(intent);
                 finish();
             }
@@ -80,4 +90,11 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+        // Optionally, you could add additional logic here
+    }
+
 }
