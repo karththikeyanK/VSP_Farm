@@ -48,13 +48,17 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_BILL_TABLE = "CREATE TABLE "+BILL_TABLE+" (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "reference_number TEXT, " +
             "status TEXT, " +
             "total_amount DOUBLE, " +
             "customer_id INTEGER, " +
             "user_id INTEGER, " +
             "created_at TEXT, " +
+            "create_time TEXT, " +
             "updated_at TEXT, " +
+            "update_time TEXT, " +
             "modified_by TEXT, " +
+            "payment_methode TEXT, " +
             "FOREIGN KEY(customer_id) REFERENCES Customer(id) " +
             "ON DELETE CASCADE ON UPDATE CASCADE, " +
             "FOREIGN KEY(user_id) REFERENCES " + USER_TABLE + "(id) " +
@@ -73,6 +77,7 @@ public class DbHelper extends SQLiteOpenHelper {
             "subItemId INTEGER, " +
             "quantity REAL, " +
             "price REAL, " +
+            "discount REAL, " +
             "FOREIGN KEY(billId) REFERENCES Bill(id) " +
             "ON DELETE CASCADE ON UPDATE CASCADE)";
 

@@ -25,6 +25,7 @@ public class BillItemRepository {
         values.put("sub_item_id", billItem.getSubItemId());
         values.put("quantity", billItem.getQuantity());
         values.put("price", billItem.getPrice());
+        values.put("discount", billItem.getDiscount());
         db.insert(DbHelper.BILL_ITEM_TABLE, null, values);
         db.close();
 
@@ -37,6 +38,7 @@ public class BillItemRepository {
         values.put("sub_item_id", billItem.getSubItemId());
         values.put("quantity", billItem.getQuantity());
         values.put("price", billItem.getPrice());
+        values.put("discount", billItem.getDiscount());
         db.update(DbHelper.BILL_ITEM_TABLE, values, "id = ?", new String[]{String.valueOf(billItem.getId())});
         db.close();
     }
@@ -50,7 +52,7 @@ public class BillItemRepository {
 
     public BillItem getBillItemById(int id) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(DbHelper.BILL_ITEM_TABLE, new String[]{"id", "bill_id", "sub_item_id", "quantity", "price"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        Cursor cursor = db.query(DbHelper.BILL_ITEM_TABLE, new String[]{"id", "bill_id", "sub_item_id", "quantity", "price","discount"}, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
         BillItem billItem = null;
         if (cursor.moveToFirst()) {
             billItem = new BillItem();
@@ -59,6 +61,7 @@ public class BillItemRepository {
             billItem.setSubItemId(cursor.getInt(2));
             billItem.setQuantity(cursor.getDouble(3));
             billItem.setPrice(cursor.getDouble(4));
+            billItem.setDiscount(cursor.getDouble(5));
         }
         cursor.close();
         db.close();
@@ -67,7 +70,7 @@ public class BillItemRepository {
 
     public List<BillItem> getBillItemByBillId(int billId) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(DbHelper.BILL_ITEM_TABLE, new String[]{"id", "bill_id", "sub_item_id", "quantity", "price"}, "bill_id = ?", new String[]{String.valueOf(billId)}, null, null, null);
+        Cursor cursor = db.query(DbHelper.BILL_ITEM_TABLE, new String[]{"id", "bill_id", "sub_item_id", "quantity", "price","discount"}, "bill_id = ?", new String[]{String.valueOf(billId)}, null, null, null);
         List<BillItem> billItems = null;
         if (cursor.moveToFirst()) {
             do {
@@ -77,6 +80,7 @@ public class BillItemRepository {
                 billItem.setSubItemId(cursor.getInt(2));
                 billItem.setQuantity(cursor.getDouble(3));
                 billItem.setPrice(cursor.getDouble(4));
+                billItem.setDiscount(cursor.getDouble(5));
                 billItems.add(billItem);
             } while (cursor.moveToNext());
         }

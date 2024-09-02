@@ -28,8 +28,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.adapter.ItemRecycleAdapter;
 import com.karththi.vsp_farm.helper.adapter.SubItemGridAdapter;
+import com.karththi.vsp_farm.model.BillItem;
 import com.karththi.vsp_farm.model.Customer;
 import com.karththi.vsp_farm.model.Item;
 import com.karththi.vsp_farm.model.SubItem;
@@ -37,15 +39,19 @@ import com.karththi.vsp_farm.service.CustomerService;
 import com.karththi.vsp_farm.service.ItemService;
 import com.karththi.vsp_farm.service.SubItemService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 // ToDO: put the bill items in the ArrayList
-//
+// ToDO:  in bill Payment method Loan or Cash
+// ToDO:  in paid amount Onchange event to calculate the balance want to improve
 
 public class BillingPageActivity extends AppCompatActivity {
 
     private ItemService itemService;
+
+    private AppConstant appConstant;
 
     private CustomerService customerService;
 
@@ -58,7 +64,11 @@ public class BillingPageActivity extends AppCompatActivity {
 
     private Spinner customerSpinner;
 
-    private Button backButton;
+    private List<BillItem> billItems ;
+
+    private Button backButton, loanButton,printBillButton;
+
+    private int customerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +79,38 @@ public class BillingPageActivity extends AppCompatActivity {
         itemService = new ItemService(this);
         subItemService = new SubItemService(this);
         customerService = new CustomerService(this);
+        appConstant = new AppConstant(this);
+
+        loanButton = findViewById(R.id.loanButton);
+        printBillButton = findViewById(R.id.printBillButton);
+        printBillButton.setOnClickListener(v -> printBill());
+        loanButton.setOnClickListener(v->LoanButtonClick());
+
+        billItems = new ArrayList<>();
+
+
 
         initializeUIComponents();
         setupItemsGridView();
-        setupPrintBillButton();
         setupInputAmountEditText();
         initializeHeader();
         setupCustomerSpinner();
         setupBackButton();
+
+        customerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
+                if (!selectedCustomer.getName().equals("DEFAULT")) {
+                    loanButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
 
@@ -115,47 +149,226 @@ public class BillingPageActivity extends AppCompatActivity {
         });
     }
 
+//    private void addSubItemToBill(SubItem subItem) {
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        TableRow row = (TableRow) inflater.inflate(R.layout.billing_row, billingTableLayout, false);
+//
+//        TextView itemName = row.findViewById(R.id.itemName);
+//        TextView itemPrice = row.findViewById(R.id.itemPrice);
+//        EditText itemDiscount = row.findViewById(R.id.itemDiscount);
+//        EditText itemQuantity = row.findViewById(R.id.itemQuantity);
+//        EditText itemTotal = row.findViewById(R.id.itemTotal);
+//        ImageView deleteIcon = row.findViewById(R.id.deleteIcon);
+//        float density = getResources().getDisplayMetrics().density;
+//        int newWidthDp = (int)(40 * density);
+//        int newHeightDp = (int)(40 * density);
+//        deleteIcon.getLayoutParams().width = newWidthDp;
+//        deleteIcon.getLayoutParams().height = newHeightDp;
+//        deleteIcon.requestLayout();
+//
+//        itemDiscount.setText("0.0");
+//
+//        Customer selectedCustomer = (Customer) customerSpinner.getSelectedItem();
+//        if (selectedCustomer.getName().equals("DEFAULT")) {
+//            itemDiscount.setClickable(false);
+//            itemDiscount.setFocusable(false);
+//        }
+//
+//        itemName.setText(subItem.getSubItemName());
+//        itemPrice.setText(String.valueOf(subItem.getPrice()));
+//        itemQuantity.setText("1");
+//        itemTotal.setText(String.valueOf(subItem.getPrice()));
+//
+//        BillItem billItem = new BillItem();
+//        billItem.setSubItemId(subItem.getId());
+//
+//        customerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
+//                if (!selectedCustomer.getName().equals("DEFAULT")) {
+//                    loanButton.setVisibility(View.VISIBLE);
+//                }
+//                for (int i = 1; i < billingTableLayout.getChildCount(); i++) {
+//                    TableRow row = (TableRow) billingTableLayout.getChildAt(i);
+//                    TextView itemPrice = row.findViewById(R.id.itemPrice);
+//                    EditText itemDiscount = row.findViewById(R.id.itemDiscount);
+//                    EditText itemTotal = row.findViewById(R.id.itemTotal);
+//                    EditText itemQuantity = row.findViewById(R.id.itemQuantity);
+//                    if (selectedCustomer.getName().equals("DEFAULT")) {
+//                        itemDiscount.setText("0.0");
+//                        itemDiscount.setClickable(false);
+//                        itemDiscount.setFocusable(false);
+//                        // Update the total amount after setting the discount to 0
+//                        double price = Double.parseDouble(itemPrice.getText().toString());
+//                        double qty = Double.parseDouble(itemQuantity.getText().toString());
+//                        double total = qty * price;
+//                        itemTotal.setText(String.format("%.2f", total));
+//                        updateTotalAmount();
+//                        billItem.setDiscount(0.0);
+//                        billItem.setPrice(total);
+//                        billItem.setQuantity(qty);
+//
+//                    } else {
+//                        itemDiscount.setClickable(true);
+//                        itemDiscount.setFocusable(true);
+//                        itemDiscount.setFocusableInTouchMode(true);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                // Do nothing
+//            }
+//        });
+//
+//        itemTotal.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//                    double total = Double.parseDouble(itemTotal.getText().toString());
+//                    double discount = Double.parseDouble(itemDiscount.getText().toString());
+//                    double price = subItem.getPrice();
+//                    double qty = total / (price-discount);
+//                    itemQuantity.setText(String.format("%.3f", qty));
+//                    updateTotalAmount();
+//                    billItem.setPrice(total);
+//                    billItem.setQuantity(qty);
+//                    billItem.setDiscount(discount);
+//                }
+//            }
+//        });
+//
+//        itemQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//                    String quantityStr = itemQuantity.getText().toString();
+//                    if (!quantityStr.isEmpty()) {
+//                        double qty = Double.parseDouble(quantityStr);
+//                        double discount = Double.parseDouble(itemDiscount.getText().toString());
+//                        double price = subItem.getPrice();
+//                        double total = qty * (price-discount);
+//                        itemTotal.setText(String.format("%.2f", total));
+//                        updateTotalAmount();
+//                        billItem.setPrice(total);
+//                        billItem.setQuantity(qty);
+//                        billItem.setDiscount(discount);
+//                    }
+//                }
+//            }
+//        });
+//
+//        itemDiscount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (!hasFocus) {
+//                    double price = Double.parseDouble(itemPrice.getText().toString());
+//                    double discount = Double.parseDouble(itemDiscount.getText().toString());
+//                    double qty = Double.parseDouble(itemQuantity.getText().toString());
+//                    double total = qty * (price - discount);
+//                    itemTotal.setText(String.format("%.2f", total));
+//                    updateTotalAmount();
+//                    billItem.setPrice(total);
+//                    billItem.setQuantity(qty);
+//                    billItem.setDiscount(discount);
+//                }
+//            }
+//        });
+//
+//        deleteIcon.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                billingTableLayout.removeView(row);
+//                updateTotalAmount();
+//            }
+//        });
+//
+//        billingTableLayout.addView(row);
+//        updateTotalAmount();
+//    }
+
     private void addSubItemToBill(SubItem subItem) {
         LayoutInflater inflater = LayoutInflater.from(this);
         TableRow row = (TableRow) inflater.inflate(R.layout.billing_row, billingTableLayout, false);
 
         TextView itemName = row.findViewById(R.id.itemName);
-        EditText itemPrice = row.findViewById(R.id.itemPrice);
+        TextView itemPrice = row.findViewById(R.id.itemPrice);
+        EditText itemDiscount = row.findViewById(R.id.itemDiscount);
         EditText itemQuantity = row.findViewById(R.id.itemQuantity);
         EditText itemTotal = row.findViewById(R.id.itemTotal);
         ImageView deleteIcon = row.findViewById(R.id.deleteIcon);
-        float density = getResources().getDisplayMetrics().density;
-        int newWidthDp = (int)(40 * density);
-        int newHeightDp = (int)(40 * density);
-        deleteIcon.getLayoutParams().width = newWidthDp;
-        deleteIcon.getLayoutParams().height = newHeightDp;
-        deleteIcon.requestLayout();
 
-        Customer selectedCustomer = (Customer) customerSpinner.getSelectedItem();
-        if (selectedCustomer.getName().equals("DEFAULT")) {
-            itemPrice.setClickable(false);
-            itemPrice.setFocusable(false);
-        }
+        itemDiscount.setText("0.0");
+
+        // Create and add BillItem to the list
+        BillItem billItem = new BillItem();
+        billItem.setSubItemId(subItem.getId());
+        billItem.setPrice(subItem.getPrice());
+        billItem.setQuantity(1.0);
+        billItem.setDiscount(0.0);
+
+        billItems.add(billItem);
+        row.setTag(billItems.size() - 1); // Store index in row tag
 
         itemName.setText(subItem.getSubItemName());
         itemPrice.setText(String.valueOf(subItem.getPrice()));
-        itemQuantity.setText("1");  // Default quantity is 1
+        itemQuantity.setText("1");
         itemTotal.setText(String.valueOf(subItem.getPrice()));
 
+        Customer selectedCustomer = (Customer) customerSpinner.getSelectedItem();
+        if (selectedCustomer.getName().equals("DEFAULT")) {
+            itemDiscount.setEnabled(false);
+            customerId = selectedCustomer.getId();
+        }
+
+        // Update quantity, price, and discount on focus change
+        updateRowOnFocusChange(itemPrice, itemDiscount, itemQuantity, itemTotal, Integer.parseInt(row.getTag().toString()));
+
+        // Handle row deletion
+        deleteIcon.setOnClickListener(v -> {
+            int index = (int) row.getTag();
+            billItems.remove(index);
+            billingTableLayout.removeView(row);
+            updateTotalAmount();
+        });
+
+        billingTableLayout.addView(row);
+        updateTotalAmount();
+    }
+
+    private void updateRowOnFocusChange(TextView itemPrice, EditText itemDiscount, EditText itemQuantity, EditText itemTotal, int tag) {
         customerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
+                boolean isDefaultCustomer = selectedCustomer.getName().equals("DEFAULT");
+                customerId = selectedCustomer.getId();
+
+                if (isDefaultCustomer) {
+                    loanButton.setVisibility(View.GONE);
+                } else {
+                    loanButton.setVisibility(View.VISIBLE);
+                }
+
                 for (int i = 1; i < billingTableLayout.getChildCount(); i++) {
                     TableRow row = (TableRow) billingTableLayout.getChildAt(i);
-                    EditText itemPrice = row.findViewById(R.id.itemPrice);
-                    if (selectedCustomer.getName().equals("DEFAULT")) {
-                        itemPrice.setClickable(false);
-                        itemPrice.setFocusable(false);
+                    EditText itemDiscount = row.findViewById(R.id.itemDiscount);
+                    EditText itemQuantity = row.findViewById(R.id.itemQuantity);
+                    EditText itemTotal = row.findViewById(R.id.itemTotal);
+                    TextView itemPrice = row.findViewById(R.id.itemPrice);
+
+                    if (isDefaultCustomer) {
+                        itemDiscount.setText("0.0");
+                        itemDiscount.setEnabled(false);  // Disable editing
+                        double price = parseDoubleOrDefault(itemPrice.getText().toString());
+                        double qty = parseDoubleOrDefault(itemQuantity.getText().toString());
+                        double total = qty * price;
+                        itemTotal.setText(String.format("%.2f", total));
+                        updateTotalAmount();
                     } else {
-                        itemPrice.setClickable(true);
-                        itemPrice.setFocusable(true);
-                        itemPrice.setFocusableInTouchMode(true); // To gain focus on touch
+                        itemDiscount.setEnabled(true); // Enable editing
                     }
                 }
             }
@@ -166,71 +379,61 @@ public class BillingPageActivity extends AppCompatActivity {
             }
         });
 
-        itemTotal.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    double total = Double.parseDouble(itemTotal.getText().toString());
-                    double price = subItem.getPrice();
-                    double qty = total / price;
-                    itemQuantity.setText(String.format("%.2f", qty));
-                    updateTotalAmount();
-                }
-            }
-        });
+        BillItem billItem = billItems.get(tag);
 
-        itemQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    String quantityStr = itemQuantity.getText().toString();
-                    if (!quantityStr.isEmpty()) {
-                        double qty = Double.parseDouble(quantityStr);
-                        double price = subItem.getPrice();
-                        double total = qty * price;
-                        itemTotal.setText(String.format("%.2f", total));
-                        updateTotalAmount();
-                    }
-                }
-            }
-        });
-
-        itemPrice.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    double price = Double.parseDouble(itemPrice.getText().toString());
-                    double qty = Double.parseDouble(itemQuantity.getText().toString());
-                    double total = qty * price;
-                    itemTotal.setText(String.format("%.2f", total));
-                    updateTotalAmount();
-                }
-            }
-        });
-
-        itemQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    double qty = Double.parseDouble(itemQuantity.getText().toString());
-                    double price = subItem.getPrice();
-                    double total = qty * price;
-                    itemTotal.setText(String.format("%.2f", total));
-                    updateTotalAmount();
-                }
-            }
-        });
-
-        deleteIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                billingTableLayout.removeView(row);
+        itemTotal.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                double total = parseDoubleOrDefault(itemTotal.getText().toString());
+                double discount = parseDoubleOrDefault(itemDiscount.getText().toString());
+                double price = parseDoubleOrDefault(itemPrice.getText().toString());
+                double qty = total / (price - discount);
+                itemQuantity.setText(String.format("%.3f", qty));
+                billItem.setPrice(total);
+                billItem.setQuantity(qty);
+                billItem.setDiscount(discount);
                 updateTotalAmount();
             }
         });
 
-        billingTableLayout.addView(row);
-        updateTotalAmount();
+        itemQuantity.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                double qty = parseDoubleOrDefault(itemQuantity.getText().toString());
+                double discount = parseDoubleOrDefault(itemDiscount.getText().toString());
+                double price = parseDoubleOrDefault(itemPrice.getText().toString());
+                double total = qty * (price - discount);
+                itemTotal.setText(String.format("%.2f", total));
+                billItem.setPrice(total);
+                billItem.setQuantity(qty);
+                billItem.setDiscount(discount);
+                updateTotalAmount();
+            }
+        });
+
+        itemDiscount.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                double price = parseDoubleOrDefault(itemPrice.getText().toString());
+                double discount = parseDoubleOrDefault(itemDiscount.getText().toString());
+                double qty = parseDoubleOrDefault(itemQuantity.getText().toString());
+                double total = qty * (price - discount);
+                itemTotal.setText(String.format("%.2f", total));
+                billItem.setPrice(total);
+                billItem.setQuantity(qty);
+                billItem.setDiscount(discount);
+                updateTotalAmount();
+            }
+        });
+    }
+
+    private double parseDoubleOrDefault(String value) {
+        if (value.isEmpty()) {
+            return 0.0;
+        } else {
+            try {
+                return Double.parseDouble(value);
+            } catch (NumberFormatException e) {
+                return 0.0; // Handle any other potential NumberFormatException
+            }
+        }
     }
 
 
@@ -238,12 +441,14 @@ public class BillingPageActivity extends AppCompatActivity {
         totalAmount = 0.0;
         for (int i = 1; i < billingTableLayout.getChildCount(); i++) {
             TableRow row = (TableRow) billingTableLayout.getChildAt(i);
-            TextView itemTotal = (TextView) row.getChildAt(3);
+            EditText itemTotal = row.findViewById(R.id.itemTotal);
             totalAmount += Double.parseDouble(itemTotal.getText().toString());
         }
         totalPriceTextView.setText(String.format("Total: %.2f", totalAmount));
-        calculateBalance();  // Recalculate balance after updating total amount
+        calculateBalance();
     }
+
+
     private void calculateBalance() {
         String inputAmountStr = inputAmountEditText.getText().toString();
         double inputAmount = inputAmountStr.isEmpty() ? 0.0 : Double.parseDouble(inputAmountStr);
@@ -252,23 +457,38 @@ public class BillingPageActivity extends AppCompatActivity {
     }
 
     private void printBill() {
-        // Implement printing logic here, like sending data to a printer or showing a print preview
+
+        if (inputAmountEditText.getText().toString().isEmpty()) {
+            appConstant.ErrorAlert("Error", "Please enter the amount paid");
+            return;
+        }
+
         Toast.makeText(this, "Bill printed successfully!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void LoanButtonClick(){
+        // Implement loan logic here
+        Toast.makeText(this, "Loan button clicked", Toast.LENGTH_SHORT).show();
     }
 
 
     private void initializeHeader(){
         TableRow headerRow = (TableRow) LayoutInflater.from(this).inflate(R.layout.billing_row, billingTableLayout, false);
         TextView headerItemName = headerRow.findViewById(R.id.itemName);
-        EditText headerItemPrice = headerRow.findViewById(R.id.itemPrice);
+        TextView headerItemPrice = headerRow.findViewById(R.id.itemPrice);
+        EditText headerItemDiscount = headerRow.findViewById(R.id.itemDiscount);
         EditText headerItemQuantity = headerRow.findViewById(R.id.itemQuantity);
         EditText headerItemTotal = headerRow.findViewById(R.id.itemTotal);
         headerItemName.setText("Item Name");
-        headerItemPrice.setText("Price");
+        headerItemPrice.setText("Price(Kg/Ltr/Pc)");
+        headerItemDiscount.setText("Discount");
         headerItemQuantity.setText("Quantity");
         headerItemTotal.setText("Total");
         headerItemName.setFocusable(false);
         headerItemName.setClickable(false);
+
+        headerItemDiscount.setFocusable(false);
+        headerItemDiscount.setClickable(false);
 
         headerItemPrice.setFocusable(false);
         headerItemPrice.setClickable(false);
@@ -296,11 +516,6 @@ public class BillingPageActivity extends AppCompatActivity {
         itemsRecycleView.setAdapter(adapter);
     }
 
-    private void setupPrintBillButton() {
-        Button printBillButton = findViewById(R.id.printBillButton);
-        printBillButton.setOnClickListener(v -> printBill());
-    }
-
     private void setupInputAmountEditText() {
         inputAmountEditText.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
@@ -319,6 +534,7 @@ public class BillingPageActivity extends AppCompatActivity {
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView tv = (TextView) view;
+                tv.setTextSize(20);
                 tv.setText(getItem(position).getName());  // Display the customer's name
                 return view;
             }

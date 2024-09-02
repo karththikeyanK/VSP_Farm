@@ -7,16 +7,19 @@ public class BillItem {
     private Double quantity;
     private double price;
 
+    private double discount;
+
 
     public BillItem() {
     }
 
-    public BillItem(int id, int billId, int subItemId, Double quantity, double price) {
+    public BillItem(int id, int billId, int subItemId, Double quantity, double price, double discount) {
         this.id = id;
         this.billId = billId;
         this.subItemId = subItemId;
         this.quantity = quantity;
         this.price = price;
+        this.discount = discount;
     }
 
     public int getId() {
@@ -57,5 +60,13 @@ public class BillItem {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
     }
 }

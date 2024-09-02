@@ -1,9 +1,15 @@
 package com.karththi.vsp_farm.helper;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
+import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
+
+import java.util.Random;
 import java.util.function.Function;
 
 public class AppConstant {
@@ -22,6 +28,9 @@ public class AppConstant {
 
     public static final String BILL_ITEM_TABLE = "BillItem";
     public static final String COMPANY_NAME = "VSP Farm";
+
+    private static final String LOAN = "LOAN";
+    private static final String CASH = "CASH";
 
 
     public static String USER_ID = "";
@@ -72,5 +81,25 @@ public class AppConstant {
         builder.setNegativeButton("No", null);
         builder.show();
     }
+
+    public String generateReferenceNumber() {
+        // Generate a three-digit random number
+
+
+        // Get the counter from Shared Preferences
+        SharedPreferences prefs = context.getSharedPreferences("prefs", MODE_PRIVATE);
+        int counter = prefs.getInt("counter", 1001);
+
+        // Increment the counter and save it back to Shared Preferences
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("counter", counter + 1);
+        editor.apply();
+
+        // Combine the random number and counter to form the reference number
+        String referenceNumberStr = DateTimeUtils.getCurrentDate() +"   "+ String.valueOf(counter);
+        return referenceNumberStr;
+    }
+
+
 
 }
