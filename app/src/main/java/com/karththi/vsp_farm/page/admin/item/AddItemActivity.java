@@ -38,6 +38,8 @@ public class AddItemActivity extends AppCompatActivity {
     private ItemService itemService;
     private Bitmap selectedImageBitmap;
 
+    private Button backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,7 @@ public class AddItemActivity extends AppCompatActivity {
         itemImageView = findViewById(R.id.itemImageView);
         selectImageButton = findViewById(R.id.selectImageButton);
         saveItemButton = findViewById(R.id.saveItemButton);
+        backButton = findViewById(R.id.backButton);
 
         itemService = new ItemService(this);
 
@@ -67,6 +70,15 @@ public class AddItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectImage();
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddItemActivity.this, ItemListActivity.class);
+                startActivity(intent);
+
             }
         });
     }

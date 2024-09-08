@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Heading: Today Report -->
+    <TextView
+        android:id="@+id/reportHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Report"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/reportDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date -"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_gravity="left"
+        android:paddingBottom="16dp"/>
+
+    <!-- Subheading: General Report -->
+    <TextView
+        android:id="@+id/generalReportSubHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="General Report"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_gravity="left"
+        android:paddingBottom="16dp"/>
+
+    <!-- Table: General Report -->
+    <TableLayout
+        android:id="@+id/generalReportTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:padding="8dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:padding="8dp">
+
+            <TextView
+                android:text="Item"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/table_row_border"/>
+
+            <TextView
+                android:text="Total Quantity"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/table_row_border"/>
+
+            <TextView
+                android:text="Total Discount"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/table_row_border"/>
+
+            <TextView
+                android:text="Total Amount"
+                android:textStyle="bold"
+                android:gravity="end"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:padding="8dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/table_row_border"/>
+        </TableRow>
+
+
+    </TableLayout>
+
+</LinearLayout>

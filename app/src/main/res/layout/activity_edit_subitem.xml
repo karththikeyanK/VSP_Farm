@@ -4,7 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="80dp">
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_flat"
+        android:text="Back"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:text="Edit Sub Item"
+        android:layout_marginBottom="10dp"
+        android:textStyle="bold"
+        />
 
     <!-- Sub-Item Name Input -->
     <EditText
@@ -12,7 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Sub-Item Name"
+        android:background="@drawable/edittext_background"
         android:textSize="16sp"
+        android:padding="16dp"
         android:inputType="text"/>
 
     <!-- Sub-Item Price Input -->
@@ -21,6 +41,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Sub-Item Price"
+        android:padding="16dp"
+        android:background="@drawable/edittext_background"
         android:textSize="16sp"
         android:inputType="numberDecimal"
         android:layout_marginTop="16dp"/>
@@ -32,5 +54,8 @@
         android:layout_height="wrap_content"
         android:text="Update Sub-Item"
         android:layout_gravity="end"
+
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white"
         android:layout_marginTop="24dp"/>
 </LinearLayout>

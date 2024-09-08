@@ -21,6 +21,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final String BILL_ITEM_TABLE = AppConstant.BILL_ITEM_TABLE;
 
+    public static final String LOAN_TABLE = AppConstant.LOAN_TABLE;
+
+    public static final String LOAN_PAYMENT_TABLE = AppConstant.LOAN_PAYMENT_TABLE;
+
     public DbHelper(Context context) {
         super(context, AppConstant.DATABASE_NAME, null, AppConstant.DATABASE_VERSION);
     }
@@ -46,19 +50,19 @@ public class DbHelper extends SQLiteOpenHelper {
             "password TEXT, " +
             "role TEXT)";
 
-    private static final String CREATE_BILL_TABLE = "CREATE TABLE "+BILL_TABLE+" (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "reference_number TEXT, " +
-            "status TEXT, " +
-            "total_amount DOUBLE, " +
-            "customer_id INTEGER, " +
-            "user_id INTEGER, " +
-            "created_at TEXT, " +
-            "create_time TEXT, " +
-            "updated_at TEXT, " +
-            "update_time TEXT, " +
-            "modified_by TEXT, " +
-            "payment_methode TEXT, " +
+    private static final String CREATE_BILL_TABLE = "CREATE TABLE " + BILL_TABLE + "("
+            + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + "reference_number TEXT,"
+            + "total_amount REAL,"
+            + "customer_id INTEGER,"
+            + "user_id INTEGER,"
+            + "status TEXT,"
+            + "payment_methode TEXT,"
+            + "created_at TEXT,"
+            + "create_time TEXT,"
+            + "updated_at TEXT,"
+            + "update_time TEXT,"
+            + "modified_by TEXT," +
             "FOREIGN KEY(customer_id) REFERENCES Customer(id) " +
             "ON DELETE CASCADE ON UPDATE CASCADE, " +
             "FOREIGN KEY(user_id) REFERENCES " + USER_TABLE + "(id) " +
@@ -73,15 +77,29 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_BILL_ITEM_TABLE = "CREATE TABLE "+BILL_ITEM_TABLE+" (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "billId INTEGER, " +
-            "subItemId INTEGER, " +
+            "bill_id INTEGER, " + // Added bill_id column
+            "sub_item_id INTEGER, " +
             "quantity REAL, " +
             "price REAL, " +
             "discount REAL, " +
-            "FOREIGN KEY(billId) REFERENCES Bill(id) " +
+            "FOREIGN KEY(bill_id) REFERENCES Bill(id) " +
             "ON DELETE CASCADE ON UPDATE CASCADE)";
 
+    private static final String CREATE_LOAN_TABLE = "CREATE TABLE " + LOAN_TABLE + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "customer_id INTEGER, " +
+            "remaining_amount REAL, " +
+            "updated_date TEXT, " +
+            "FOREIGN KEY(customer_id) REFERENCES " + CUSTOMER_TABLE + "(id) " +
+            "ON DELETE CASCADE ON UPDATE CASCADE)";
 
+    private static final String CREATE_LOAN_PAYMENT_TABLE = "CREATE TABLE " + LOAN_PAYMENT_TABLE + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "loan_id INTEGER, " +
+            "payment_amount REAL, " +
+            "payment_date TEXT, " +
+            "FOREIGN KEY(loan_id) REFERENCES " + LOAN_TABLE + "(id) " +
+            "ON DELETE CASCADE ON UPDATE CASCADE)";
 
 
 
@@ -93,6 +111,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_CUSTOMER_TABLE);
         db.execSQL(CREATE_BILL_TABLE);
         db.execSQL(CREATE_BILL_ITEM_TABLE);
+        db.execSQL(CREATE_LOAN_TABLE);
+        db.execSQL(CREATE_LOAN_PAYMENT_TABLE);
         createDefaultAdminUser(db);
         insertDefaultCustomer(db);
     }
@@ -105,6 +125,8 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS "+CUSTOMER_TABLE);
         db.execSQL("DROP TABLE IF EXISTS "+BILL_TABLE);
         db.execSQL("DROP TABLE IF EXISTS "+BILL_ITEM_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+LOAN_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS "+LOAN_PAYMENT_TABLE);
         onCreate(db);
     }
 
@@ -126,7 +148,7 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put("username", "1010");
         values.put("name", "Admin");
         values.put("password", hash_password); // Consider hashing passwords for security
-        values.put("role", "ADMIN"); // Set role to ADMIN
+        values.put("role", AppConstant.ADMIN); // Set role to ADMIN
         db.insert(USER_TABLE, null, values);
     }
 

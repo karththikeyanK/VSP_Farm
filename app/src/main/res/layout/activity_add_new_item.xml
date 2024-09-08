@@ -1,47 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="100dp"
+    android:orientation="vertical"
+    android:padding="80dp"
     tools:context=".page.admin.item.AddItemActivity">
+
+    <!-- Back Button -->
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_flat"
+        android:text="Back"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Title Text -->
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Item"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp" />
 
     <!-- Item Name Input -->
     <EditText
         android:id="@+id/itemNameEditText"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Item Name"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edittext_background" />
 
     <!-- Measurement Spinner -->
     <Spinner
         android:id="@+id/measurementSpinner"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:spinnerMode="dropdown"
-        app:layout_constraintTop_toBottomOf="@id/itemNameEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:padding="20dp"
+        android:background="@drawable/edittext_background"
+        android:layout_marginTop="16dp" />
 
     <!-- ImageView for Selected Image -->
     <ImageView
         android:id="@+id/itemImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_gravity="center"
         android:contentDescription="Item Image"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toBottomOf="@id/measurementSpinner"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
     <!-- Button to Select Image -->
     <Button
@@ -49,9 +65,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select Image"
-        app:layout_constraintTop_toBottomOf="@id/itemImageView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center" />
 
     <!-- Save Item Button -->
     <Button
@@ -59,8 +74,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save Item"
-        app:layout_constraintTop_toBottomOf="@id/selectImageButton"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_gravity="end" />
+</LinearLayout>

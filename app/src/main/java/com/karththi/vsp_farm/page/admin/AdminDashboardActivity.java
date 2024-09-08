@@ -15,12 +15,15 @@ import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.page.CreateUserActivity;
 import com.karththi.vsp_farm.page.LoginActivity;
 import com.karththi.vsp_farm.page.admin.item.ItemListActivity;
+import com.karththi.vsp_farm.page.admin.report.ReportActivity;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
     private AppConstant appConstant;
 
     private TextView userName;
+
+    private Button viewReportButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
         appConstant = new AppConstant(this);
         userName = findViewById(R.id.userNameTextView);
         userName.setText(AppConstant.USER_NAME);
+        viewReportButton = findViewById(R.id.viewReportButton);
+        viewReportButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ReportActivity.class);
+            startActivity(intent);
+        });
 
     }
 

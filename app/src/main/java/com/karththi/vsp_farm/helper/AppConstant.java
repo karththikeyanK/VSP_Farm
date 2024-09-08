@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.view.Gravity;
+import android.widget.TextView;
 
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 
@@ -27,10 +29,14 @@ public class AppConstant {
     public static final String CUSTOMER_TABLE = "Customer";
 
     public static final String BILL_ITEM_TABLE = "BillItem";
-    public static final String COMPANY_NAME = "VSP Farm";
 
-    private static final String LOAN = "LOAN";
-    private static final String CASH = "CASH";
+    public static final String LOAN_TABLE = "Loan";
+
+    public static final String LOAN_PAYMENT_TABLE = "LoanPayment";
+    public static final String COMPANY_NAME = "VSP Farm";
+    public static final String LOAN = "LOAN";
+    public static final String CASH = "CASH";
+    public static final String DEFAULT = "DEFAULT";
 
 
     public static String USER_ID = "";
@@ -81,6 +87,38 @@ public class AppConstant {
         builder.setNegativeButton("No", null);
         builder.show();
     }
+
+    public void showBalancePopup(String title, String balance, Runnable onOkClick) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        TextView balanceView = new TextView(context);
+        balanceView.setText(balance);
+        balanceView.setTextSize(48);
+        balanceView.setGravity(Gravity.CENTER);
+        builder.setView(balanceView);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // Run the function passed to the method when "OK" is clicked
+            if (onOkClick != null) {
+                onOkClick.run();
+            }
+        });
+
+        // Create the dialog
+        AlertDialog dialog = builder.create();
+
+        // Set a dismiss listener
+        dialog.setOnDismissListener(dialogInterface -> {
+            // Run the function passed to the method when the dialog is dismissed
+            if (onOkClick != null) {
+                onOkClick.run();
+            }
+        });
+
+        // Show the dialog
+        dialog.show();
+    }
+
 
     public String generateReferenceNumber() {
         // Generate a three-digit random number

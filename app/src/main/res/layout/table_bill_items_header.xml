@@ -1,0 +1,56 @@
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:padding="8dp"
+    android:layout_margin="4dp"
+    android:layout_gravity="center">
+
+    <!-- Item Column -->
+    <TextView
+        android:text="Item"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Discount Column -->
+    <TextView
+        android:text="Discount (Per Unit)"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Quantity Column -->
+    <TextView
+        android:text="Quantity"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Price Column -->
+    <TextView
+        android:text="Price"
+        android:textStyle="bold"
+        android:gravity="end"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+</TableRow>

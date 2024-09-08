@@ -79,7 +79,7 @@
             android:text="Billing Page"
             android:textSize="18dp"
             android:onClick="openBillingPage"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:background="@drawable/border" />
 
         <!-- Bill History Button -->
@@ -90,7 +90,18 @@
             android:text="Bill History"
             android:textSize="18dp"
             android:onClick="openBillHistory"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
+            android:background="@drawable/border"
+            android:layout_marginLeft="16dp" />
+
+        <Button
+            android:id="@+id/payLoanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pay Loan"
+            android:textSize="18dp"
+            android:onClick="payLoan"
+            android:textColor="@android:color/white"
             android:background="@drawable/border"
             android:layout_marginLeft="16dp" />
     </LinearLayout>

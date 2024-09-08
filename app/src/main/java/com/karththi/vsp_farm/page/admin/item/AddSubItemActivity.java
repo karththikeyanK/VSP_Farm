@@ -21,6 +21,8 @@ public class AddSubItemActivity extends AppCompatActivity {
     private Button saveSubItemButton;
     private SubItemService subItemService;
 
+    private Button backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,7 @@ public class AddSubItemActivity extends AppCompatActivity {
         subItemNameEditText = findViewById(R.id.subItemNameEditText);
         subItemPriceEditText = findViewById(R.id.subItemPriceEditText);
         saveSubItemButton = findViewById(R.id.saveSubItemButton);
+        backButton = findViewById(R.id.backButton);
 
         subItemService = new SubItemService(this);
 
@@ -55,6 +58,15 @@ public class AddSubItemActivity extends AppCompatActivity {
                 subItemService.create(subItem);
 
                 Toast.makeText(AddSubItemActivity.this, "Sub-Item added", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(AddSubItemActivity.this, SubItemListActivity.class);
+                intent.putExtra("ITEM_ID", itemId);
+                startActivity(intent);
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(AddSubItemActivity.this, SubItemListActivity.class);
                 intent.putExtra("ITEM_ID", itemId);
                 startActivity(intent);

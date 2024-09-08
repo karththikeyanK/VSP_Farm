@@ -55,7 +55,8 @@ public class CustomerListActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(CustomerListActivity.this, AdminDashboardActivity.class);
+                startActivity(intent);
             }
         });
 

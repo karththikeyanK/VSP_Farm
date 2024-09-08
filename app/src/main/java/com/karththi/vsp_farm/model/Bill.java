@@ -11,7 +11,6 @@ public class Bill {
     private String createdDate;
     private String createTime;
     private String updatedDate;
-
     private String updateTime;
     private String modifiedBy;
     private String status;  // DELETED, MODIFIED,MODIFIED_ORIGINAL, NEW

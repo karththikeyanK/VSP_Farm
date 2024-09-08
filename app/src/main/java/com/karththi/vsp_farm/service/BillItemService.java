@@ -2,8 +2,13 @@ package com.karththi.vsp_farm.service;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.karththi.vsp_farm.dto.BillItemsDetailDto;
 import com.karththi.vsp_farm.model.BillItem;
 import com.karththi.vsp_farm.repo.BillItemRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BillItemService {
     private BillItemRepository billItemRepository;
@@ -33,6 +38,22 @@ public class BillItemService {
     public BillItem getBillItemById(int id) {
         Log.i("BillItemService", "BillItemService::getBillItemById()::is called");
         return billItemRepository.getBillItemById(id);
+    }
+
+    public List<BillItem> getBillItemByBillId(int billId) {
+        Log.i("BillItemService", "BillItemService::getBillItemByBillId()::is called");
+        List<BillItem> billItems = new ArrayList<>();
+        billItems = billItemRepository.getBillItemByBillId(billId);
+        Log.i("BillItemService", "BillItemService::getBillItemByBillId():: fetched " + billItems.size() + " items");
+        return billItems;
+    }
+
+    public List<BillItemsDetailDto> getAllBillDtoByDate(String date) {
+        Log.i("BillItemService", "BillItemService::getAllBillDtoByDate()::is called");
+        List<BillItemsDetailDto> billItemsDetailDtoList = new ArrayList<>();
+        billItemsDetailDtoList = billItemRepository.getAllBillDtoByDate(date);
+        Log.i("BillItemService", "BillItemService::getAllBillDtoByDate():: fetched " + billItemsDetailDtoList.size() + " items");
+        return billItemsDetailDtoList;
     }
 
 

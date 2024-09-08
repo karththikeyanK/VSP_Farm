@@ -39,7 +39,7 @@ public class EditCustomerActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.btnSave);
 
         // Set data to views
-        Customer customer = customerService.getCustomer(customerId);
+        Customer customer = customerService.getCustomerById(customerId);
         nameEditText.setText(customer.getName());
         mobileEditText.setText(customer.getMobile());
         descriptionEditText.setText(customer.getDescription());

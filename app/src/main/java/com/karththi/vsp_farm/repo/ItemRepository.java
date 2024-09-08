@@ -105,6 +105,8 @@ public class ItemRepository {
         return itemList;
     }
 
+
+
     public boolean isItemExists(String name) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(AppConstant.ITEM_TABLE, null, "name = ?", new String[]{name}, null, null, null);

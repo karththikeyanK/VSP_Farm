@@ -10,9 +10,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.VSP_Farm"
         tools:targetApi="31">
@@ -45,6 +45,11 @@
             android:name=".page.cashier.BillingPageActivity"
             android:windowSoftInputMode="adjustPan"
             />
+        <activity android:name=".page.cashier.BillListActivity"/>
+        <activity android:name=".page.cashier.BillDetailsActivity"/>
+        <activity android:name=".page.cashier.PayLoanActivity"/>
+        <activity android:name=".page.admin.report.ReportActivity"/>
+        <activity android:name=".page.admin.report.TodayReportActivity"/>
 
 
 

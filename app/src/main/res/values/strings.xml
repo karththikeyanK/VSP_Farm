@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">VSP_Farm</string>
     <string-array name="roles_array">
-        <item>ADMIN</item>
         <item>CASHIER</item>
+        <item>ADMIN</item>
     </string-array>
     <string name="delete_item">delete</string>
+    <string name="select_customer">Select Customer</string>
 </resources>

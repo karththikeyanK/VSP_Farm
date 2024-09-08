@@ -23,6 +23,8 @@ public class EditSubItemActivity extends AppCompatActivity {
     private SubItemService subItemService;
     private SubItem subItem;
 
+    private Button backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,16 @@ public class EditSubItemActivity extends AppCompatActivity {
                 subItemService.update(subItem);
 
                 Toast.makeText(EditSubItemActivity.this, "Sub-Item updated", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EditSubItemActivity.this, SubItemListActivity.class);
+                intent.putExtra("ITEM_ID", subItem.getItemId());
+                startActivity(intent);
+            }
+        });
+
+        backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(EditSubItemActivity.this, SubItemListActivity.class);
                 intent.putExtra("ITEM_ID", subItem.getItemId());
                 startActivity(intent);

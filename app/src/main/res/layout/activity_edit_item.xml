@@ -16,17 +16,19 @@
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Back"
-            android:textColor="@android:color/black"
-            android:background="@drawable/border"
             android:layout_gravity="start"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_flat"
+            android:text="Back"
+            android:textColor="@android:color/white" />
 
         <!-- Item Name Input -->
         <EditText
             android:id="@+id/itemNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/edittext_background"
+            android:padding="16dp"
             android:hint="Item Name"
             android:textSize="16sp"
             android:layout_marginBottom="16dp"/>
@@ -36,6 +38,8 @@
             android:id="@+id/measurementSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/edittext_background"
+            android:padding="16dp"
             android:spinnerMode="dropdown"
             android:layout_marginBottom="16dp"/>
 

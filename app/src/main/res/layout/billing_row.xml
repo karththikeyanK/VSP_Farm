@@ -61,13 +61,16 @@
         android:ellipsize="end"
         android:maxLines="1" />
 
-    <ImageView
-        android:id="@+id/deleteIcon"
-        android:layout_width="20dp"
+    <TextView
+        android:id="@+id/deleteItem"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_delete"
+        android:text="DELETE"
+        android:textSize="16dp"
         android:contentDescription="@string/delete_item"
+        android:textColor="@color/holo_red_dark"
         android:paddingStart="8dp"
         android:paddingEnd="8dp" />
 

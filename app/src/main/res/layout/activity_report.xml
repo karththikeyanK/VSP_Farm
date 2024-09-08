@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="100dp">
+
+    <!-- Heading -->
+    <TextView
+        android:id="@+id/heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="VSP Farm - Report"
+        android:textSize="26sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Button for Today Report -->
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button"
+        android:text="Back"
+        android:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/todayReportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Today Report"
+        android:textSize="18sp"
+        android:padding="12dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Button for Get A Report -->
+    <Button
+        android:id="@+id/getReportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get A Report"
+        android:textSize="18sp"
+        android:padding="12dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>

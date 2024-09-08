@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.karththi.vsp_farm.dto.BillItemsDetailDto;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 import com.karththi.vsp_farm.model.Bill;
 import com.karththi.vsp_farm.repo.BillRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -34,10 +36,11 @@ public class BillService {
 
     }
 
-    public void createBill(Bill bill) {
+    public int createBill(Bill bill) {
         Log.i("BillService", "BillService::createBill()::is called");
-        billRepository.createBill(bill);
-        Log.i("BillService", "BillService::createBill()::is completed");
+        int id = billRepository.createBill(bill);
+        Log.i("BillService", "BillService::createBill()::is completed with id: " + id);
+        return id;
     }
 
     public void updateBill(int id, int customerId, int userId, double totalAmount , String paymentMethode,String status) {
@@ -79,10 +82,41 @@ public class BillService {
     }
 
     public List<Bill> getAllBillByDate(String date) {
+        List<Bill> bills = new ArrayList<>();
         Log.i("BillService", "BillService::getAllBills()::is called");
-        List<Bill> bills = billRepository.getBillsByDate(date);
+        bills = billRepository.getBillsByDate(date);
         Log.i("BillService", "BillService::getAllBills()::is completed");
         return bills;
+    }
+
+    public void updateBillStatus(Bill bill) {
+        Log.i("BillService", "BillService::updateBillStatus()::is called");
+        billRepository.updateBill(bill);
+        Log.i("BillService", "BillService::updateBillStatus()::is completed");
+    }
+
+    public List<Bill> getAllByStatusAndDateAndPaymentMethod(String status, String date, String paymentMethod) {
+        List<Bill> bills = new ArrayList<>();
+        Log.i("BillService", "BillService::getAllByStatusAndDateAndPaymentMethod()::is called");
+        bills = billRepository.getAllByStatusAndDateAndPaymentMethod(status, date, paymentMethod);
+        Log.i("BillService", "BillService::getAllByStatusAndDateAndPaymentMethod()::is completed");
+        return bills;
+    }
+
+    public List<Bill> getAllDeletedBIllsByDate(String date) {
+        List<Bill> bills = new ArrayList<>();
+        Log.i("BillService", "BillService::getAllDeletedBIllsByDate()::is called");
+        bills = billRepository.getAllDeletedBIllsByDate(date);
+        Log.i("BillService", "BillService::getAllDeletedBIllsByDate()::is completed");
+        return bills;
+    }
+
+    public List<BillItemsDetailDto> getAllBillDtoByDate(String date) {
+        List<BillItemsDetailDto> billItemsDetailDtos = new ArrayList<>();
+        Log.i("BillService", "BillService::getAllBillDtoByDate()::is called");
+        billItemsDetailDtos = billRepository.getAllBillDtoByDate(date);
+        Log.i("BillService", "BillService::getAllBillDtoByDate()::is completed");
+        return billItemsDetailDtos;
     }
 
 

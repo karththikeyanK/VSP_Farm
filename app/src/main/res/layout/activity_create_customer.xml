@@ -50,9 +50,9 @@
             android:layout_marginBottom="16dp"
             android:gravity="center"
             android:hint="Customer Name"
-            android:inputType="textPersonName"
-            android:background="@drawable/border"
-            android:padding="12dp"/>
+            android:background="@drawable/edittext_background"
+            android:padding="16dp"
+            android:inputType="textPersonName"/>
 
         <!-- Mobile Input -->
         <EditText
@@ -63,8 +63,8 @@
             android:gravity="center"
             android:hint="Mobile Number"
             android:inputType="phone"
-            android:background="@drawable/border"
-            android:padding="12dp"/>
+            android:background="@drawable/edittext_background"
+            android:padding="16dp"/>
 
         <!-- Description Input -->
         <EditText
@@ -75,8 +75,8 @@
             android:gravity="center"
             android:hint="Description"
             android:inputType="textMultiLine"
-            android:background="@drawable/border"
-            android:padding="12dp"/>
+            android:background="@drawable/edittext_background"
+            android:padding="16dp"/>
 
         <!-- Save Button -->
         <Button
@@ -84,10 +84,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="addCustomer"
-        android:text="Save"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"
-        android:gravity="center"/>
+            android:text="Save"
+            android:background="@drawable/button_background"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@android:color/holo_blue_dark"
+            android:gravity="center"/>
 
     </LinearLayout>
 

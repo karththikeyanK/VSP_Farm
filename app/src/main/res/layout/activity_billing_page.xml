@@ -81,7 +81,81 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:stretchColumns="1">
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border"
+                        android:padding="8dp">
 
+                        <TextView
+                            android:id="@+id/itemName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="ITEM NAME"
+                            android:paddingEnd="8dp"
+                            android:textColor="@android:color/black"
+                            android:ellipsize="end"
+                            android:maxLines="1" />
+
+                        <TextView
+                            android:id="@+id/itemPrice"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="PRICE/UNIT"
+                            android:padding="4dp"
+                            android:background="@android:color/white"
+                            android:textColor="@android:color/black"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/itemDiscount"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="DISCOUNT"
+                            android:padding="4dp"
+                            android:background="@android:color/white"
+                            android:textColor="@android:color/black"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/itemQuantity"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="QUANTITY"
+                            android:padding="4dp"
+                            android:background="@android:color/white"
+                            android:textColor="@android:color/black"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/itemTotal"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingStart="8dp"
+                            android:text="PRICE"
+                            android:textColor="@android:color/black"
+                            android:ellipsize="end"
+                            android:maxLines="1" />
+
+                        <TextView
+                            android:id="@+id/deleteItem"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_delete"
+                            android:text="ACTION"
+                            android:textSize="16dp"
+                            android:contentDescription="@string/delete_item"
+                            android:textColor="@color/black"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp" />
+
+                    </TableRow>
 
 
                     <!-- Dynamic Rows: Will be added programmatically -->
@@ -100,7 +174,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total: 0.00"
-                        android:textSize="16sp"
+                        android:textSize="32dp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -120,6 +194,7 @@
                             android:id="@+id/inputAmountEditText"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textSize="28dp"
                             android:inputType="numberDecimal" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -128,6 +203,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Balance: 0.00"
+                        android:textSize="24dp"
                         android:paddingTop="10dp" />
                 </LinearLayout>
                 <com.google.android.material.button.MaterialButton

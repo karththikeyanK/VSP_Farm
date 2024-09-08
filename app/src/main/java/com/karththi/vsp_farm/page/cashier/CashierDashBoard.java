@@ -37,6 +37,13 @@ public class CashierDashBoard extends AppCompatActivity {
     }
 
     public void openBillHistory(View view){
+        Intent intent = new Intent(this, BillListActivity.class);
+        startActivity(intent);
+    }
+
+    public void payLoan(View view){
+        Intent intent = new Intent(this, PayLoanActivity.class);
+        startActivity(intent);
     }
 
 

@@ -65,7 +65,7 @@ public class CustomerService {
 
     }
 
-    public Customer getCustomer(int id) {
+    public Customer getCustomerById(int id) {
         Log.i("CustomerService", "CustomerService::getCustomer()::Getting customer is called");
         Customer customer = customerRepository.getById(id);
         Log.i("CustomerService", "CustomerService::getCustomer()::Customer retrieved successfully");
