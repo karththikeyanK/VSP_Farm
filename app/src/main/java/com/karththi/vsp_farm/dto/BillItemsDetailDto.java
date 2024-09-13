@@ -3,11 +3,14 @@ package com.karththi.vsp_farm.dto;
 public class BillItemsDetailDto {
     private int billId;
     private String referenceNumber;
-    private double totalAmount;
     private String status;
     private String paymentMethod;
     private String createdAt;
     private String createTime;
+
+    private String updateAt;
+
+    private String updateTime;
     private String customerName;
     private String userName;
 
@@ -20,14 +23,15 @@ public class BillItemsDetailDto {
     public BillItemsDetailDto() {
     }
 
-    public BillItemsDetailDto(int billId, String referenceNumber, double totalAmount, String status, String paymentMethod, String createdAt, String createTime, String customerName, String userName, double quantity, double billItemPrice, double discount, String subItemName, String itemName) {
+    public BillItemsDetailDto(int billId, String referenceNumber, String status, String paymentMethod, String createdAt, String createTime, String updateAt, String updateTime, String customerName, String userName, double quantity, double billItemPrice, double discount, String subItemName, String itemName) {
         this.billId = billId;
         this.referenceNumber = referenceNumber;
-        this.totalAmount = totalAmount;
         this.status = status;
         this.paymentMethod = paymentMethod;
         this.createdAt = createdAt;
         this.createTime = createTime;
+        this.updateAt = updateAt;
+        this.updateTime = updateTime;
         this.customerName = customerName;
         this.userName = userName;
         this.quantity = quantity;
@@ -35,6 +39,22 @@ public class BillItemsDetailDto {
         this.discount = discount;
         this.subItemName = subItemName;
         this.itemName = itemName;
+    }
+
+    public String getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(String updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 
     public int getBillId() {
@@ -53,13 +73,6 @@ public class BillItemsDetailDto {
         this.referenceNumber = referenceNumber;
     }
 
-    public double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
 
     public String getStatus() {
         return status;

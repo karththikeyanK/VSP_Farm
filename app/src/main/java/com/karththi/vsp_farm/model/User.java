@@ -1,6 +1,7 @@
 package com.karththi.vsp_farm.model;
 
 public class User {
+    private int id;
     private String username;
     private String name;
     private String password;
@@ -9,13 +10,21 @@ public class User {
     public User() {
     }
 
-    public User(String username, String name, String password, String role) {
+    public User(int id, String username, String name, String password, String role) {
+        this.id = id;
         this.username = username;
         this.name = name;
         this.password = password;
         this.role = role;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

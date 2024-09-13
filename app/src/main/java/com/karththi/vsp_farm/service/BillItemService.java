@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
+import com.karththi.vsp_farm.dto.BillSummary;
 import com.karththi.vsp_farm.model.BillItem;
 import com.karththi.vsp_farm.repo.BillItemRepository;
 
@@ -56,5 +57,20 @@ public class BillItemService {
         return billItemsDetailDtoList;
     }
 
+    public List<BillSummary> getSummaryByDateAndPaymentMethode(String date, String methode) {
+        Log.i("BillService", "BillService::getSummaryByDateAndPaymentMethode()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+        list = billItemRepository.getSummaryByDateAndPaymentMethode(date,methode);
+        Log.i("BillService", "BillService::getSummaryByDateAndPaymentMethode()::is completed with size of :" + list.size());
+        return list;
+    }
+
+    public List<BillSummary> getSummaryByDate(String date) {
+        Log.i("BillService", "BillService::getSummaryByDate()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+        list = billItemRepository.getSummaryByDate(date);
+        Log.i("BillService", "BillService::getSummaryByDate()::is completed with size of :" + list.size());
+        return list;
+    }
 
 }

@@ -74,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (user != null && PasswordUtils.hashPassword(password).equals(user.getPassword())) {
 
+            AppConstant.USER_TABLE_ID = user.getId();
             appConstant.USER_ID = user.getUsername();
             appConstant.USER_NAME = user.getName();
             appConstant.USER_ROLE = user.getRole();

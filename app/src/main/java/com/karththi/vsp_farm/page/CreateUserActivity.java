@@ -100,7 +100,7 @@ public class CreateUserActivity extends AppCompatActivity {
             return;
         }
 
-        userService.addUser(new User(username, name, password, role));
+        userService.addUser(new User(0,username, name, password, role));
         finish();
     }
 

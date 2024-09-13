@@ -66,7 +66,7 @@ public class BillFacade {
         bill.setReferenceNumber(appConstant.generateReferenceNumber());
         bill.setTotalAmount(totalAmount);
         bill.setCustomerId(customerId);
-        bill.setUserId(Integer.parseInt(AppConstant.USER_ID));
+        bill.setUserId(AppConstant.USER_TABLE_ID);
         if (isLoan) {
             bill.setPaymentMethod(AppConstant.LOAN);
             loanFacade.handleLoan(customerId, totalAmount);
@@ -76,6 +76,7 @@ public class BillFacade {
         bill.setCreatedDate(DateTimeUtils.getCurrentDate());
         bill.setCreateTime(DateTimeUtils.getCurrentTime());
         bill.setStatus(AppConstant.NEW);
+
 
        int billId = billService.createBill(bill);
 

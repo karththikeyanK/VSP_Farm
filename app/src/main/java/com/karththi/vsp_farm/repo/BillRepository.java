@@ -367,46 +367,5 @@ public class BillRepository {
         return bills;
     }
 
-    public List<BillItemsDetailDto> getAllBillDtoByDate(String date){
-        List<BillItemsDetailDto> billItemsDetailDtoList = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        String sql = "SELECT b.id AS bill_id, b.reference_number, b.total_amount, b.status, " +
-                "b.payment_methode, b.created_at, b.create_time, c.name AS customer_name, " +
-                "u.username AS user_name, bi.quantity, bi.price AS bill_item_price, bi.discount, " +
-                "si.name AS sub_item_name, i.name AS item_name " +
-                "FROM "+AppConstant.BILL_TABLE+" b " +
-                "JOIN "+AppConstant.CUSTOMER_TABLE+" c ON b.customer_id = c.id " +
-                "JOIN "+AppConstant.USER_TABLE+" u ON b.user_id = u.id " +
-                "JOIN "+AppConstant.BILL_ITEM_TABLE+" bi ON bi.bill_id = b.id " +
-                "JOIN "+AppConstant.SUB_ITEM_TABLE+" si ON bi.sub_item_id = si.id " +
-                "JOIN "+AppConstant.ITEM_TABLE+" i ON si.item_id = i.id";
-
-
-        Cursor cursor = db.rawQuery(sql, new String[]{date});
-
-        while (cursor.moveToNext()) {
-            BillItemsDetailDto billItemsDetailDto = new BillItemsDetailDto();
-            billItemsDetailDto.setBillId(cursor.getInt(0));
-            billItemsDetailDto.setReferenceNumber(cursor.getString(1));
-            billItemsDetailDto.setTotalAmount(cursor.getDouble(2));
-            billItemsDetailDto.setStatus(cursor.getString(3));
-            billItemsDetailDto.setPaymentMethod(cursor.getString(4));
-            billItemsDetailDto.setCreatedAt(cursor.getString(5));
-            billItemsDetailDto.setCreateTime(cursor.getString(6));
-            billItemsDetailDto.setCustomerName(cursor.getString(7));
-            billItemsDetailDto.setUserName(cursor.getString(8));
-            billItemsDetailDto.setQuantity(cursor.getDouble(9));
-            billItemsDetailDto.setBillItemPrice(cursor.getDouble(10));
-            billItemsDetailDto.setDiscount(cursor.getDouble(11));
-            billItemsDetailDto.setSubItemName(cursor.getString(12));
-            billItemsDetailDto.setItemName(cursor.getString(13));
-
-            billItemsDetailDtoList.add(billItemsDetailDto);
-        }
-
-        cursor.close();
-        db.close();
-        return billItemsDetailDtoList;
-    }
 }

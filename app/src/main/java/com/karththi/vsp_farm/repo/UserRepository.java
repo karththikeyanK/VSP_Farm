@@ -38,11 +38,12 @@ public class UserRepository {
         Cursor cursor = db.query(AppConstant.USER_TABLE, null, "username = ?", new String[]{username}, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             try {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
                 String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
                 cursor.close();
-                return new User(username, name, password, role);
+                return new User(id,username, name, password, role);
             } catch (IllegalArgumentException e) {
                 // Handle the exception here
                 Log.e("UserRepository", "Column does not exist", e);
@@ -56,6 +57,7 @@ public class UserRepository {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String[] columns = {
+                "id",
                 "username",
                 "name",
                 "role"
@@ -65,11 +67,12 @@ public class UserRepository {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("username"));
                 String username = cursor.getString(cursor.getColumnIndexOrThrow("username"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
 
-                User user = new User(username, name,null, role);
+                User user = new User(id,username, name,null, role);
                 userList.add(user);
             } while (cursor.moveToNext());
 

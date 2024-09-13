@@ -39,6 +39,7 @@ public class AppConstant {
     public static final String DEFAULT = "DEFAULT";
 
 
+    public static Integer USER_TABLE_ID =null;
     public static String USER_ID = "";
     public static String USER_NAME = "";
 

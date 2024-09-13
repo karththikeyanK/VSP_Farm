@@ -111,13 +111,7 @@ public class BillService {
         return bills;
     }
 
-    public List<BillItemsDetailDto> getAllBillDtoByDate(String date) {
-        List<BillItemsDetailDto> billItemsDetailDtos = new ArrayList<>();
-        Log.i("BillService", "BillService::getAllBillDtoByDate()::is called");
-        billItemsDetailDtos = billRepository.getAllBillDtoByDate(date);
-        Log.i("BillService", "BillService::getAllBillDtoByDate()::is completed");
-        return billItemsDetailDtos;
-    }
+
 
 
 }
