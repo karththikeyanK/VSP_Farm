@@ -66,4 +66,8 @@ public class TodayReportFacade {
         return billItemService.getSummaryByDate(DateTimeUtils.getCurrentDate());
     }
 
+
+
+
+
 }

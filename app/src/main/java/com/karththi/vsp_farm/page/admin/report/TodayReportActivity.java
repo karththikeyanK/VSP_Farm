@@ -2,6 +2,7 @@ package com.karththi.vsp_farm.page.admin.report;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
@@ -22,6 +23,7 @@ import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.dto.BillSummary;
 import com.karththi.vsp_farm.facade.TodayReportFacade;
 import com.karththi.vsp_farm.helper.AppConstant;
+import com.karththi.vsp_farm.helper.pdf.CreateReport;
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 import com.karththi.vsp_farm.service.BillService;
 
@@ -138,73 +140,100 @@ public class TodayReportActivity extends AppCompatActivity {
 
     }
 
-
+//    private void downloadPdf(){
+//        CreateReport report = new CreateReport();
+//        report.startPage(595, 842); // A4 size
+//
+//// Add header
+//        report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
+//
+//// Add dynamic report title and date
+//        report.addReportTitle("Daily Sales Report", "12-09-2024");
+//
+//// Add table headers
+//        String[] headers = {"Item", "Total Quantity", "Total Discount", "Total Amount"};
+//        int[] colWidths = {150, 100, 100, 150};
+//        report.addTableHeader(headers, colWidths);
+//
+//// Add table rows dynamically
+//        String[] row1 = {"Rice", "100", "10", "9000"};
+//        report.addTableRow(row1, colWidths);
+//
+//// Finish and save the PDF
+//        report.finishReport("VSP_Farm_Report.pdf");
+//
+//    }
+//
     private void downloadPdf() {
-        // Create a new PdfDocument
-        PdfDocument document = new PdfDocument();
+        CreateReport report = new CreateReport();
+        report.startPage(595, 842); // A4 size
 
-        // Get the content view (root layout)
-        View content = findViewById(R.id.reportRootLayout);
+        report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
+        report.addReportTitle("Daily Sales Report", "12-09-2024");
+        report.addTableHeading("Summary");
+        String[] summary_headers = {"Item", "Quantity", "Discount", "Total"};
+        int[] summary_col_width = {150, 100, 100, 150};
+        report.addTableHeader(summary_headers,summary_col_width);
 
-        // Measure the content's actual height and width
-        content.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        int contentHeight = content.getMeasuredHeight();
-        int contentWidth = content.getMeasuredWidth();
-
-        // Define page width and height (A4 size)
-        int pageWidth = 595;
-        int pageHeight = 842;
-        float scale = (float) pageWidth / contentWidth;
-        int scaledContentHeight = (int) (contentHeight * scale);
-
-        int totalPages = (int) Math.ceil((float) scaledContentHeight / pageHeight);
-
-        Paint paint = new Paint();
-        paint.setTextSize(12);
-
-        for (int i = 0; i < totalPages; i++) {
-            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(pageWidth, pageHeight, i + 1).create();
-            PdfDocument.Page page = document.startPage(pageInfo);
-
-            Canvas canvas = page.getCanvas();
-
-            if (i == 0) {
-                canvas.drawText("Today Report", 80, 50, paint); // Only on the first page
-            }
-
-            // Scale the canvas to fit the content width
-            canvas.save();
-            canvas.scale(scale, scale); // Scale the canvas based on calculated scale factor
-
-            // Calculate the portion of the content to draw on this page
-            int yOffset = i * (int) (pageHeight / scale); // Adjust yOffset to account for scaling
-            canvas.translate(0, -yOffset); // Translate the canvas to draw the next portion of content
-
-            // Render the current portion of the layout into the canvas
-            content.draw(canvas);
-
-            canvas.restore();
-
-            // Finish the current page
-            document.finishPage(page);
+        for (BillSummary summary : todayReportFacade.getTodayTotalSummary()) {
+            String[] row = {
+                    summary.getItemName(),
+                    String.valueOf(summary.getTotalQuantity()),
+                    String.valueOf(summary.getTotalDiscount()),
+                    String.format("%.2f", summary.getTotalPrice())
+            };
+            report.addTableRow(row,summary_col_width);
         }
 
-        // Save the document to a file
-        String directoryPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-        File file = new File(directoryPath, "Today Report-" + DateTimeUtils.getCurrentTime() + ".pdf");
+        // Add TOTAL row
+        double totalPrice = 0;
+        double totalDiscount = 0;
 
-        try {
-            document.writeTo(new FileOutputStream(file));
-            Toast.makeText(this, "PDF saved to Downloads", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error saving PDF: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        List<BillSummary> summaryList = todayReportFacade.getTodayTotalSummary();
+        for (BillSummary summary : summaryList) {
+            totalPrice += summary.getTotalPrice();
+            totalDiscount += summary.getTotalDiscount();
         }
 
-        // Close the document
-        document.close();
+        String[] summary_total = {"TOTAL", "==", String.valueOf(totalDiscount), String.format("%.2f", totalPrice)};
+        report.addTableRow(summary_total, summary_col_width);
+
+        report.addTableHeading("Cash Sales");
+        String[] detail_header = {"Item", "Sub Item", "Quantity", "Discount", "Total"};
+        int[] detail_col_width = {100, 150, 80, 80, 120};
+        report.addTableHeader(detail_header, detail_col_width);
+
+        for (BillSummary cashSummary : todayReportFacade.getTodaySummary(AppConstant.CASH)) {
+            String[] row = {
+                    cashSummary.getItemName(),
+                    cashSummary.getSubItemName(),
+                    String.valueOf(cashSummary.getTotalQuantity()),
+                    String.valueOf(cashSummary.getTotalDiscount()),
+                    String.valueOf(cashSummary.getTotalPrice())
+            };
+            report.addTableRow(row, detail_col_width);
+
+        }
+
+        report.addTableHeading("Loan Sales");
+
+
+        report.addTableHeader( detail_header, detail_col_width);
+
+
+        for (BillSummary loanSummary : todayReportFacade.getTodaySummary(AppConstant.LOAN)) {
+            String[] row = {
+                    loanSummary.getItemName(),
+                    loanSummary.getSubItemName(),
+                    String.valueOf(loanSummary.getTotalQuantity()),
+                    String.valueOf(loanSummary.getTotalDiscount()),
+                    String.valueOf(loanSummary.getTotalPrice())
+            };
+            report.addTableRow(row, detail_col_width);
+        }
+
+        String fileName = "VSP_Farm_Report_" + System.currentTimeMillis() + ".pdf";
+        report.finishReport(fileName);
     }
-
 
 }

@@ -80,11 +80,7 @@ The Cashier primarily handles billing and loan payments. The Cashier functionali
       <br>
       <em>Today Report</em>
     </td>
-    <td align="center">
-      <img src="screenshots/cashier_dashboard.jpeg" alt="cashier_dashboard.jpeg" width="200"/>
-      <br>
-      <em>Cashier Dashboard</em>
-    </td>
+    
   </tr>
 </table>
 
@@ -92,6 +88,11 @@ The Cashier primarily handles billing and loan payments. The Cashier functionali
 
 <table align="center">
   <tr>
+    <td align="center">
+      <img src="screenshots/cashier_dashboard.jpeg" alt="cashier_dashboard.jpeg" width="200"/>
+      <br>
+      <em>Cashier Dashboard</em>
+    </td>
     <td align="center">
       <img src="screenshots/billing_page.jpeg" alt="billing_page.jpeg" width="200"/>
       <br>
