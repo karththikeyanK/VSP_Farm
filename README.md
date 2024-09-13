@@ -47,14 +47,76 @@ The Cashier primarily handles billing and loan payments. The Cashier functionali
    https://github.com/karththikeyanK/VSP_Farm.git
    ```
 
+## Screenshots
 
-### ScreenShots
+### Admin
 
-<p align="center">
-  <img src="screenshots%2Flogin_page.jpeg" alt="login_page.jpeg">
-  <br>
-  <em>Login Page</em>
-</p>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/login_page.jpeg" alt="login_page.jpeg" width="200"/>
+      <br>
+      <em>Login Page</em>
+    </td>
+    <td align="center">
+      <img src="screenshots/admin_dashBoard.jpeg" alt="admin_dashboard.jpeg" width="200"/>
+      <br>
+      <em>Admin Dashboard</em>
+    </td>
+    <td align="center">
+      <img src="screenshots/create_user.jpeg" alt="create_user.jpeg" width="200"/>
+      <br>
+      <em>Create User</em>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/addItems.jpeg" alt="add_items.jpeg" width="200"/>
+      <br>
+      <em>Add Items</em>
+    </td>
+    <td align="center">
+      <img src="screenshots/today_report.jpeg" alt="today_report.jpeg" width="200"/>
+      <br>
+      <em>Today Report</em>
+    </td>
+    <td align="center">
+      <img src="screenshots/cashier_dashboard.jpeg" alt="cashier_dashboard.jpeg" width="200"/>
+      <br>
+      <em>Cashier Dashboard</em>
+    </td>
+  </tr>
+</table>
+
+### Cashier
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/billing_page.jpeg" alt="billing_page.jpeg" width="200"/>
+      <br>
+      <em>Billing Page</em>
+    </td>
+    <td align="center">
+      <img src="screenshots/view_bill.jpeg" alt="view_bill.jpeg" width="200"/>
+      <br>
+      <em>View Bills</em>
+    </td>
+    <td align="center">
+      <img src="screenshots/view_details_of_bill.jpeg" alt="view_bill_details.jpeg" width="200"/>
+      <br>
+      <em>View Bill Details</em>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/pay_loan.jpeg" alt="pay_loan.jpeg" width="200"/>
+      <br>
+      <em>Pay Loan</em>
+    </td>
+    <!-- Add more images here if necessary -->
+  </tr>
+</table>
 
 
 // welcome@1234
