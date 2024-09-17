@@ -100,6 +100,7 @@ public class CreateUserActivity extends AppCompatActivity {
             return;
         }
 
+        signupButton.setEnabled(false);
         userService.addUser(new User(0,username, name, password, role));
         finish();
     }

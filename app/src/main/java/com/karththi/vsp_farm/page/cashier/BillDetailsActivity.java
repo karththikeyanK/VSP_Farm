@@ -73,8 +73,7 @@ public class BillDetailsActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         deleteButton = findViewById(R.id.deleteIcon);
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, BillListActivity.class);
-            startActivity(intent);
+            finish();
         });
         deleteButton.setOnClickListener(v -> {
             appConstant.ConfirmAlert(
@@ -101,8 +100,7 @@ public class BillDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, BillListActivity.class);
-        startActivity(intent);
+        finish();
     }
 }
 

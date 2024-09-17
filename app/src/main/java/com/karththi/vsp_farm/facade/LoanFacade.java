@@ -12,6 +12,9 @@ import com.karththi.vsp_farm.page.cashier.PayLoanActivity;
 import com.karththi.vsp_farm.service.LoanPaymentService;
 import com.karththi.vsp_farm.service.LoanService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LoanFacade {
     private LoanService loanService;
     private LoanPaymentService loanPaymentService;
@@ -53,7 +56,7 @@ public class LoanFacade {
         loanPayment.setLoanId(loan.getId());
         loanPaymentService.addLoanPayment(loanPayment);
         Intent intent = new Intent(context, PayLoanActivity.class);
-        appConstant.SuccessAlert("Payment Successful", intent);
+        appConstant.SuccessAlert(AppConstant.SUCCESS,"Payment Successful", intent);
     }
 
 
@@ -68,6 +71,23 @@ public class LoanFacade {
             return loanDto;
         }
         return loanDto;
+    }
+
+
+    public List<LoanDto> getAllLoanDto(){
+        Log.i("LoanFacade","LoanFacade::getAllLoanDto()::is called");
+        List<LoanDto> loanDtoList = new ArrayList<>();
+        List<Loan> loanList = loanService.getAllLoan();
+
+        for (Loan loan : loanList){
+            LoanDto loanDto = new LoanDto();
+            LoanPayment loanPayment = loanPaymentService.getLastPaymentByLoanId(loan.getId());
+            loanDto.setLastPayment(loanPayment);
+            loanDto.setLoan(loan);
+            loanDtoList.add(loanDto);
+        }
+        Log.i("LoanFacade","LoanFacade::getAllLoanDto():: is completed with size "+ loanDtoList.size());
+        return loanDtoList;
     }
 
 

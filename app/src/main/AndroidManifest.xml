@@ -54,8 +54,8 @@
         <activity android:name=".page.cashier.PayLoanActivity"/>
         <activity android:name=".page.admin.report.ReportActivity"/>
         <activity android:name=".page.admin.report.TodayReportActivity"/>
-
-
+        <activity android:name=".page.admin.report.ViewBillActivity"/>
+        <activity android:name=".page.admin.report.TodayDetailReportActivity"/>
 
         <activity
             android:name=".page.PrintActivity"

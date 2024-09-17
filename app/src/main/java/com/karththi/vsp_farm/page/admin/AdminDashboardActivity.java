@@ -16,6 +16,7 @@ import com.karththi.vsp_farm.page.CreateUserActivity;
 import com.karththi.vsp_farm.page.LoginActivity;
 import com.karththi.vsp_farm.page.admin.item.ItemListActivity;
 import com.karththi.vsp_farm.page.admin.report.ReportActivity;
+import com.karththi.vsp_farm.page.admin.report.ViewBillActivity;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
@@ -23,7 +24,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private TextView userName;
 
-    private Button viewReportButton;
+    private Button viewReportButton,viewBillButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +38,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
         userName = findViewById(R.id.userNameTextView);
         userName.setText(AppConstant.USER_NAME);
         viewReportButton = findViewById(R.id.viewReportButton);
+        viewBillButton = findViewById(R.id.viewBillButton);
         viewReportButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, ReportActivity.class);
+            startActivity(intent);
+        });
+
+        viewBillButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ViewBillActivity.class);
             startActivity(intent);
         });
 

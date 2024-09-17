@@ -46,6 +46,8 @@ public class TodayReportActivity extends AppCompatActivity {
 
     private Button downloadPdfButton;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,100 +142,13 @@ public class TodayReportActivity extends AppCompatActivity {
 
     }
 
-//    private void downloadPdf(){
-//        CreateReport report = new CreateReport();
-//        report.startPage(595, 842); // A4 size
-//
-//// Add header
-//        report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
-//
-//// Add dynamic report title and date
-//        report.addReportTitle("Daily Sales Report", "12-09-2024");
-//
-//// Add table headers
-//        String[] headers = {"Item", "Total Quantity", "Total Discount", "Total Amount"};
-//        int[] colWidths = {150, 100, 100, 150};
-//        report.addTableHeader(headers, colWidths);
-//
-//// Add table rows dynamically
-//        String[] row1 = {"Rice", "100", "10", "9000"};
-//        report.addTableRow(row1, colWidths);
-//
-//// Finish and save the PDF
-//        report.finishReport("VSP_Farm_Report.pdf");
-//
-//    }
-//
     private void downloadPdf() {
-        CreateReport report = new CreateReport();
-        report.startPage(595, 842); // A4 size
+        downloadPdfButton.setEnabled(false);
+        todayReportFacade.downloadTodayPdf();
+    }
 
-        report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
-        report.addReportTitle("Daily Sales Report", "12-09-2024");
-        report.addTableHeading("Summary");
-        String[] summary_headers = {"Item", "Quantity", "Discount", "Total"};
-        int[] summary_col_width = {150, 100, 100, 150};
-        report.addTableHeader(summary_headers,summary_col_width);
+    private void addTodayLoanDetails(){
 
-        for (BillSummary summary : todayReportFacade.getTodayTotalSummary()) {
-            String[] row = {
-                    summary.getItemName(),
-                    String.valueOf(summary.getTotalQuantity()),
-                    String.valueOf(summary.getTotalDiscount()),
-                    String.format("%.2f", summary.getTotalPrice())
-            };
-            report.addTableRow(row,summary_col_width);
-        }
-
-        // Add TOTAL row
-        double totalPrice = 0;
-        double totalDiscount = 0;
-
-        List<BillSummary> summaryList = todayReportFacade.getTodayTotalSummary();
-        for (BillSummary summary : summaryList) {
-            totalPrice += summary.getTotalPrice();
-            totalDiscount += summary.getTotalDiscount();
-        }
-
-        String[] summary_total = {"TOTAL", "==", String.valueOf(totalDiscount), String.format("%.2f", totalPrice)};
-        report.addTableRow(summary_total, summary_col_width);
-
-        report.addTableHeading("Cash Sales");
-        String[] detail_header = {"Item", "Sub Item", "Quantity", "Discount", "Total"};
-        int[] detail_col_width = {100, 150, 80, 80, 120};
-        report.addTableHeader(detail_header, detail_col_width);
-
-        for (BillSummary cashSummary : todayReportFacade.getTodaySummary(AppConstant.CASH)) {
-            String[] row = {
-                    cashSummary.getItemName(),
-                    cashSummary.getSubItemName(),
-                    String.valueOf(cashSummary.getTotalQuantity()),
-                    String.valueOf(cashSummary.getTotalDiscount()),
-                    String.valueOf(cashSummary.getTotalPrice())
-            };
-            report.addTableRow(row, detail_col_width);
-
-        }
-
-        report.addTableHeading("Loan Sales");
-
-
-        report.addTableHeader( detail_header, detail_col_width);
-
-
-        for (BillSummary loanSummary : todayReportFacade.getTodaySummary(AppConstant.LOAN)) {
-            String[] row = {
-                    loanSummary.getItemName(),
-                    loanSummary.getSubItemName(),
-                    String.valueOf(loanSummary.getTotalQuantity()),
-                    String.valueOf(loanSummary.getTotalDiscount()),
-                    String.valueOf(loanSummary.getTotalPrice())
-            };
-            report.addTableRow(row, detail_col_width);
-        }
-
-        String fileName = "VSP_Farm_Report_" + System.currentTimeMillis() + ".pdf";
-        report.finishReport(fileName);
     }
 
 }

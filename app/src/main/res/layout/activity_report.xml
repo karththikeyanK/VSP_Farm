@@ -30,6 +30,17 @@
         android:text="Back"
         android:textColor="@android:color/black" />
 
+    <TextView
+        android:id="@+id/subHeading1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today Reports"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_gravity="left"
+        android:layout_marginBottom="24dp"/>
+
     <Button
         android:id="@+id/todayReportButton"
         android:layout_width="match_parent"
@@ -41,15 +52,18 @@
         android:textColor="@android:color/white"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Button for Get A Report -->
     <Button
-        android:id="@+id/getReportButton"
+        android:id="@+id/todayDetailReportButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Get A Report"
+        android:text="Today Details Report"
         android:textSize="18sp"
         android:padding="12dp"
         android:background="@drawable/button_background"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+
+
 
 </LinearLayout>

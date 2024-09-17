@@ -61,7 +61,14 @@
                     android:textSize="16sp"
                     android:gravity="center" />
 
-
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Deleted"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:gravity="center" />
             </TableRow>
             <TableRow
                 android:layout_width="match_parent"
@@ -100,16 +107,103 @@
                     android:textStyle="bold"
                     android:gravity="center" />
 
+                <TextView
+                    android:id="@+id/delete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0.00"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
             </TableRow>
         </TableLayout>
 
+        <!-- Date Range Selection -->
+        <LinearLayout
+            android:id="@+id/dateRangeLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tableLayout"
+            android:paddingHorizontal="50dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal">
+
+            <!-- Date1 Button -->
+            <Button
+                android:id="@+id/date1Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:textColor="@android:color/black"
+                android:text="Select Date 1" />
+
+            <!-- Separator Text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" to "
+                android:gravity="center"
+                android:layout_marginHorizontal="10dp"/>
+
+            <!-- Date2 Button -->
+            <Button
+                android:id="@+id/date2Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:textColor="@android:color/black"
+                android:text="Select Date 2" />
+        </LinearLayout>
+
+        <!-- Filter Buttons -->
+        <LinearLayout
+            android:id="@+id/filterButtonsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dateRangeLayout"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <!-- All Button -->
+            <Button
+                android:id="@+id/allButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All"
+                android:layout_marginEnd="10dp" />
+
+            <!-- Cash Button -->
+            <Button
+                android:id="@+id/cashButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cash"
+                android:layout_marginEnd="10dp" />
+
+            <!-- Loan Button -->
+            <Button
+                android:id="@+id/loanButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Loan"
+                android:layout_marginEnd="10dp" />
+
+            <!-- Deleted Button -->
+            <Button
+                android:id="@+id/deletedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deleted" />
+        </LinearLayout>
 
         <!-- RecyclerView -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tableLayout"
+            android:layout_below="@id/filterButtonsLayout"
             android:layout_margin="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </RelativeLayout>

@@ -63,6 +63,11 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
             holder.paymentMethod.setTextColor(Color.parseColor("#b2102b"));
         }
 
+        if (bill.getStatus().equals(AppConstant.DELETED)){
+            holder.deleteStatus.setVisibility(View.VISIBLE);
+            holder.deleteStatus.setText(bill.getStatus());
+        }
+
         Log.i("BillSatus:",bill.getStatus());
 
 
@@ -86,7 +91,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
     }
 
     class BillViewHolder extends RecyclerView.ViewHolder {
-        TextView referenceNumber, totalAmount, customerName, dateTime, paymentMethod;
+        TextView referenceNumber, totalAmount, customerName, dateTime, paymentMethod,deleteStatus;
 
         BillViewHolder(View itemView) {
             super(itemView);
@@ -95,6 +100,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
             customerName = itemView.findViewById(R.id.customer_name);
             dateTime = itemView.findViewById(R.id.date_time);
             paymentMethod = itemView.findViewById(R.id.paymentMethod);
+            deleteStatus = itemView.findViewById(R.id.deleteStatus);
 
         }
     }

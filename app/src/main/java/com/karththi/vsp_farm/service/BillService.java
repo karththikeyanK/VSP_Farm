@@ -111,6 +111,14 @@ public class BillService {
         return bills;
     }
 
+    public List<Bill> getBillsBetweenDates(String startDate, String endDate){
+        Log.i("BillService","BillService::getBillsBetweenDates():: is called..");
+        List<Bill> billList = new ArrayList<>();
+        billList = billRepository.getBillsBetweenDates(startDate,endDate);
+        Log.i("BillService","BillService::getBillsBetweenDates()::is completed with size: "+billList.size());
+        return billList;
+    }
+
 
 
 

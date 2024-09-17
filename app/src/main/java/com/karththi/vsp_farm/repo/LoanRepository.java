@@ -48,7 +48,14 @@ public class LoanRepository {
 
     public Loan getLoanById(int id) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(AppConstant.LOAN_TABLE, null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        Cursor cursor = null;
+
+        String sql = "SELECT l.id,l.customer_id,l.remaining_amount,l.updated_date,c.name "+
+                "FROM "+AppConstant.LOAN_TABLE+" l "+
+                "INNER JOIN "+AppConstant.CUSTOMER_TABLE+" c ON l.customer_id = c.id "+
+                "WHERE l.id = ? ";
+
+        cursor = db.rawQuery(sql, new String[]{String.valueOf(id)});
         Loan loan = null;
         if (cursor.moveToFirst()) {
             loan = new Loan();
@@ -56,6 +63,7 @@ public class LoanRepository {
             loan.setCustomerId(cursor.getInt(1));
             loan.setRemainingAmount(cursor.getDouble(2));
             loan.setUpdatedDate(cursor.getString(3));
+            loan.setCustomerName(cursor.getString(4));
         }
         cursor.close();
         db.close();
@@ -65,7 +73,13 @@ public class LoanRepository {
     public List<Loan> getAllLoans(){
         List<Loan> loans = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(AppConstant.LOAN_TABLE, null, null, null, null, null, null);
+        Cursor cursor = null;
+
+        String sql = "SELECT l.id,l.customer_id,l.remaining_amount,l.updated_date,c.name "+
+                "FROM "+AppConstant.LOAN_TABLE+" l "+
+                "INNER JOIN "+AppConstant.CUSTOMER_TABLE+" c ON l.customer_id = c.id ";
+
+        cursor = db.rawQuery(sql, null);
         if (cursor.moveToFirst()) {
             do {
                 Loan loan = new Loan();
@@ -73,6 +87,7 @@ public class LoanRepository {
                 loan.setCustomerId(cursor.getInt(1));
                 loan.setRemainingAmount(cursor.getDouble(2));
                 loan.setUpdatedDate(cursor.getString(3));
+                loan.setCustomerName(cursor.getString(4));
                 loans.add(loan);
             } while (cursor.moveToNext());
         }

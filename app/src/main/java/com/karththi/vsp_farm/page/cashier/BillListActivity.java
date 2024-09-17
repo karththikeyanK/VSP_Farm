@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,16 +31,26 @@ public class BillListActivity extends AppCompatActivity {
 
     private Button backButton;
 
+    private double total, totalCash, totalLoan;
 
+    private TextView totalT,cashT,loanT;
+
+    private AppConstant appConstant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill_list);
 
+
+        totalT = findViewById(R.id.total);
+        cashT = findViewById(R.id.cash);
+        loanT = findViewById(R.id.loan);
+
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         billService = new BillService(this);
+        appConstant = new AppConstant(this);
         backButton = findViewById(R.id.backButton);
         loadBills();
 
@@ -47,6 +58,8 @@ public class BillListActivity extends AppCompatActivity {
             Intent intent = new Intent(this, CashierDashBoard.class);
             startActivity(intent);
         });
+
+
 
     }
 
@@ -65,7 +78,17 @@ public class BillListActivity extends AppCompatActivity {
                 if (bill.getStatus().equals(AppConstant.MODIFIED_ORIGINAL) || bill.getStatus().equals(AppConstant.DELETED)) {
                     iterator.remove(); // Safe removal
                 }
+                total += bill.getTotalAmount();
+                if (bill.getPaymentMethod().equals(AppConstant.CASH)){
+                    totalCash += bill.getTotalAmount();
+                }
+
+                if (bill.getPaymentMethod().equals(AppConstant.LOAN)){
+                    totalLoan += bill.getTotalAmount();
+                }
             }
+
+            addNewRow(total,totalCash,totalLoan);
 
             // Check if the list is now empty after removing bills
             if (bills.isEmpty()) {
@@ -78,6 +101,12 @@ public class BillListActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No bills found", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void addNewRow(double total, double cash, double loan) {
+        totalT.setText(appConstant.formatAmount(total));
+        cashT.setText(appConstant.formatAmount(cash));
+        loanT.setText(appConstant.formatAmount(loan));
     }
 
 

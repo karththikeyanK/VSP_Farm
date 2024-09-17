@@ -11,7 +11,7 @@ import com.karththi.vsp_farm.page.admin.AdminDashboardActivity;
 
 public class ReportActivity extends AppCompatActivity {
 
-    private Button backButton,todayReportButton;
+    private Button backButton,todayReportButton,todayDetailReportButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +28,14 @@ public class ReportActivity extends AppCompatActivity {
             Intent intent = new Intent(this, TodayReportActivity.class);
             startActivity(intent);
         });
+
+        todayDetailReportButton = findViewById(R.id.todayDetailReportButton);
+        todayDetailReportButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TodayDetailReportActivity.class);
+            startActivity(intent);
+        });
+
+
     }
 
     @Override

@@ -7,15 +7,12 @@ public class LoanDto {
     private Loan loan;
     private LoanPayment lastPayment;
 
-    private String customerName;
-
     public LoanDto() {
     }
 
-    public LoanDto(Loan loan, LoanPayment lastPayment, String customerName) {
+    public LoanDto(Loan loan, LoanPayment lastPayment) {
         this.loan = loan;
         this.lastPayment = lastPayment;
-        this.customerName = customerName;
     }
 
 
@@ -35,11 +32,4 @@ public class LoanDto {
         this.lastPayment = lastPayment;
     }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
 }

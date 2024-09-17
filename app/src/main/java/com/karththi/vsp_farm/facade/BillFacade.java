@@ -46,15 +46,6 @@ public class BillFacade {
 
     public void addBill(List<BillItem> billItems,boolean isLoan,int customerId, SaveBill saveBill) {
         Log.i("BillFacade", "BillFacade::addBill()::is called");
-        if (billItems == null && billItems.size() == 0) {
-            appConstant.ErrorAlert("Error", "Please add items to the bill");
-            return;
-        }
-
-        if (customerId == 0) {
-            appConstant.ErrorAlert("Error", "Please select a customer");
-            return;
-        }
 
         double totalAmount = 0;
 

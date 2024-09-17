@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.SubItem;
 import com.karththi.vsp_farm.service.SubItemService;
 
@@ -23,6 +24,7 @@ public class EditSubItemActivity extends AppCompatActivity {
     private SubItemService subItemService;
     private SubItem subItem;
 
+    private AppConstant appConstant;
     private Button backButton;
 
     @Override
@@ -35,6 +37,7 @@ public class EditSubItemActivity extends AppCompatActivity {
         updateSubItemButton = findViewById(R.id.updateSubItemButton);
 
         subItemService = new SubItemService(this);
+        appConstant = new AppConstant(this);
 
         int subItemId = getIntent().getIntExtra("SUB_ITEM_ID", -1);
 
@@ -58,10 +61,10 @@ public class EditSubItemActivity extends AppCompatActivity {
 
                 Double subItemPrice = Double.parseDouble(subItemPriceStr);
 
-                subItem.setSubItemName(subItemName);
-                subItem.setPrice(subItemPrice);
-
-                subItemService.update(subItem);
+                SubItem updateSubItem = new SubItem();
+                updateSubItem.setSubItemName(subItemName);
+                updateSubItem.setPrice(subItemPrice);
+                subItemService.update(updateSubItem,subItem);
 
                 Toast.makeText(EditSubItemActivity.this, "Sub-Item updated", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(EditSubItemActivity.this, SubItemListActivity.class);

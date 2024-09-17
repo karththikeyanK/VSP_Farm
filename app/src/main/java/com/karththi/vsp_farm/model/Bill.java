@@ -2,7 +2,6 @@ package com.karththi.vsp_farm.model;
 
 public class Bill {
     private int id;
-
     private String referenceNumber;
     private Double totalAmount;
     private int customerId;

@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.function.Function;
 
@@ -37,6 +41,8 @@ public class AppConstant {
     public static final String LOAN = "LOAN";
     public static final String CASH = "CASH";
     public static final String DEFAULT = "DEFAULT";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String ERROR = "ERROR";
 
 
     public static Integer USER_TABLE_ID =null;
@@ -68,9 +74,9 @@ public class AppConstant {
         builder.show();
     }
 
-    public void SuccessAlert(String message, Intent intent) {
+    public void SuccessAlert(String type,String message, Intent intent) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Success");
+        builder.setTitle(type);
         builder.setMessage(message);
         builder.setPositiveButton("OK", (dialog, which) -> context.startActivity(intent));
         builder.show();
@@ -122,9 +128,6 @@ public class AppConstant {
 
 
     public String generateReferenceNumber() {
-        // Generate a three-digit random number
-
-
         // Get the counter from Shared Preferences
         SharedPreferences prefs = context.getSharedPreferences("prefs", MODE_PRIVATE);
         int counter = prefs.getInt("counter", 1001);
@@ -134,9 +137,22 @@ public class AppConstant {
         editor.putInt("counter", counter + 1);
         editor.apply();
 
-        // Combine the random number and counter to form the reference number
-        String referenceNumberStr = DateTimeUtils.getCurrentDate() +"   "+ String.valueOf(counter);
+        // Get the current date and format it as ddMMyy
+        Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("ddMMyy");
+        String formattedDate = formatter.format(date);
+
+        // Combine the formatted date and counter to form the reference number
+        String referenceNumberStr = formattedDate + " " + String.valueOf(counter);
         return referenceNumberStr;
+    }
+
+    public String formatAmount(double total) {
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        nf.setMinimumFractionDigits(2);
+        nf.setMaximumFractionDigits(2);
+        String formattedTotal = nf.format(total);
+        return formattedTotal.replace(',', ' ');
     }
 
 

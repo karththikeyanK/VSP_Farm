@@ -170,9 +170,9 @@ public class PayLoanActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter a payment amount.", Toast.LENGTH_SHORT).show();
             return;
         }
-
         double paymentAmount = Double.parseDouble(paymentAmountStr);
         if (CUSTOMER_ID != 0) {
+            payLoanButton.setEnabled(false);
             loanFacade.handleLoanPayment(CUSTOMER_ID, paymentAmount);
             Toast.makeText(this, "Payment processed successfully.", Toast.LENGTH_SHORT).show();
         } else {

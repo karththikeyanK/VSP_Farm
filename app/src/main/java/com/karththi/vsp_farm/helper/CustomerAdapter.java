@@ -58,6 +58,11 @@ public class CustomerAdapter extends ArrayAdapter<Customer> {
         mobileTextView.setText(customer.getMobile());
         descriptionTextView.setText(customer.getDescription());
 
+        if (customer.getName().equals(AppConstant.DEFAULT)){
+            deleteButton.setEnabled(false);
+            editButton.setEnabled(false);
+        }
+
         // Set click listeners
         editButton.setOnClickListener(v -> {
             Intent intent = new Intent(context, EditCustomerActivity.class);

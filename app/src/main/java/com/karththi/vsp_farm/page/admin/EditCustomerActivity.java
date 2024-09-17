@@ -55,7 +55,10 @@ public class EditCustomerActivity extends AppCompatActivity {
             String name = nameEditText.getText().toString();
             String mobile = mobileEditText.getText().toString();
             String description = descriptionEditText.getText().toString();
-
+            if (name.isEmpty()) {
+                Toast.makeText(EditCustomerActivity.this, "Please fill the name field!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             customerService.updateCustomer(customerId, name, description, mobile);
         });
 

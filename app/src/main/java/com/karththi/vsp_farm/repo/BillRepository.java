@@ -367,5 +367,45 @@ public class BillRepository {
         return bills;
     }
 
+    public List<Bill> getBillsBetweenDates(String startDate, String endDate) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        // Modify query to fetch bills between two dates using BETWEEN clause
+        Cursor cursor = db.query(DbHelper.BILL_TABLE,
+                new String[]{"id", "total_amount", "customer_id", "user_id", "status", "payment_methode",
+                        "created_at", "create_time", "updated_at", "update_time", "modified_by", "reference_number"},
+                "created_at BETWEEN ? AND ?",
+                new String[]{startDate, endDate},
+                null, null, null);
+
+        List<Bill> bills = new ArrayList<>();
+
+        if (cursor.moveToFirst()) {
+            do {
+                Bill bill = new Bill();
+                bill.setId(cursor.getInt(0));
+                bill.setTotalAmount(cursor.getDouble(1));
+                bill.setCustomerId(cursor.getInt(2));
+                bill.setUserId(cursor.getInt(3));
+                bill.setStatus(cursor.getString(4));
+                bill.setPaymentMethod(cursor.getString(5));
+                bill.setCreatedDate(cursor.getString(6));
+                bill.setCreateTime(cursor.getString(7));
+                bill.setUpdatedDate(cursor.getString(8));
+                bill.setUpdateTime(cursor.getString(9));
+                bill.setModifiedBy(cursor.getString(10));
+                bill.setReferenceNumber(cursor.getString(11));
+
+                // Add the bill to the list
+                bills.add(bill);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return bills; // Return the list of bills within the date range
+    }
+
 
 }

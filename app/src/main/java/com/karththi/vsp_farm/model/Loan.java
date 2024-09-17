@@ -6,6 +6,8 @@ public class Loan {
     private Double remainingAmount;
     private String updatedDate;
 
+    private String customerName;
+
     public Loan() {
     }
 
@@ -14,6 +16,14 @@ public class Loan {
         this.customerId = customerId;
         this.remainingAmount = remainingAmount;
         this.updatedDate = updatedDate;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     public int getId() {

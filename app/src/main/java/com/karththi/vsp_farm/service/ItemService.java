@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.Item;
 import com.karththi.vsp_farm.model.Measurement;
 import com.karththi.vsp_farm.page.admin.item.ItemListActivity;
@@ -20,9 +21,12 @@ public class ItemService {
 
     private Context context;
 
+    AppConstant appConstant;
+
     private ItemRepository itemRepository;
     public ItemService(Context context) {
         this.context = context;
+        appConstant = new AppConstant(context);
         itemRepository = new ItemRepository(context);
     }
 
@@ -30,7 +34,7 @@ public class ItemService {
         Log.i("ItemService", "ItemService::addItem():: is called");
         if (itemRepository.isItemExists(item.getName())) {
             Log.i("ItemService", "ItemService::addItem():: item already exists");
-            Toast.makeText(context, "Item already exists with name : "+ item.getName(), Toast.LENGTH_SHORT).show();
+            appConstant.ErrorAlert(AppConstant.ERROR,"Item already exist with the name: "+item.getName());
             return;
         }
         try{
@@ -47,9 +51,9 @@ public class ItemService {
 
     public void update(String name, Measurement measurement, Drawable itemImageView, Item item){
         Log.i("ItemService", "ItemService::update():: is called");
-        if (itemRepository.isItemExists(name)) {
+        if (itemRepository.isItemExists(name) && !item.getName().equals(name)) {
             Log.i("ItemService", "ItemService::addItem():: item already exists");
-            Toast.makeText(context, "Item already exists with name : "+ name, Toast.LENGTH_SHORT).show();
+            appConstant.ErrorAlert(AppConstant.ERROR,"Item already exist with the name: "+item.getName());
             return;
         }
         item.setName(name);

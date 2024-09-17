@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.Item;
 import com.karththi.vsp_farm.model.Measurement;
 import com.karththi.vsp_farm.service.ItemService;
@@ -36,12 +37,16 @@ public class EditItemActivity extends AppCompatActivity {
 
     private Button backButton;
 
+    private AppConstant appConstant;
+
     private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
+
+        appConstant = new AppConstant(this);
 
         itemNameEditText = findViewById(R.id.itemNameEditText);
         measurementSpinner = findViewById(R.id.measurementSpinner);
@@ -105,7 +110,10 @@ public class EditItemActivity extends AppCompatActivity {
     private void saveItem() {
         String name = itemNameEditText.getText().toString();
         Measurement measurement = (Measurement) measurementSpinner.getSelectedItem();
-
+        if (name.isEmpty()){
+            appConstant.ErrorAlert("Error", "Please fill the name!");
+            return;
+        }
         itemService.update(name, measurement, itemImageView.getDrawable(), item);
     }
 

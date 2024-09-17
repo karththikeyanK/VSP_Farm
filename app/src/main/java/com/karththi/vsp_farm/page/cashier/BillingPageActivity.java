@@ -72,6 +72,8 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private int customerId;
 
+    private Customer selectedCus;
+
     private BillFacade billFacade;
 
     private int billId = 0;
@@ -111,11 +113,22 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
+                selectedCus =selectedCustomer;
                 if (!selectedCustomer.getName().equals("DEFAULT")) {
                     loanButton.setVisibility(View.VISIBLE);
                 }
-            }
 
+                if (selectedCustomer.equals(null) || selectedCustomer == null){
+                    appConstant.ErrorAlert("Error", "Please select a customer");
+                    return;
+                }
+                customerId = selectedCustomer.getId();
+                if (customerId ==0 ){
+                    appConstant.ErrorAlert("Error", "Please select a customer");
+                    return;
+                }
+
+            }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -192,7 +205,6 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         Customer selectedCustomer = (Customer) customerSpinner.getSelectedItem();
         if (selectedCustomer.getName().equals("DEFAULT")) {
             itemDiscount.setEnabled(false);
-            customerId = selectedCustomer.getId();
         }
 
         updateRowOnFocusChange(itemPrice, itemDiscount, itemQuantity, itemTotal,billId );
@@ -227,8 +239,8 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
                 boolean isDefaultCustomer = selectedCustomer.getName().equals("DEFAULT");
+                selectedCus = selectedCustomer;
                 customerId = selectedCustomer.getId();
-
                 if (isDefaultCustomer) {
                     loanButton.setVisibility(View.GONE);
                 } else {
@@ -273,7 +285,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
                 itemQuantity.setText(String.format("%.3f", qty));
                 billItem.setPrice(total);
                 billItem.setQuantity(Double.parseDouble(String.format("%.3f", qty)));
-                billItem.setDiscount(discount);
+                billItem.setDiscount(Double.parseDouble(String.format("%.3f", discount)));
                 updateBillItem(billItem, billId);
                 updateTotalAmount();
             }
@@ -288,7 +300,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
                 itemTotal.setText(String.format("%.2f", total));
                 billItem.setPrice(total);
                 billItem.setQuantity(Double.parseDouble(String.format("%.3f", qty)));
-                billItem.setDiscount(discount);
+                billItem.setDiscount(Double.parseDouble(String.format("%.3f", discount)));
                 updateBillItem(billItem, billId);
                 updateTotalAmount();
             }
@@ -303,7 +315,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
                 itemTotal.setText(String.format("%.2f", total));
                 billItem.setPrice(total);
                 billItem.setQuantity(Double.parseDouble(String.format("%.3f", qty)));
-                billItem.setDiscount(discount);
+                billItem.setDiscount(Double.parseDouble(String.format("%.3f", discount)));
                 updateBillItem(billItem, billId);
                 updateTotalAmount();
             }
@@ -359,26 +371,37 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             return;
         }
 
-        if (billItems.size() == 0) {
-            appConstant.ErrorAlert("Error", "Please add items to the bill");
-            return;
-        }
-
         if(balance < 0){
             appConstant.ErrorAlert("Error", "Amount paid is less than the total amount");
             return;
         }
-
-        Toast.makeText(this, "Bill printed successfully!", Toast.LENGTH_SHORT).show();
+        if (customerId == 0) {
+            appConstant.ErrorAlert("Error", "Please select a customer");
+            return;
+        }
+        if (billItems == null || billItems.isEmpty()) {
+            appConstant.ErrorAlert("Error", "Please add items to the bill");
+            return;
+        }
+        printBillButton.setEnabled(false);
         billFacade.addBill(billItems, false, customerId, this);
     }
 
     private void LoanButtonClick(){
-        // Implement loan logic here
-        if (billItems.size() == 0) {
+        if (selectedCus.getName().equals(AppConstant.DEFAULT)){
+            Intent intent = new Intent(BillingPageActivity.this,BillingPageActivity.class);
+            appConstant.SuccessAlert(AppConstant.ERROR,"Please Add items Again",intent);
+            return;
+        }
+        if (customerId == 0) {
+            appConstant.ErrorAlert("Error", "Please select a customer");
+            return;
+        }
+        if (billItems == null || billItems.isEmpty()) {
             appConstant.ErrorAlert("Error", "Please add items to the bill");
             return;
         }
+        loanButton.setEnabled(false);
         isLoan =true;
         billFacade.addBill(billItems, true, customerId, this);
     }

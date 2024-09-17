@@ -166,7 +166,7 @@ public class BillItemRepository {
                 "    sub.name AS sub_item_name," +
                 "    it.name AS item_name," +
                 "    SUM(bi.quantity) AS total_quantity," +
-                "    SUM(bi.price * bi.quantity) AS total_price," +
+                "    SUM(bi.price ) AS total_price," +
                 "    SUM(bi.discount*bi.quantity) AS total_discount " +
                 "FROM "+AppConstant.BILL_ITEM_TABLE+" bi "+
                 "INNER JOIN " +
@@ -222,7 +222,7 @@ public class BillItemRepository {
         String sql = "SELECT " +
                 "    it.name AS item_name, " +
                 "    SUM(bi.quantity) AS total_quantity, " +
-                "    SUM(bi.price * bi.quantity) AS total_price, " +
+                "    SUM(bi.price ) AS total_price, " +
                 "    SUM(bi.discount * bi.quantity) AS total_discount " +
                 "FROM " + AppConstant.BILL_ITEM_TABLE + " bi " +
                 "INNER JOIN " +

@@ -38,7 +38,7 @@ public class CustomerService {
         customerRepository.addCustomer(customer);
         Log.i("CustomerService", "CustomerService::createCustomer()::Customer created successfully");
         Intent intent = new Intent(context, CustomerListActivity.class);
-        appConstant.SuccessAlert("Customer created successfully", intent);
+        appConstant.SuccessAlert(AppConstant.SUCCESS,"Customer created successfully", intent);
     }
 
     public void updateCustomer(int id, String name, String mobile, String description) {
@@ -53,7 +53,7 @@ public class CustomerService {
         customerRepository.updateCustomer(customer);
         Log.i("CustomerService", "CustomerService::updateCustomer()::Customer updated successfully");
         Intent intent = new Intent(context, CustomerListActivity.class);
-        appConstant.SuccessAlert("Customer updated successfully", intent);
+        appConstant.SuccessAlert(AppConstant.SUCCESS,"Customer updated successfully", intent);
     }
 
     public void deleteCustomer(int id) {
@@ -61,7 +61,7 @@ public class CustomerService {
         customerRepository.deleteCustomer(id);
         Log.i("CustomerService", "CustomerService::deleteCustomer()::Customer deleted successfully");
         Intent intent = new Intent(context, CustomerListActivity.class);
-        appConstant.SuccessAlert("Customer deleted successfully", intent);
+        appConstant.SuccessAlert(AppConstant.SUCCESS,"Customer deleted successfully", intent);
 
     }
 

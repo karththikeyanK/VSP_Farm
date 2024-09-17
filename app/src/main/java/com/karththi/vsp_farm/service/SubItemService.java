@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.SubItem;
 import com.karththi.vsp_farm.repo.SubItemRepository;
 
@@ -12,11 +13,13 @@ import java.util.List;
 public class SubItemService {
     private Context context;
     private SubItemRepository subItemRepository;
+    private AppConstant appConstant;
 
     private static final String TAG = "SubItemService";
 
     public SubItemService(Context context) {
         this.context = context;
+        appConstant = new AppConstant(context);
         this.subItemRepository = new SubItemRepository(context);
     }
 
@@ -24,7 +27,7 @@ public class SubItemService {
         Log.d(TAG, TAG+"::create()::Adding sub item");
         if (subItemRepository.isSubItemExists(subItem.getSubItemName())) {
             Log.d(TAG, TAG+"::create()::Sub item already exists");
-            Toast.makeText(context, "Sub item already exists with name: "+subItem.getSubItemName(), Toast.LENGTH_SHORT).show();
+            appConstant.ErrorAlert(AppConstant.ERROR,"Sub Item already exist with the name: "+subItem.getSubItemName());
             return;
         }
         try {
@@ -47,8 +50,11 @@ public class SubItemService {
         Log.d(TAG, TAG+"::delete()::Sub item deleted successfully");
     }
 
-    public void update(SubItem subItem) {
+    public void update(SubItem subItem, SubItem old) {
         Log.d(TAG, TAG+"::update()::Updating sub item");
+        if(isExistByName(subItem.getSubItemName())  && !old.getSubItemName().equals(subItem.getSubItemName())){
+            appConstant.ErrorAlert(AppConstant.ERROR, "Sub Item already exist with the name: " + subItem.getSubItemName());
+        }
         subItemRepository.updateSubItem(subItem);
         Log.d(TAG, TAG+"::update()::Sub item updated successfully");
     }
@@ -58,6 +64,10 @@ public class SubItemService {
         SubItem subItem = subItemRepository.getSubItemById(id);
         Log.d(TAG, TAG + "::getSubItemById()::Sub item fetched successfully");
         return subItem;
+    }
+
+    public boolean isExistByName(String name){
+        return subItemRepository.isSubItemExists(name);
     }
 
 }

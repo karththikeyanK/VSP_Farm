@@ -57,7 +57,6 @@ public class AddSubItemActivity extends AppCompatActivity {
 
                 subItemService.create(subItem);
 
-                Toast.makeText(AddSubItemActivity.this, "Sub-Item added", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(AddSubItemActivity.this, SubItemListActivity.class);
                 intent.putExtra("ITEM_ID", itemId);
                 startActivity(intent);

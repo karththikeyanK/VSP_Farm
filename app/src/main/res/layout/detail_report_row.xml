@@ -1,0 +1,151 @@
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:padding="8dp"
+    android:layout_margin="4dp"
+    android:layout_gravity="center">
+
+    <!-- Date Column -->
+    <TextView
+        android:id="@+id/dateColumn"
+        android:text="Date"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- User Column -->
+    <TextView
+        android:id="@+id/userColumn"
+        android:text="User"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Item Column -->
+    <TextView
+        android:id="@+id/itemColumn"
+        android:text="Item"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Sub Item Column -->
+    <TextView
+        android:id="@+id/subItemColumn"
+        android:text="Sub Item"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Reference Number Column -->
+    <TextView
+        android:id="@+id/referenceNumberColumn"
+        android:text="Ref Num"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Customer Column -->
+    <TextView
+        android:id="@+id/customerColumn"
+        android:text="Customer"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Payment Column -->
+    <TextView
+        android:id="@+id/paymentColumn"
+        android:text="Payment"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <TextView
+        android:id="@+id/statusColumn"
+        android:text="Status"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Discount Column -->
+    <TextView
+        android:id="@+id/discountColumn"
+        android:text="Discount"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Quantity Column -->
+    <TextView
+        android:id="@+id/quantityColumn"
+        android:text="Quantity"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+    <!-- Price Column -->
+    <TextView
+        android:id="@+id/priceColumn"
+        android:text="Price"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="10sp"
+        android:padding="8dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/table_row_border"/>
+
+</TableRow>

@@ -126,6 +126,18 @@
                 android:text="View Items"
                 android:onClick="viewItems" />
 
+            <TextView
+                style="@style/SectionTextView"
+                android:id="@+id/billSectionTextView"
+                android:text="Bills Management"
+                android:layout_marginTop="16dp" />
+
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewBillButton"
+                android:text="View Bills"
+                android:layout_marginTop="8dp" />
+
             <!-- Reports Section -->
             <TextView
                 style="@style/SectionTextView"

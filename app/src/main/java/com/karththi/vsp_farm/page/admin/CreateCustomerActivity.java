@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.page.admin.item.EditSubItemActivity;
 import com.karththi.vsp_farm.service.CustomerService;
 
 public class CreateCustomerActivity extends AppCompatActivity {
@@ -53,6 +54,11 @@ public class CreateCustomerActivity extends AppCompatActivity {
                 String name = nameEditText.getText().toString();
                 String mobile = mobileEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
+
+                if (name.isEmpty()) {
+                    Toast.makeText(CreateCustomerActivity.this, "Please fill the name field!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 customerService.createCustomer(name, mobile, description);
             }
