@@ -41,9 +41,6 @@ public class TodayReportFacade {
     private  CreateReport report;
 
 
-
-
-
     public TodayReportFacade(Context context) {
         this.context = context;
         billItemService = new BillItemService(context);
@@ -78,11 +75,9 @@ public class TodayReportFacade {
     }
 
     public void downloadTodayPdf() {
-
         report.startPage(595, 842); // A4 size
-
         report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
-        report.addReportTitle("Daily Sales Report", "12-09-2024");
+        report.addReportTitle("Daily Sales Report", DateTimeUtils.getCurrentDate());
         report.addTableHeading("Summary");
         String[] summary_headers = {"Item", "Quantity", "Discount", "Total"};
         int[] summary_col_width = {150, 100, 100, 150};
@@ -168,6 +163,80 @@ public class TodayReportFacade {
         String fileName = "VSP_Farm_Report_" + DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() + ".pdf";
         report.finishReport(fileName);
     }
+
+
+    public void downloadTodayDetailPdf(double total, double cash, double loan, double delete, List<BillItemsDetailDto> bills, List<BillItemsDetailDto> deletedBillItemList){
+        report.startPage(842, 595); // A4 size
+
+        report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
+        report.addReportTitle("Daily Sales Report", DateTimeUtils.getCurrentDate() + " "+DateTimeUtils.getCurrentTime());
+        report.addTableHeading("Summary");
+        String[] summary_headers = {"Total", "Cash", "Loan", "Delete"};
+        int[] summary_col_width = {120, 120, 120, 120};
+        report.addTableHeader(summary_headers,summary_col_width,0);
+        String[] summary ={formatAmount(total),formatAmount(cash),formatAmount(loan),formatAmount(delete)};
+        report.addTableRow(summary,summary_col_width,0);
+
+        report.addSpace();
+
+        createTable(report,bills,"All Bills Without Deleted Bills");
+        createTable(report,deletedBillItemList,"Deleted Bills");
+        String fileName = "VSP_Detail_Report_" + DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() + ".pdf";
+        report.finishReport(fileName);
+    }
+
+
+    private void createTable(CreateReport report, List<BillItemsDetailDto> bills, String heading) {
+        if (bills == null || bills.isEmpty()) {
+            // Early return if no bills are present
+            return;
+        }
+
+        int billId = -1;  // Set to -1 for the initial check since bill IDs should be positive
+        boolean isAlternate = false;  // Track row background alternation
+
+        // Add table heading and headers
+        report.addTableHeading(heading);
+        String[] detailHeaders = {"Date", "Time", "Customer", "Ref No", "Item", "Sub Item", "Discount", "Quantity", "Price", "Payment", "Status", "User"};
+        int[] detailColWidth = {80, 60, 80, 80, 60, 80, 60, 60, 70, 50, 50, 50};
+        report.addTableHeader(detailHeaders, detailColWidth, 10);
+
+        // Iterate over bills and add rows with background logic
+        for (BillItemsDetailDto dto : bills) {
+            // Switch the background when bill ID changes
+            if (billId != dto.getBillId()) {
+                isAlternate = !isAlternate;  // Alternate background color on bill change
+                billId = dto.getBillId();    // Update the current bill ID
+            }
+
+            // Set the background for the row based on the alternation
+            if (isAlternate) {
+                report.changeBgColour(detailColWidth);
+            } else {
+                report.removeBg(detailColWidth);
+            }
+
+            // Prepare the row data
+            String[] row = {
+                    dto.getCreatedAt(),
+                    dto.getCreateTime(),
+                    dto.getCustomerName(),
+                    dto.getReferenceNumber(),
+                    dto.getItemName(),
+                    dto.getSubItemName(),
+                    formatAmount(dto.getDiscount()),
+                    String.valueOf(dto.getQuantity()),
+                    String.valueOf(dto.getBillItemPrice()),
+                    dto.getPaymentMethod(),
+                    dto.getStatus(),
+                    dto.getUserName()
+            };
+
+            // Add the row to the report
+            report.addTableRow(row, detailColWidth, 10);
+        }
+    }
+
 
     private String formatAmount(double total) {
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);

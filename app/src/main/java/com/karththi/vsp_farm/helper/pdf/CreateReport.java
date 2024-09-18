@@ -135,8 +135,9 @@ public class CreateReport {
         drawTableRow(headers, colWidths);
     }
 
-    // Method to add table rows with normal text
+
     public void addTableRow(String[] rowData, int[] colWidths, int textSize) {
+        int startX = xPos;
         if(textSize > 0){
             this.textPaint.setTextSize(textSize);
         }
@@ -146,17 +147,70 @@ public class CreateReport {
         this.textPaint.setTextSize(16);
     }
 
-    // Common method to draw table rows with custom column widths
+    public void changeBgColour(int[] colWidths){
+        int rowBackgroundColor = Color.LTGRAY;
+        canvas.drawRect(35, yPos-20, 40 + getTotalWidth(colWidths) - 5, yPos + 10, getBackgroundPaint(rowBackgroundColor));
+    }
+
+    public void removeBg(int[] colWidths){
+        int rowBackgroundColor = Color.TRANSPARENT;
+        canvas.drawRect(35, yPos-20, 40 + getTotalWidth(colWidths) - 5, yPos + 10, getBackgroundPaint(rowBackgroundColor));
+    }
+
+    private int getTotalWidth(int[] colWidths) {
+        int totalWidth = 0;
+        for (int width : colWidths) {
+            totalWidth += width;
+        }
+        return totalWidth;
+    }
+
     private void drawTableRow(String[] data, int[] colWidths) {
+
         int startX = xPos;
         checkPageHeight();
         for (int i = 0; i < data.length; i++) {
-            canvas.drawText(data[i], startX, yPos, textPaint);
+            String d = data[i];
+            if (d.equals(AppConstant.LOAN) || d.equals(AppConstant.DELETED)){
+                changeColour("red");
+            }else if (d.equals(AppConstant.LOAN)){
+                changeColour("bule");
+            }
+            canvas.drawText(d, startX, yPos, textPaint);
             canvas.drawRect(startX - 5, yPos - 20, startX + colWidths[i] - 5, yPos + 10, borderPaint);
             startX += colWidths[i];
+            changeColour("black");
         }
         yPos += 30; // Adjust row height
     }
+
+    private Paint getBackgroundPaint(int color) {
+        Paint paint = new Paint();
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.FILL);
+        return paint;
+    }
+    public void addSpace(){
+        yPos+=20;
+    }
+
+    public void changeColour(String colour) {
+        switch (colour.toLowerCase()) {
+            case "green":
+                this.textPaint.setColor(Color.GREEN);
+                break;
+            case "red":
+                this.textPaint.setColor(Color.RED);
+                break;
+            case "blue":
+                this.textPaint.setColor(Color.BLUE);
+                break;
+            default:
+                this.textPaint.setColor(Color.BLACK);  // Default color if input doesn't match
+                break;
+        }
+    }
+
 
 
     private void checkPageHeight(){
@@ -170,6 +224,7 @@ public class CreateReport {
             pageNumber += 1;
         }
     }
+
 
 
 
