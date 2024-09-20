@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
-import com.karththi.vsp_farm.facade.TodayReportFacade;
+import com.karththi.vsp_farm.Factory.TodayReportFactory;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 import com.karththi.vsp_farm.service.BillItemService;
@@ -21,6 +21,8 @@ import com.karththi.vsp_farm.service.BillItemService;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TodayDetailReportActivity extends AppCompatActivity {
 
@@ -45,7 +47,9 @@ public class TodayDetailReportActivity extends AppCompatActivity {
 
     private AppConstant appConstant;
 
-    private TodayReportFacade todayReportFacade;
+    private TodayReportFactory todayReportFactory;
+
+    private ExecutorService executorService;
 
 
     @Override
@@ -55,7 +59,7 @@ public class TodayDetailReportActivity extends AppCompatActivity {
 
         billItemService = new BillItemService(this);
         appConstant = new AppConstant(this);
-        todayReportFacade = new TodayReportFacade(this);
+        todayReportFactory = new TodayReportFactory(this);
 
         reportDate = findViewById(R.id.reportDate);
         tableLayout = findViewById(R.id.detailReportTable);
@@ -65,10 +69,17 @@ public class TodayDetailReportActivity extends AppCompatActivity {
         loanT = findViewById(R.id.loan);
         deleteT = findViewById(R.id.delete);
         downloadPdfButton = findViewById(R.id.downloadPdfButton);
+
+        executorService = Executors.newSingleThreadExecutor();
         downloadPdfButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadPdf();
+                executorService.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        downloadPdf();  // This runs on a background thread
+                    }
+                });
             }
         });
 
@@ -88,7 +99,14 @@ public class TodayDetailReportActivity extends AppCompatActivity {
 
 
     private void loadBills() {
-        billItemsDetailDtoList = billItemService.getAllBillDtoByDate(DateTimeUtils.getCurrentDate());
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                billItemsDetailDtoList = billItemService.getAllBillDtoByDate(DateTimeUtils.getCurrentDate());
+            }
+        });
+
 
         // Add table header
         TableRow header = (TableRow) getLayoutInflater().inflate(R.layout.detail_report_header, tableLayout, false);
@@ -186,8 +204,15 @@ public class TodayDetailReportActivity extends AppCompatActivity {
     }
 
     private void downloadPdf(){
-        todayReportFacade.downloadTodayDetailPdf(total,cash,loan,deleteTotal,billItemsDetailDtoList,deletedBills);
+        todayReportFactory.downloadTodayDetailPdf(billItemsDetailDtoList,deletedBills);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executorService.shutdown();
+    }
+
 
 
 }

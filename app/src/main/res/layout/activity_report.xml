@@ -45,8 +45,8 @@
         android:id="@+id/todayReportButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Today Report"
-        android:textSize="18sp"
+        android:text="Today Summary Report"
+        android:textSize="24sp"
         android:padding="12dp"
         android:background="@drawable/button_background"
         android:textColor="@android:color/white"
@@ -57,7 +57,40 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Today Details Report"
-        android:textSize="18sp"
+        android:textSize="24sp"
+        android:padding="12dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/getSummaryReportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get A Summary Report"
+        android:textSize="24sp"
+        android:padding="12dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/getDetailReportButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get A Detail Report"
+        android:textSize="24sp"
+        android:padding="12dp"
+        android:background="@drawable/button_background"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/getDetailReportByCustomerButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get A Detail Report By Customer"
+        android:textSize="24sp"
         android:padding="12dp"
         android:background="@drawable/button_background"
         android:textColor="@android:color/white"

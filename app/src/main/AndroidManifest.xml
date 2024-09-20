@@ -56,7 +56,9 @@
         <activity android:name=".page.admin.report.TodayReportActivity"/>
         <activity android:name=".page.admin.report.ViewBillActivity"/>
         <activity android:name=".page.admin.report.TodayDetailReportActivity"/>
-
+        <activity android:name=".page.admin.report.GetSummaryReportActivity"/>
+        <activity android:name=".page.admin.report.GetDetailReportActivity"/>
+        <activity android:name=".page.admin.UserActionActivity"/>
         <activity
             android:name=".page.PrintActivity"
             android:exported="true">

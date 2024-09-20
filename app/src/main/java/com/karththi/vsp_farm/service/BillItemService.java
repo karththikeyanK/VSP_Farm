@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
 import com.karththi.vsp_farm.dto.BillSummary;
+import com.karththi.vsp_farm.dto.Sale;
 import com.karththi.vsp_farm.model.BillItem;
 import com.karththi.vsp_farm.repo.BillItemRepository;
 
@@ -53,24 +54,24 @@ public class BillItemService {
         Log.i("BillItemService", "BillItemService::getAllBillDtoByDate()::is called");
         List<BillItemsDetailDto> billItemsDetailDtoList = new ArrayList<>();
         billItemsDetailDtoList = billItemRepository.getAllBillDtoByDate(date);
+        if (billItemsDetailDtoList.isEmpty()){
+            Log.w("BillService", "BillService::getAllBillDtoByDate():: returned null list");
+        }
         Log.i("BillItemService", "BillItemService::getAllBillDtoByDate():: fetched " + billItemsDetailDtoList.size() + " items");
         return billItemsDetailDtoList;
     }
 
-    public List<BillSummary> getSummaryByDateAndPaymentMethode(String date, String methode) {
-        Log.i("BillService", "BillService::getSummaryByDateAndPaymentMethode()::is called..");
-        List<BillSummary> list = new ArrayList<>();
-        list = billItemRepository.getSummaryByDateAndPaymentMethode(date,methode);
-        Log.i("BillService", "BillService::getSummaryByDateAndPaymentMethode()::is completed with size of :" + list.size());
-        return list;
+    public List<BillItemsDetailDto> getAllBillDtoByDateRange(String startDate, String endDate) {
+        Log.i("BillItemService", "BillItemService::getAllBillDtoByDateRange()::is called");
+        List<BillItemsDetailDto> billItemsDetailDtoList = new ArrayList<>();
+        billItemsDetailDtoList = billItemRepository.getAllBillDtoByDateRange(startDate, endDate);
+        if (billItemsDetailDtoList.isEmpty()){
+            Log.w("BillService", "BillService::getAllBillDtoByDateRange():: returned null list");
+        }
+        Log.i("BillItemService", "BillItemService::getAllBillDtoByDateRange():: fetched " + billItemsDetailDtoList.size() + " items");
+        return billItemsDetailDtoList;
     }
 
-    public List<BillSummary> getSummaryByDate(String date) {
-        Log.i("BillService", "BillService::getSummaryByDate()::is called..");
-        List<BillSummary> list = new ArrayList<>();
-        list = billItemRepository.getSummaryByDate(date);
-        Log.i("BillService", "BillService::getSummaryByDate()::is completed with size of :" + list.size());
-        return list;
-    }
+
 
 }

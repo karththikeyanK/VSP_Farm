@@ -1,0 +1,57 @@
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/darker_gray">
+
+    <!-- Date Column Header -->
+    <TextView
+        android:id="@+id/payment_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Date"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Total Column Header -->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Total"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Cash Column Header -->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Cash"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Loan Column Header -->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Loan"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Deleted Column Header -->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Deleted"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+</TableRow>

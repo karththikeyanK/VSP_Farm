@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
+import com.karththi.vsp_farm.dto.BillSummary;
+import com.karththi.vsp_farm.dto.Sale;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 import com.karththi.vsp_farm.model.Bill;
@@ -117,6 +119,83 @@ public class BillService {
         billList = billRepository.getBillsBetweenDates(startDate,endDate);
         Log.i("BillService","BillService::getBillsBetweenDates()::is completed with size: "+billList.size());
         return billList;
+    }
+
+    public List<BillSummary> getSummaryByDateAndPaymentMethode(String date, String methode) {
+        Log.i("BillService", "BillService::getSummaryByDateAndPaymentMethode()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+        list = billRepository.getSummaryByDateAndPaymentMethode(date,methode);
+        if (list.isEmpty()){
+            Log.w("BillService", "BillService::getSummaryByDateAndPaymentMethode():: returned null list");
+        }
+        Log.i("BillService", "BillService::getSummaryByDateAndPaymentMethode()::is completed with size of :" + list.size());
+        return list;
+    }
+
+    public List<BillSummary> getSummaryByDate(String date) {
+        Log.i("BillService", "BillService::getSummaryByDate()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+        list = billRepository.getSummaryByDate(date);
+        if (list.isEmpty()){
+            Log.w("BillService", "BillService::getSummaryByDate():: returned null list");
+        }
+        Log.i("BillService", "BillService::getSummaryByDate()::is completed with size of :" + list.size());
+        return list;
+    }
+
+    public List<BillSummary> getSummaryByDateRange(String startDate, String endDate) {
+        Log.i("BillService", "BillService::getSummaryByDateRange()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+        list = billRepository.getSummaryByDateRange(startDate,endDate);
+        if (list.isEmpty()){
+            Log.w("BillService", "BillService::getSummaryByDateRange():: returned null list");
+        }
+        Log.i("BillService", "BillService::getSummaryByDateRange()::is completed with size of :" + list.size());
+        return list;
+    }
+
+    public List<BillSummary> getSubItemSummaryByDateRange(String startDate, String endDate) {
+        Log.i("BillService", "BillService::getSubItemSummaryByDateRange()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+        list = billRepository.getSubItemSummaryByDateRange(startDate,endDate);
+        if (list.isEmpty()){
+            Log.w("BillService", "BillService::getSubItemSummaryByDateRange():: returned null list");
+        }
+        Log.i("BillService", "BillService::getSubItemSummaryByDateRange()::is completed with size of :" + list.size());
+        return list;
+    }
+
+    public List<BillSummary> getSubItemDetailSummaryByDateRange(String startDate, String endDate) {
+        Log.i("BillService", "BillService::getSubItemDetailSummaryByDateRange()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+        list = billRepository.getSubItemDetailSummaryByDateRange(startDate,endDate);
+        if (list.isEmpty()){
+            Log.w("BillService", "BillService::getSubItemDetailSummaryByDateRange():: returned null list");
+        }
+        Log.i("BillService", "BillService::getSubItemDetailSummaryByDateRange()::is completed with size of :" + list.size());
+        return list;
+    }
+
+    public List<BillSummary> getDetailedSummaryByDateRange(String startDate, String endDate) {
+        Log.i("BillService", "BillService::getDetailedSummaryByDateRange()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+        list = billRepository.getDetailedSummaryByDateRange(startDate,endDate);
+        if (list.isEmpty()){
+            Log.w("BillService", "BillService::getDetailedSummaryByDateRange():: returned null list");
+        }
+        Log.i("BillService", "BillService::getDetailedSummaryByDateRange()::is completed with size of :" + list.size());
+        return list;
+    }
+
+    public List<Sale> getSalesByDateRange(String startDate, String endDate) {
+        Log.i("BillService", "BillService::getSalesByDateRange()::is called..");
+        List<Sale> list = new ArrayList<>();
+        list = billRepository.getSalesByDateRange(startDate,endDate);
+        if (list.isEmpty()){
+            Log.w("BillService", "BillService::getSalesByDateRange():: returned null list");
+        }
+        Log.i("BillService", "BillService::getSalesByDateRange()::is completed with size of :" + list.size());
+        return list;
     }
 
 

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".page.admin.UserActionActivity">
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="100dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Welcome Message -->
+            <TextView
+                style="@style/HeaderTextView"
+                android:id="@+id/welcomeTextView"
+                android:text="User Actions"
+                android:layout_marginBottom="24dp" />
+
+
+
+            <!-- Buttons for User Management -->
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/createUserButton"
+                android:height="100dp"
+                android:textSize="24sp"
+                android:text="Create User"
+                android:onClick="createUser" />
+
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewUserButton"
+                android:height="100dp"
+                android:textSize="24sp"
+                android:text="View User"
+                android:onClick="viewUsers" />
+
+            <!-- New Buttons for Customer Management -->
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/addCustomerButton"
+                android:height="100dp"
+                android:textSize="24sp"
+                android:text="Add Customer"
+                android:onClick="addCustomer" />
+
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewCustomerButton"
+                android:height="100dp"
+                android:textSize="24sp"
+                android:text="View Customer"
+                android:onClick="viewCustomers" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

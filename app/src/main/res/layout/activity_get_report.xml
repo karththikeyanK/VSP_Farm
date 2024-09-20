@@ -1,0 +1,444 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button"
+            android:paddingHorizontal="20dp"
+            android:text="Back"
+            android:textColor="@android:color/black" />
+
+        <!-- Date Range Selection -->
+        <LinearLayout
+            android:id="@+id/dateRangeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="50dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Date1 Button -->
+            <Button
+                android:id="@+id/date1Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:textColor="@android:color/black"
+                android:text="Select Date 1" />
+
+            <!-- Separator Text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" to "
+                android:gravity="center"
+                android:layout_marginHorizontal="10dp" />
+
+            <!-- Date2 Button -->
+            <Button
+                android:id="@+id/date2Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button"
+                android:textColor="@android:color/black"
+                android:text="Select Date 2" />
+        </LinearLayout>
+
+        <!-- Download PDF Button -->
+        <Button
+            android:id="@+id/downloadPdfButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_background"
+            android:text="Download PDF"
+            android:textColor="@android:color/white"
+            android:padding="12dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Summary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:paddingBottom="16dp" />
+        <TableLayout
+            android:id="@+id/payment_summary_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/backButton"
+            android:layout_marginTop="20dp"
+            android:stretchColumns="1, 2, 3, 4">
+
+        </TableLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Detail"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:paddingBottom="16dp" />
+        <TableLayout
+            android:id="@+id/payment_detail_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/backButton"
+            android:layout_marginTop="20dp"
+            android:stretchColumns="1, 2, 3, 4">
+
+        </TableLayout>
+
+        <!-- Summary Section -->
+        <TextView
+            android:id="@+id/summarySection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Summary"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:paddingBottom="16dp" />
+
+        <TableLayout
+            android:id="@+id/generalReportTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:padding="8dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Item"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+
+                <TextView
+                    android:text="Quantity"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+
+                <TextView
+                    android:text="Discount"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+
+                <TextView
+                    android:text="Total"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+            </TableRow>
+        </TableLayout>
+        <TextView
+            android:id="@+id/subItemText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="By Sub Item"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:paddingBottom="16dp" />
+
+        <TableLayout
+            android:id="@+id/subItemSummaryTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:padding="8dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:padding="8dp">
+
+                <TextView
+                    android:text="Item"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Sub Item"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Quantity"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Discount"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Total"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="8dp"
+                    android:textColor="@android:color/black"
+                    android:background="@drawable/table_row_border"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Cash Section -->
+        <TextView
+            android:id="@+id/cashSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="By Date"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:paddingBottom="16dp" />
+
+        <TableLayout
+            android:id="@+id/detailByDateTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:padding="8dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:padding="8dp">
+                <TextView
+                    android:text="Date"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Item"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Sub Item"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Quantity"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Discount"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:background="@drawable/table_row_border"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+
+                <TextView
+                    android:text="Total"
+                    android:textStyle="bold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="8dp"
+                    android:textColor="@android:color/black"
+                    android:background="@drawable/table_row_border"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Loan Section -->
+        <TextView
+            android:id="@+id/loanSection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="By Date (Detailed)"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:paddingBottom="16dp" />
+
+        <TableLayout
+            android:id="@+id/byDateDetailTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:padding="8dp">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Date"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+
+                <TextView
+                    android:text="Item"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+
+                <TextView
+                    android:text="Sub Item"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+
+                <TextView
+                    android:text="Total Quantity"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+
+                <TextView
+                    android:text="Total Discount"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="@drawable/table_row_border" />
+
+                <TextView
+                    android:text="Total Amount"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:padding="8dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:background="@drawable/table_row_border" />
+            </TableRow>
+        </TableLayout>
+
+    </LinearLayout>
+</ScrollView>

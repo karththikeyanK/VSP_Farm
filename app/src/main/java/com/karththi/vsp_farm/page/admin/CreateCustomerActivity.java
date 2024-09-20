@@ -41,7 +41,7 @@ public class CreateCustomerActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CreateCustomerActivity.this, AdminDashboardActivity.class);
+                Intent intent = new Intent(CreateCustomerActivity.this, UserActionActivity.class);
                 startActivity(intent);
             }
         });
@@ -69,8 +69,9 @@ public class CreateCustomerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
-        // Optionally, you could add additional logic here
+
+        Intent intent = new Intent(this, UserActionActivity.class);
+        startActivity(intent);
     }
 
     @Override

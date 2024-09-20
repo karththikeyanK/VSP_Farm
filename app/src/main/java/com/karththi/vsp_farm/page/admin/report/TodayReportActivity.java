@@ -1,41 +1,30 @@
 package com.karththi.vsp_farm.page.admin.report;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
-import android.os.Environment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.dto.BillSummary;
-import com.karththi.vsp_farm.facade.TodayReportFacade;
+import com.karththi.vsp_farm.Factory.TodayReportFactory;
 import com.karththi.vsp_farm.helper.AppConstant;
-import com.karththi.vsp_farm.helper.pdf.CreateReport;
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
-import com.karththi.vsp_farm.service.BillService;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.PrimitiveIterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TodayReportActivity extends AppCompatActivity {
 
-    private TodayReportFacade todayReportFacade;
+    private TodayReportFactory todayReportFactory;
 
     private TableLayout generalReportTableCash;
     private TableLayout generalReportTableLoan;
@@ -46,14 +35,17 @@ public class TodayReportActivity extends AppCompatActivity {
 
     private Button downloadPdfButton;
 
+    List<BillSummary> cashList;
+    List<BillSummary> loanList;
+    List<BillSummary> summaryList;
 
-
+    private ExecutorService executorService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_today_report);
 
-        todayReportFacade = new TodayReportFacade(this);
+        todayReportFactory = new TodayReportFactory(this);
 
         reportDate = findViewById(R.id.reportDate);
 
@@ -68,21 +60,40 @@ public class TodayReportActivity extends AppCompatActivity {
         downloadPdfButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadPdf();
+                executorService.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        downloadPdf();
+                    }
+                });
             }
         });
 
-        loadGeneralReport();
+        executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                fetchList();
+
+                // run on main thread
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadGeneralReport();
+                    }
+                });
+            }
+        });
     }
 
+    private void fetchList() {
+        cashList = todayReportFactory.getTodaySummary(AppConstant.CASH);
+        loanList = todayReportFactory.getTodaySummary(AppConstant.LOAN);
+        summaryList = todayReportFactory.getTodayTotalSummary();
+    }
     public void loadGeneralReport() {
-        List<BillSummary> cashList = todayReportFacade.getTodaySummary(AppConstant.CASH);
         populateTable(generalReportTableCash, cashList,false);
-
-        List<BillSummary> loanList = todayReportFacade.getTodaySummary(AppConstant.LOAN);
         populateTable(generalReportTableLoan, loanList,false);
-
-        List<BillSummary> summaryList = todayReportFacade.getTodayTotalSummary();
         populateTable(getGeneralReportTable, summaryList,true);
     }
 
@@ -144,7 +155,7 @@ public class TodayReportActivity extends AppCompatActivity {
 
     private void downloadPdf() {
         downloadPdfButton.setEnabled(false);
-        todayReportFacade.downloadTodayPdf();
+        todayReportFactory.downloadTodayPdf();
     }
 
     private void addTodayLoanDetails(){

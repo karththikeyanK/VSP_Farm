@@ -24,7 +24,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private TextView userName;
 
-    private Button viewReportButton,viewBillButton;
+    private Button viewReportButton,viewBillButton,viewLoanButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +49,18 @@ public class AdminDashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        viewLoanButton = findViewById(R.id.viewLoanButton);
+        viewLoanButton.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, LoanActivity.class);
+//            startActivity(intent);
+        });
+
     }
 
-    public void createUser(View view){
-        Log.d("AdminDashboardActivity", "AdminDashboardActivity::createUser():: is started");
-        Intent intent = new Intent(this, CreateUserActivity.class);
-        startActivity(intent);
-    }
 
-    public void viewUsers(View view) {
-        Log.d("AdminDashboardActivity", "AdminDashboardActivity::viewUsers():: is started");
-        Intent intent = new Intent(this, ViewUserActivity.class);
+    public void userAction(View view){
+        Log.d("AdminDashboardActivity", "AdminDashboardActivity::userActions():: is started");
+        Intent intent = new Intent(this, UserActionActivity.class);
         startActivity(intent);
     }
 
@@ -69,17 +70,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void addCustomer(View view) {
-        Log.d("AdminDashboardActivity", "AdminDashboardActivity::viewCustomers():: is started");
-        Intent intent = new Intent(this, CreateCustomerActivity.class);
-        startActivity(intent);
-    }
 
-    public void viewCustomers(View view) {
-        Log.d("AdminDashboardActivity", "AdminDashboardActivity::viewCustomers():: is started");
-        Intent intent = new Intent(this, CustomerListActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     public void onBackPressed() {

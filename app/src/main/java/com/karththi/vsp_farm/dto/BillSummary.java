@@ -7,6 +7,8 @@ public class BillSummary {
     private double totalPrice;
     private double totalDiscount;
 
+    private String date;
+
     public BillSummary() {
     }
 
@@ -16,6 +18,14 @@ public class BillSummary {
         this.totalQuantity = totalQuantity;
         this.totalPrice = totalPrice;
         this.totalDiscount = totalDiscount;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getSubItemName() {

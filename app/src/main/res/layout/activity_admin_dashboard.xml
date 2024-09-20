@@ -75,81 +75,53 @@
 
             <!-- Welcome Message -->
             <TextView
-                style="@style/HeaderTextView"
                 android:id="@+id/welcomeTextView"
-                android:text="Welcome to the Admin Dashboard!"
-                android:layout_marginBottom="24dp" />
+                style="@style/HeaderTextView"
+                android:layout_marginBottom="24dp"
+                android:text="Welcome to the Admin Dashboard!" />
 
-            <!-- User Section -->
-            <TextView
-                style="@style/SectionTextView"
-                android:id="@+id/userSectionTextView"
-                android:text="User Management"
-                android:layout_marginBottom="8dp" />
 
-            <!-- Buttons for User Management -->
             <Button
-                style="@style/BoxButton"
                 android:id="@+id/createUserButton"
-                android:text="Create User"
-                android:onClick="createUser" />
+                android:height="100dp"
+                android:textSize="20dp"
+                style="@style/BoxButton"
+                android:onClick="userAction"
+                android:text="User Action" />
+
 
             <Button
-                style="@style/BoxButton"
-                android:id="@+id/viewUserButton"
-                android:text="View User"
-                android:onClick="viewUsers" />
-
-            <!-- New Buttons for Customer Management -->
-            <Button
-                style="@style/BoxButton"
-                android:id="@+id/addCustomerButton"
-                android:text="Add Customer"
-                android:onClick="addCustomer" />
-
-            <Button
-                style="@style/BoxButton"
-                android:id="@+id/viewCustomerButton"
-                android:text="View Customer"
-                android:onClick="viewCustomers" />
-
-            <!-- Items Section -->
-            <TextView
-                style="@style/SectionTextView"
-                android:id="@+id/itemsSectionTextView"
-                android:text="Items Management"
-                android:layout_marginTop="16dp" />
-
-            <Button
-                style="@style/BoxButton"
                 android:id="@+id/addItemsButton"
-                android:text="View Items"
-                android:onClick="viewItems" />
+                android:height="100dp"
+                android:textSize="20dp"
+                style="@style/BoxButton"
+                android:onClick="viewItems"
+                android:text="View Items" />
 
-            <TextView
-                style="@style/SectionTextView"
-                android:id="@+id/billSectionTextView"
-                android:text="Bills Management"
-                android:layout_marginTop="16dp" />
 
             <Button
-                style="@style/BoxButton"
                 android:id="@+id/viewBillButton"
-                android:text="View Bills"
-                android:layout_marginTop="8dp" />
-
-            <!-- Reports Section -->
-            <TextView
-                style="@style/SectionTextView"
-                android:id="@+id/reportsSectionTextView"
-                android:text="Reports"
-                android:layout_marginTop="16dp" />
+                android:height="100dp"
+                android:textSize="20dp"
+                style="@style/BoxButton"
+                android:layout_marginTop="8dp"
+                android:text="View Bills" />
 
             <Button
-                style="@style/BoxButton"
                 android:id="@+id/viewReportButton"
-                android:text="View Report"
-                android:layout_marginTop="8dp" />
+                android:height="100dp"
+                android:textSize="20dp"
+                style="@style/BoxButton"
+                android:layout_marginTop="8dp"
+                android:text="View Report" />
+
+            <Button
+                android:id="@+id/viewLoanButton"
+                android:height="100dp"
+                android:textSize="20dp"
+                style="@style/BoxButton"
+                android:layout_marginTop="8dp"
+                android:text="View Loan" />
 
         </LinearLayout>
 

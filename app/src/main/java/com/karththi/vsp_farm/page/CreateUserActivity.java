@@ -1,6 +1,7 @@
 package com.karththi.vsp_farm.page;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.helper.PasswordUtils;
 import com.karththi.vsp_farm.model.User;
+import com.karththi.vsp_farm.page.admin.UserActionActivity;
 import com.karththi.vsp_farm.repo.UserRepository;
 import com.karththi.vsp_farm.service.UserService;
 
@@ -52,7 +54,8 @@ public class CreateUserActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(CreateUserActivity.this, UserActionActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -107,8 +110,8 @@ public class CreateUserActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
-        // Optionally, you could add additional logic here
+        Intent intent = new Intent(this, UserActionActivity.class);
+        startActivity(intent);
     }
 
     @Override

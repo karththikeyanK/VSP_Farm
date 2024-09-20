@@ -58,6 +58,18 @@
                 android:textColor="@android:color/black"
                 android:paddingBottom="16dp"/>
 
+            <Button
+                android:id="@+id/downloadPdfButton"
+                android:layout_marginTop="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Download PDF"
+                android:background="@drawable/button_background"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                android:padding="12dp"/>
+
             <TableLayout
                 android:id="@+id/generalReportTable"
                 android:layout_width="match_parent"
@@ -272,16 +284,7 @@
                 </TableRow>
             </TableLayout>
 
-            <Button
-                android:id="@+id/downloadPdfButton"
-                android:layout_marginTop="40dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Download PDF"
-                android:background="@drawable/button_background"
-                android:textColor="@android:color/white"
-                android:layout_gravity="center"
-                android:padding="12dp"/>
+
         </LinearLayout>
     </ScrollView>
 

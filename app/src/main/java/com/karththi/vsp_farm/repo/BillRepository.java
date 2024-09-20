@@ -4,9 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.karththi.vsp_farm.db.DbHelper;
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
+import com.karththi.vsp_farm.dto.BillSummary;
+import com.karththi.vsp_farm.dto.Sale;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.Bill;
 
@@ -405,6 +408,392 @@ public class BillRepository {
         db.close();
 
         return bills; // Return the list of bills within the date range
+    }
+
+    public List<BillSummary> getSummaryByDateAndPaymentMethode(String date, String paymentMethode) {
+        Log.i("BillRepository", "BillRepository::getSummaryByDateAndPaymentMethode()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        String sql = "SELECT " +
+                "    sub.name AS sub_item_name," +
+                "    it.name AS item_name," +
+                "    SUM(bi.quantity) AS total_quantity," +
+                "    SUM(bi.price ) AS total_price," +
+                "    SUM(bi.discount*bi.quantity) AS total_discount " +
+                "FROM "+AppConstant.BILL_ITEM_TABLE+" bi "+
+                "INNER JOIN " +
+                "   " +AppConstant.BILL_TABLE+" bill ON bi.bill_id = bill.id " +
+                "INNER JOIN " +
+                "    "+AppConstant.SUB_ITEM_TABLE+" sub ON bi.sub_item_id = sub.id " +
+                "INNER JOIN  " +
+                "    "+AppConstant.ITEM_TABLE+" it ON sub.item_id = it.id " +
+                "WHERE " +
+                "    bill.created_at = ?  " +
+                "    AND bill.status != '"+AppConstant.DELETED+"' " +
+                "AND bill.payment_methode = ? "+
+                "GROUP BY " +
+                "    sub.name, it.name, it.id " +
+                "ORDER BY  " +
+                "    it.id ASC;";
+
+        try {
+            cursor = db.rawQuery(sql, new String[]{date,paymentMethode});
+
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    BillSummary dto = new BillSummary();
+                    dto.setSubItemName(cursor.getString(0));
+                    dto.setItemName(cursor.getString(1));
+                    dto.setTotalQuantity(cursor.getDouble(2));
+                    dto.setTotalPrice(cursor.getDouble(3));
+                    dto.setTotalDiscount(cursor.getDouble(4));
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("billItemRepository", "billItemRepository::getSummaryByDateAndPaymentMethode()::Error fetching bills:", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return list;
+    }
+
+    public List<BillSummary> getSummaryByDate(String date) {
+        Log.i("BillRepository", "BillRepository::getSummaryByDate()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        // SQL query to get the total quantity, price, and discount by item
+        String sql = "SELECT " +
+                "    it.name AS item_name, " +
+                "    SUM(bi.quantity) AS total_quantity, " +
+                "    SUM(bi.price ) AS total_price, " +
+                "    SUM(bi.discount * bi.quantity) AS total_discount " +
+                "FROM " + AppConstant.BILL_ITEM_TABLE + " bi " +
+                "INNER JOIN " +
+                "    " + AppConstant.BILL_TABLE + " bill ON bi.bill_id = bill.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.SUB_ITEM_TABLE + " sub ON bi.sub_item_id = sub.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.ITEM_TABLE + " it ON sub.item_id = it.id " +
+                "WHERE " +
+                "    bill.created_at = ? " +
+                "    AND bill.status != '"+AppConstant.DELETED+"' " +
+                "GROUP BY " +
+                "    it.name, it.id " +
+                "ORDER BY " +
+                "    it.id ASC;";
+
+        try {
+            cursor = db.rawQuery(sql, new String[]{date});
+
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    BillSummary dto = new BillSummary();
+                    dto.setItemName(cursor.getString(0));        // Set the item name
+                    dto.setSubItemName(null);                    // Set sub-item name as null
+                    dto.setTotalQuantity(cursor.getDouble(1));   // Total quantity of all sub-items
+                    dto.setTotalPrice(cursor.getDouble(2));      // Total price of all sub-items
+                    dto.setTotalDiscount(cursor.getDouble(3));   // Total discount of all sub-items
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("billItemRepository", "billItemRepository::getSummaryByDate()::Error fetching bills:", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return list;
+    }
+
+    public List<BillSummary> getSummaryByDateRange(String startDate, String endDate) {
+        Log.i("BillRepository", "BillRepository::getSummaryByDateRange()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        // SQL query to get the total quantity, price, and discount by item within the date range
+        String sql = "SELECT " +
+                "    it.name AS item_name, " +
+                "    SUM(bi.quantity) AS total_quantity, " +
+                "    SUM(bi.price ) AS total_price, " +
+                "    SUM(bi.discount * bi.quantity) AS total_discount " +
+                "FROM " + AppConstant.BILL_ITEM_TABLE + " bi " +
+                "INNER JOIN " +
+                "    " + AppConstant.BILL_TABLE + " bill ON bi.bill_id = bill.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.SUB_ITEM_TABLE + " sub ON bi.sub_item_id = sub.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.ITEM_TABLE + " it ON sub.item_id = it.id " +
+                "WHERE " +
+                "    bill.created_at BETWEEN ? AND ? " +
+                "    AND bill.status != '"+AppConstant.DELETED+"' " +
+                "GROUP BY " +
+                "    it.name, it.id " +
+                "ORDER BY " +
+                "    it.id ASC;";
+
+        try {
+            cursor = db.rawQuery(sql, new String[]{startDate, endDate});
+
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    BillSummary dto = new BillSummary();
+                    dto.setItemName(cursor.getString(0));        // Set the item name
+                    dto.setSubItemName(null);                    // Set sub-item name as null
+                    dto.setTotalQuantity(cursor.getDouble(1));   // Total quantity of all sub-items
+                    dto.setTotalPrice(cursor.getDouble(2));      // Total price of all sub-items
+                    dto.setTotalDiscount(cursor.getDouble(3));   // Total discount of all sub-items
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("billItemRepository", "billItemRepository::getSummaryByDateRange()::Error fetching bills:", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return list;
+    }
+
+    public List<BillSummary> getSubItemSummaryByDateRange(String startDate, String endDate) {
+        Log.i("BillRepository", "BillRepository::getSubItemSummaryByDateRange()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        // SQL query to get the total quantity, price, and discount by sub-item within the date range
+        String sql = "SELECT " +
+                "    it.name AS item_name, " +
+                "    sub.name AS sub_item_name, " +
+                "    SUM(bi.quantity) AS total_quantity, " +
+                "    SUM(bi.price) AS total_price, " +
+                "    SUM(bi.discount * bi.quantity) AS total_discount " +
+                "FROM " + AppConstant.BILL_ITEM_TABLE + " bi " +
+                "INNER JOIN " +
+                "    " + AppConstant.BILL_TABLE + " bill ON bi.bill_id = bill.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.SUB_ITEM_TABLE + " sub ON bi.sub_item_id = sub.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.ITEM_TABLE + " it ON sub.item_id = it.id " +
+                "WHERE " +
+                "    bill.created_at BETWEEN ? AND ? " +
+                "    AND bill.status != '" + AppConstant.DELETED + "' " +
+                "GROUP BY " +
+                "    it.name, sub.name, sub.id " +
+                "ORDER BY " +
+                "    it.id ASC, sub.id ASC;";
+
+        try {
+            cursor = db.rawQuery(sql, new String[]{startDate, endDate});
+
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    BillSummary dto = new BillSummary();
+                    dto.setItemName(cursor.getString(0));        // Set the item name
+                    dto.setSubItemName(cursor.getString(1));     // Set the sub-item name
+                    dto.setTotalQuantity(cursor.getDouble(2));   // Total quantity of the sub-item
+                    dto.setTotalPrice(cursor.getDouble(3));      // Total price of the sub-item
+                    dto.setTotalDiscount(cursor.getDouble(4));   // Total discount of the sub-item
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("billItemRepository", "billItemRepository::getSubItemSummaryByDateRange()::Error fetching bills:", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return list;
+    }
+
+
+    public List<BillSummary> getSubItemDetailSummaryByDateRange(String startDate, String endDate) {
+        Log.i("BillRepository", "BillRepository::getSubItemDetailSummaryByDateRange()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        // SQL query to get the total quantity, price, and discount by sub-item within the date range
+        String sql = "SELECT " +
+                "    bill.created_at AS bill_date, " +
+                "    it.name AS item_name, " +
+                "    sub.name AS sub_item_name, " +
+                "    SUM(bi.quantity) AS total_quantity, " +
+                "    SUM(bi.price) AS total_price, " +
+                "    SUM(bi.discount * bi.quantity) AS total_discount " +
+                "FROM " + AppConstant.BILL_ITEM_TABLE + " bi " +
+                "INNER JOIN " +
+                "    " + AppConstant.BILL_TABLE + " bill ON bi.bill_id = bill.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.SUB_ITEM_TABLE + " sub ON bi.sub_item_id = sub.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.ITEM_TABLE + " it ON sub.item_id = it.id " +
+                "WHERE " +
+                "    bill.created_at BETWEEN ? AND ? " +
+                "    AND bill.status != '" + AppConstant.DELETED + "' " +
+                "GROUP BY " +
+                "    bill.created_at,it.name, sub.name, sub.id " +
+                "ORDER BY " +
+                "   bill.created_at ASC, it.id ASC;";
+
+        try {
+            cursor = db.rawQuery(sql, new String[]{startDate, endDate});
+
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    BillSummary dto = new BillSummary();
+                    dto.setDate(cursor.getString(0));
+                    dto.setItemName(cursor.getString(1));        // Set the item name
+                    dto.setSubItemName(cursor.getString(2));     // Set the sub-item name
+                    dto.setTotalQuantity(cursor.getDouble(3));   // Total quantity of the sub-item
+                    dto.setTotalPrice(cursor.getDouble(4));      // Total price of the sub-item
+                    dto.setTotalDiscount(cursor.getDouble(5));   // Total discount of the sub-item
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("billItemRepository", "billItemRepository::getSubItemDetailSummaryByDateRange()::Error fetching bills:", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return list;
+    }
+
+
+    public List<BillSummary> getDetailedSummaryByDateRange(String startDate, String endDate) {
+        Log.i("BillRepository", "BillRepository::getDetailedSummaryByDateRange()::is called..");
+        List<BillSummary> list = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        // SQL query to get the total quantity, price, and discount by item and group by date
+        String sql = "SELECT " +
+                "    bill.created_at AS bill_date, " +
+                "    it.name AS item_name, " +
+                "    SUM(bi.quantity) AS total_quantity, " +
+                "    SUM(bi.price ) AS total_price, " +
+                "    SUM(bi.discount * bi.quantity) AS total_discount " +
+                "FROM " + AppConstant.BILL_ITEM_TABLE + " bi " +
+                "INNER JOIN " +
+                "    " + AppConstant.BILL_TABLE + " bill ON bi.bill_id = bill.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.SUB_ITEM_TABLE + " sub ON bi.sub_item_id = sub.id " +
+                "INNER JOIN " +
+                "    " + AppConstant.ITEM_TABLE + " it ON sub.item_id = it.id " +
+                "WHERE " +
+                "    bill.created_at BETWEEN ? AND ? " +
+                "    AND bill.status != '"+AppConstant.DELETED+"' " +
+                "GROUP BY " +
+                "    bill.created_at, it.name, it.id " +
+                "ORDER BY " +
+                "    bill.created_at ASC, it.id ASC;";
+
+        try {
+            cursor = db.rawQuery(sql, new String[]{startDate, endDate});
+
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    BillSummary dto = new BillSummary();
+                    dto.setDate(cursor.getString(0));            // Set the bill date
+                    dto.setItemName(cursor.getString(1));        // Set the item name
+                    dto.setSubItemName(null);                    // Set sub-item name as null
+                    dto.setTotalQuantity(cursor.getDouble(2));   // Total quantity of all sub-items
+                    dto.setTotalPrice(cursor.getDouble(3));      // Total price of all sub-items
+                    dto.setTotalDiscount(cursor.getDouble(4));   // Total discount of all sub-items
+                    list.add(dto);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("billItemRepository", "billItemRepository::getDetailedSummaryByDateRange()::Error fetching bills:", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return list;
+    }
+
+    public List<Sale> getSalesByDateRange(String startDate, String endDate) {
+        Log.i("BillRepository", "BillRepository::getSalesByDateRange()::is called..");
+        List<Sale> list = new ArrayList<>();
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        // SQL query to get the total cash, loan, and deleted sales by date within the date range
+        String sql = "SELECT " +
+                "    bill.created_at AS date, " +
+                "    SUM(CASE WHEN bill.payment_methode = ? AND bill.status != ? THEN bill.total_amount ELSE 0 END) AS total_cash, " +
+                "    SUM(CASE WHEN bill.payment_methode = ? AND bill.status != ? THEN bill.total_amount ELSE 0 END) AS total_loan, " +
+                "    SUM(CASE WHEN bill.status = ? THEN bill.total_amount ELSE 0 END) AS total_deleted " +
+                "FROM " + AppConstant.BILL_TABLE + " bill " +
+                "WHERE bill.created_at BETWEEN ? AND ? " +
+                "GROUP BY bill.created_at " +
+                "ORDER BY bill.created_at ASC;";
+
+
+
+
+        try {
+            cursor = db.rawQuery(sql, new String[]{AppConstant.CASH, AppConstant.DELETED, AppConstant.LOAN, AppConstant.DELETED, AppConstant.DELETED, startDate, endDate});
+
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    Sale sale = new Sale();
+                    sale.setDate(cursor.getString(0));            // Set the date
+                    sale.setCash(cursor.getDouble(1));            // Set total cash sales
+                    sale.setLoan(cursor.getDouble(2));            // Set total loan sales
+                    sale.setDelete(cursor.getDouble(3));          // Set total deleted sales
+                    list.add(sale);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("BillRepository", "BillRepository::getSalesByDateRange()::Error fetching sales:", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return list;
     }
 
 

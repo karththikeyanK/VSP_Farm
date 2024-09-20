@@ -47,7 +47,7 @@ public class CustomerListActivity extends AppCompatActivity {
 
         // Add new customer button logic
         addNewCustomerButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, CreateCustomerActivity.class);
+            Intent intent = new Intent(this, UserActionActivity.class);
             startActivity(intent);
         });
 
@@ -66,7 +66,7 @@ public class CustomerListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
-        // Optionally, you could add additional logic here
+        Intent intent = new Intent(this, UserActionActivity.class);
+        startActivity(intent);
     }
 }

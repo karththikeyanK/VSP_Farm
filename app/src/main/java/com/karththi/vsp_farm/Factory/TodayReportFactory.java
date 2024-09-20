@@ -1,32 +1,28 @@
-package com.karththi.vsp_farm.facade;
+package com.karththi.vsp_farm.Factory;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
 import com.karththi.vsp_farm.dto.BillSummary;
-import com.karththi.vsp_farm.dto.ItemReport;
 import com.karththi.vsp_farm.dto.LoanDto;
-import com.karththi.vsp_farm.dto.SubItemReport;
+import com.karththi.vsp_farm.facade.LoanFacade;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.pdf.CreateReport;
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 import com.karththi.vsp_farm.service.BillItemService;
 import com.karththi.vsp_farm.service.BillService;
-import com.karththi.vsp_farm.service.CustomerService;
-import com.karththi.vsp_farm.service.ItemService;
-import com.karththi.vsp_farm.service.SubItemService;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
-public class TodayReportFacade {
+public class TodayReportFactory {
 
     private Context context;
     private BillItemService billItemService;
+
+    private BillService billService;
 
     private LoanFacade loanFacade;
 
@@ -38,13 +34,13 @@ public class TodayReportFacade {
 
     private List<BillItemsDetailDto> deletedBillItemList;
 
-    private  CreateReport report;
 
 
-    public TodayReportFacade(Context context) {
+    public TodayReportFactory(Context context) {
         this.context = context;
         billItemService = new BillItemService(context);
-        report = new CreateReport(context);
+        billService = new BillService(context);
+
         loanFacade = new LoanFacade(context);
 
         billItemsDetailDtoList = new ArrayList<>();
@@ -67,17 +63,24 @@ public class TodayReportFacade {
 
 
    public List<BillSummary> getTodaySummary(String methode){
-        return billItemService.getSummaryByDateAndPaymentMethode(DateTimeUtils.getCurrentDate(),methode);
+        return billService.getSummaryByDateAndPaymentMethode(DateTimeUtils.getCurrentDate(),methode);
    }
 
     public List<BillSummary> getTodayTotalSummary(){
-        return billItemService.getSummaryByDate(DateTimeUtils.getCurrentDate());
+        return billService.getSummaryByDate(DateTimeUtils.getCurrentDate());
     }
 
     public void downloadTodayPdf() {
+        CreateReport report = new CreateReport(context);
         report.startPage(595, 842); // A4 size
         report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
         report.addReportTitle("Daily Sales Report", DateTimeUtils.getCurrentDate());
+        addTodaySummary(report);
+        String fileName = "VSP_Farm_Report_" + DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() + ".pdf";
+        report.finishReport(fileName);
+    }
+
+    private void addTodaySummary(CreateReport report){
         report.addTableHeading("Summary");
         String[] summary_headers = {"Item", "Quantity", "Discount", "Total"};
         int[] summary_col_width = {150, 100, 100, 150};
@@ -160,28 +163,37 @@ public class TodayReportFacade {
             remainingLoan += dto.getLoan().getRemainingAmount();
         }
         report.addCustomTotal("Remaining Total",remainingLoan);
-        String fileName = "VSP_Farm_Report_" + DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() + ".pdf";
-        report.finishReport(fileName);
     }
 
 
-    public void downloadTodayDetailPdf(double total, double cash, double loan, double delete, List<BillItemsDetailDto> bills, List<BillItemsDetailDto> deletedBillItemList){
+    public void downloadTodayDetailPdf(List<BillItemsDetailDto> bills, List<BillItemsDetailDto> deletedBillItemList){
+        CreateReport report = new CreateReport(context);
         report.startPage(842, 595); // A4 size
 
         report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
         report.addReportTitle("Daily Sales Report", DateTimeUtils.getCurrentDate() + " "+DateTimeUtils.getCurrentTime());
-        report.addTableHeading("Summary");
-        String[] summary_headers = {"Total", "Cash", "Loan", "Delete"};
-        int[] summary_col_width = {120, 120, 120, 120};
-        report.addTableHeader(summary_headers,summary_col_width,0);
-        String[] summary ={formatAmount(total),formatAmount(cash),formatAmount(loan),formatAmount(delete)};
-        report.addTableRow(summary,summary_col_width,0);
+        addTodaySummary(report);
 
         report.addSpace();
 
         createTable(report,bills,"All Bills Without Deleted Bills");
         createTable(report,deletedBillItemList,"Deleted Bills");
         String fileName = "VSP_Detail_Report_" + DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() + ".pdf";
+        report.finishReport(fileName);
+    }
+
+    public void downloadDetailPdfByDateRange(String startDate, String endDate,List<BillItemsDetailDto> bills, List<BillItemsDetailDto> deletedBillItemList){
+        CreateReport report = new CreateReport(context);
+        report.startPage(842, 595); // A4 size
+
+        report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
+        report.addReportTitle("Sales Report", startDate + " --> "+endDate);
+
+        report.addSpace();
+
+        createTable(report,bills,"All Bills Without Deleted Bills");
+        createTable(report,deletedBillItemList,"Deleted Bills");
+        String fileName = "VSP_Detail_Report_" + startDate+"----" +endDate  + ".pdf";
         report.finishReport(fileName);
     }
 

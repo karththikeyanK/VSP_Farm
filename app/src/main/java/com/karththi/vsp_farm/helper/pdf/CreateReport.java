@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.pdf.PdfDocument;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.karththi.vsp_farm.helper.AppConstant;
 
@@ -232,8 +234,16 @@ public class CreateReport {
         // Finish the current page
         pdfDocument.finishPage(currentPage);
 
+        // Get the directory where the file will be saved
+        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         // Write the PDF file to storage
-        File pdfFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+        File pdfFile = new File(directory, fileName);
+        int count = 0;
+        while (pdfFile.exists()) {
+            count++;
+            String newFileName = fileName.replace(".pdf", "_" + count + ".pdf");
+            pdfFile = new File(directory, newFileName);
+        }
         try {
             pdfDocument.writeTo(new FileOutputStream(pdfFile));
             pdfDocument.close();
@@ -241,6 +251,17 @@ public class CreateReport {
             e.printStackTrace();
         }
 
-        appConstant.ErrorAlert(AppConstant.SUCCESS,"Pdf create with name "+fileName);
+        // Get a handler for the main thread
+        Handler mainHandler = new Handler(Looper.getMainLooper());
+
+        // Post a runnable to the main thread
+        mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                // Call ErrorAlert on the main thread
+                appConstant.ErrorAlert(AppConstant.SUCCESS,"Pdf created with name "+fileName);
+            }
+        });
+;
     }
 }

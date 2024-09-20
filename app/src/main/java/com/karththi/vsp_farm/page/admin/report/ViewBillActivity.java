@@ -17,6 +17,7 @@ import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.adapter.BillAdapter;
 import com.karththi.vsp_farm.model.Bill;
+import com.karththi.vsp_farm.page.admin.AdminDashboardActivity;
 import com.karththi.vsp_farm.service.BillService;
 
 import java.text.SimpleDateFormat;
@@ -65,7 +66,7 @@ public class ViewBillActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         deletedBills = new ArrayList<>();
         backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ReportActivity.class);
+            Intent intent = new Intent(this, AdminDashboardActivity.class);
             startActivity(intent);
         });
 
