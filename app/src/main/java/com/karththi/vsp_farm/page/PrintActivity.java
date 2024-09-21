@@ -17,14 +17,6 @@ public class PrintActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        try {
-            printerHelper = new EpsonPrinterHelper(this);
-            printerHelper.connectPrinter();
-            printerHelper.printHelloWorld();
-        } catch (Epos2Exception e) {
-            throw new RuntimeException(e);
-        }
-
 
     }
 

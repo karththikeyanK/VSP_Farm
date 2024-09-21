@@ -72,6 +72,17 @@ public class BillItemService {
         return billItemsDetailDtoList;
     }
 
+    public List<BillItemsDetailDto> getAllBillDtoByDateRangeAndCustomerId(String startDate, String endDate, int customerId) {
+        Log.i("BillItemService", "BillItemService::getAllBillDtoByDateRangeAndCustomerId()::is called");
+        List<BillItemsDetailDto> billItemsDetailDtoList = new ArrayList<>();
+        billItemsDetailDtoList = billItemRepository.getAllBillDtoByDateRangeAndCustomerId(startDate, endDate, customerId);
+        if (billItemsDetailDtoList.isEmpty()){
+            Log.w("BillService", "BillService::getAllBillDtoByDateRangeAndCustomerId():: returned null list");
+        }
+        Log.i("BillItemService", "BillItemService::getAllBillDtoByDateRangeAndCustomerId():: fetched " + billItemsDetailDtoList.size() + " items");
+        return billItemsDetailDtoList;
+    }
+
 
 
 }

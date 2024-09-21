@@ -95,58 +95,76 @@ public class TodayDetailReportActivity extends AppCompatActivity {
 
         loadBills();
 
+        downloadPdfButton.setEnabled(false);
+
     }
 
 
     private void loadBills() {
-
         executorService.execute(new Runnable() {
             @Override
             public void run() {
                 billItemsDetailDtoList = billItemService.getAllBillDtoByDate(DateTimeUtils.getCurrentDate());
+
+                // Check if the list is empty
+                if (billItemsDetailDtoList == null || billItemsDetailDtoList.isEmpty()) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(TodayDetailReportActivity.this, "No Bills found", Toast.LENGTH_SHORT).show();
+                            downloadPdfButton.setEnabled(false);
+                        }
+                    });
+                    return;
+                }
+
+                // Initialize totals
+                total = 0;
+                cash = 0;
+                loan = 0;
+                deleteTotal = 0;
+                deletedBills.clear(); // Clear any existing deleted bills
+
+                // Separate bills
+                for (BillItemsDetailDto dto : billItemsDetailDtoList) {
+                    if (dto.getStatus().equals(AppConstant.DELETED)) {
+                        deleteTotal += dto.getBillItemPrice();
+                        deletedBills.add(dto);
+                    } else {
+                        total += dto.getBillItemPrice();
+                        if (dto.getPaymentMethod().equals(AppConstant.CASH)) {
+                            cash += dto.getBillItemPrice();
+                        } else if (dto.getPaymentMethod().equals(AppConstant.LOAN)) {
+                            loan += dto.getBillItemPrice();
+                        }
+                    }
+                }
+
+                // Update UI on the main thread
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Add table header
+                        TableRow header = (TableRow) getLayoutInflater().inflate(R.layout.detail_report_header, tableLayout, false);
+                        tableLayout.addView(header);
+                        TableRow deletedTableHeader = (TableRow) getLayoutInflater().inflate(R.layout.detail_report_header, deleteDetailReportTable, false);
+                        deleteDetailReportTable.addView(deletedTableHeader);
+
+                        // Update total amounts
+                        totalT.setText(appConstant.formatAmount(total));
+                        cashT.setText(appConstant.formatAmount(cash));
+                        loanT.setText(appConstant.formatAmount(loan));
+                        deleteT.setText(appConstant.formatAmount(deleteTotal));
+
+                        // Load the bills into the table
+                        loadTable(tableLayout, billItemsDetailDtoList);
+                        loadTable(deleteDetailReportTable, deletedBills);
+
+                        downloadPdfButton.setEnabled(true);
+                    }
+                });
             }
         });
-
-
-        // Add table header
-        TableRow header = (TableRow) getLayoutInflater().inflate(R.layout.detail_report_header, tableLayout, false);
-        tableLayout.addView(header);
-        TableRow deleted_table_header = (TableRow) getLayoutInflater().inflate(R.layout.detail_report_header, deleteDetailReportTable, false);
-        deleteDetailReportTable.addView(deleted_table_header);
-
-        if (billItemsDetailDtoList.isEmpty()) {
-            Toast.makeText(this, "No Bills found", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Use iterator to avoid ConcurrentModificationException
-        Iterator<BillItemsDetailDto> iterator = billItemsDetailDtoList.iterator();
-        while (iterator.hasNext()) {
-            BillItemsDetailDto dto = iterator.next();
-
-            if (dto.getStatus().equals(AppConstant.DELETED)) {
-                deleteTotal += dto.getBillItemPrice();
-                deletedBills.add(dto);
-                iterator.remove(); // Remove safely during iteration
-            } else {
-                total += dto.getBillItemPrice();
-                if (dto.getPaymentMethod().equals(AppConstant.CASH)) {
-                    cash += dto.getBillItemPrice();
-                } else if (dto.getPaymentMethod().equals(AppConstant.LOAN)) {
-                    loan += dto.getBillItemPrice();
-                }
-            }
-        }
-
-        // Update total amounts
-        totalT.setText(appConstant.formatAmount(total));
-        cashT.setText(appConstant.formatAmount(cash));
-        loanT.setText(appConstant.formatAmount(loan));
-        deleteT.setText(appConstant.formatAmount(deleteTotal));
-
-        // Load the bills into the table
-        loadTable(tableLayout, billItemsDetailDtoList);
-        loadTable(deleteDetailReportTable, deletedBills);
     }
 
     private void loadTable(TableLayout tLayout, List<BillItemsDetailDto> list){

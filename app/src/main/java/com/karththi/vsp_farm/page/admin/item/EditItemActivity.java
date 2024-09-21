@@ -111,7 +111,7 @@ public class EditItemActivity extends AppCompatActivity {
         String name = itemNameEditText.getText().toString();
         Measurement measurement = (Measurement) measurementSpinner.getSelectedItem();
         if (name.isEmpty()){
-            appConstant.ErrorAlert("Error", "Please fill the name!");
+            appConstant.ShowAlert("Error", "Please fill the name!");
             return;
         }
         itemService.update(name, measurement, itemImageView.getDrawable(), item);

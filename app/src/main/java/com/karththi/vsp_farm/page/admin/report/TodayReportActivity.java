@@ -75,15 +75,11 @@ public class TodayReportActivity extends AppCompatActivity {
             public void run() {
                 fetchList();
 
-                // run on main thread
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadGeneralReport();
-                    }
-                });
+                loadGeneralReport();
             }
         });
+
+        downloadPdfButton.setEnabled(false);
     }
 
     private void fetchList() {
@@ -92,10 +88,19 @@ public class TodayReportActivity extends AppCompatActivity {
         summaryList = todayReportFactory.getTodayTotalSummary();
     }
     public void loadGeneralReport() {
-        populateTable(generalReportTableCash, cashList,false);
-        populateTable(generalReportTableLoan, loanList,false);
-        populateTable(getGeneralReportTable, summaryList,true);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                populateTable(generalReportTableCash, cashList, false);
+                populateTable(generalReportTableLoan, loanList, false);
+                populateTable(getGeneralReportTable, summaryList, true);
+
+                // Enable the button on the UI thread
+                downloadPdfButton.setEnabled(!cashList.isEmpty() || !loanList.isEmpty() || !summaryList.isEmpty());
+            }
+        });
     }
+
 
     private void populateTable(TableLayout tableLayout, List<BillSummary> billSummaryList, boolean isSummary) {
 
@@ -154,7 +159,12 @@ public class TodayReportActivity extends AppCompatActivity {
     }
 
     private void downloadPdf() {
-        downloadPdfButton.setEnabled(false);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                downloadPdfButton.setEnabled(false); // Disable the button on the UI thread
+            }
+        });
         todayReportFactory.downloadTodayPdf();
     }
 

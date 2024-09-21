@@ -30,7 +30,7 @@ public class CustomerService {
         Log.i("CustomerService", "CustomerService::createCustomer()::Creating customer is called");
         if (customerRepository.checkCustomerExists(name)){
             Log.e("CustomerService", "CustomerService::createCustomer()::Customer already exists");
-            appConstant.ErrorAlert("Error", "Customer already exists");
+            appConstant.ShowAlert("Error", "Customer already exists");
             return;
 
         }
@@ -45,7 +45,7 @@ public class CustomerService {
         Log.i("CustomerService", "CustomerService::updateCustomer()::Updating customer is called");
         if (customerRepository.checkCustomerExists(name) && customerRepository.getByName(name).getId() != id){
             Log.e("CustomerService", "CustomerService::updateCustomer()::Customer already exists");
-            appConstant.ErrorAlert("Error", "Customer already exists with this name: "+name);
+            appConstant.ShowAlert("Error", "Customer already exists with this name: "+name);
             return;
 
         }

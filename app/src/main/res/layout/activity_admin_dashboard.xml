@@ -9,7 +9,7 @@
     tools:context=".page.admin.AdminDashboardActivity">
 
 
-<LinearLayout
+    <LinearLayout
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,50 +80,96 @@
                 android:layout_marginBottom="24dp"
                 android:text="Welcome to the Admin Dashboard!" />
 
-
-            <Button
-                android:id="@+id/createUserButton"
-                android:height="100dp"
-                android:textSize="20dp"
-                style="@style/BoxButton"
-                android:onClick="userAction"
-                android:text="User Action" />
-
-
-            <Button
-                android:id="@+id/addItemsButton"
-                android:height="100dp"
-                android:textSize="20dp"
-                style="@style/BoxButton"
-                android:onClick="viewItems"
-                android:text="View Items" />
-
-
-            <Button
-                android:id="@+id/viewBillButton"
-                android:height="100dp"
-                android:textSize="20dp"
-                style="@style/BoxButton"
+            <!-- First Row: Create User and View Items -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="8dp"
-                android:text="View Bills" />
+                android:weightSum="2">
 
-            <Button
-                android:id="@+id/viewReportButton"
-                android:height="100dp"
-                android:textSize="20dp"
-                style="@style/BoxButton"
+                <Button
+                    android:id="@+id/createUserButton"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    android:layout_marginRight="20dp"
+                    style="@style/BoxButton"
+                    android:onClick="userAction"
+                    android:text="User Action" />
+
+                <Button
+                    android:id="@+id/addItemsButton"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    style="@style/BoxButton"
+                    android:onClick="viewItems"
+                    android:text="View Items" />
+            </LinearLayout>
+
+            <!-- Second Row: View Bills and View Report -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="8dp"
-                android:text="View Report" />
+                android:weightSum="2">
 
+                <Button
+                    android:id="@+id/viewBillButton"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    style="@style/BoxButton"
+                    android:layout_marginRight="20dp"
+                    android:text="View Bills" />
+
+                <Button
+                    android:id="@+id/viewReportButton"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:textSize="20sp"
+                    style="@style/BoxButton"
+                    android:text="View Report" />
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
+            <!-- Third Row: View Loan -->
             <Button
                 android:id="@+id/viewLoanButton"
-                android:height="100dp"
-                android:textSize="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:textSize="20sp"
+                android:layout_weight="1"
                 style="@style/BoxButton"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="20dp"
+                android:text="View Loan Payments" />
+            <Button
+                android:id="@+id/non"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                style="@style/BoxButton"
+                android:visibility="invisible"
                 android:layout_marginTop="8dp"
                 android:text="View Loan" />
 
         </LinearLayout>
 
+        </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>

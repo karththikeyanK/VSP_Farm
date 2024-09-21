@@ -5,12 +5,14 @@ import android.content.Context;
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
 import com.karththi.vsp_farm.dto.BillSummary;
 import com.karththi.vsp_farm.dto.LoanDto;
+import com.karththi.vsp_farm.dto.LoanPaymentDto;
 import com.karththi.vsp_farm.facade.LoanFacade;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.pdf.CreateReport;
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 import com.karththi.vsp_farm.service.BillItemService;
 import com.karththi.vsp_farm.service.BillService;
+import com.karththi.vsp_farm.service.LoanPaymentService;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -34,13 +36,15 @@ public class TodayReportFactory {
 
     private List<BillItemsDetailDto> deletedBillItemList;
 
+    private LoanPaymentService loanPaymentService;
+
 
 
     public TodayReportFactory(Context context) {
         this.context = context;
         billItemService = new BillItemService(context);
         billService = new BillService(context);
-
+        loanPaymentService = new LoanPaymentService(context);
         loanFacade = new LoanFacade(context);
 
         billItemsDetailDtoList = new ArrayList<>();
@@ -77,7 +81,7 @@ public class TodayReportFactory {
         report.addReportTitle("Daily Sales Report", DateTimeUtils.getCurrentDate());
         addTodaySummary(report);
         String fileName = "VSP_Farm_Report_" + DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() + ".pdf";
-        report.finishReport(fileName);
+        report.finishReport(fileName,AppConstant.TODAY_SUMMARY_FOLDER);
     }
 
     private void addTodaySummary(CreateReport report){
@@ -163,6 +167,22 @@ public class TodayReportFactory {
             remainingLoan += dto.getLoan().getRemainingAmount();
         }
         report.addCustomTotal("Remaining Total",remainingLoan);
+
+        List<LoanPaymentDto> loanPaymentList = loanPaymentService.getAllCustomerLoanPaymentsByDate(DateTimeUtils.getCurrentDate());
+        report.addTableHeading("Loan Payments");
+        String[] loanPaymentHeaders = {"Customer","Payment Date", "Amount"};
+        int[] loanPayment_col_widths = {150, 150, 130};
+        report.addTableHeader(loanPaymentHeaders,loanPayment_col_widths,0);
+
+        if (loanPaymentList!=null){
+            double totalLoanPayment = 0;
+            for (LoanPaymentDto dto : loanPaymentList){
+                String[] row = {dto.getCustomerName(),dto.getPaymentDate(),formatAmount(dto.getPaymentAmount())};
+                report.addTableRow(row,loanPayment_col_widths,12);
+                totalLoanPayment += dto.getPaymentAmount();
+            }
+            report.addCustomTotal("Total Loan Payment",totalLoanPayment);
+        }
     }
 
 
@@ -177,9 +197,10 @@ public class TodayReportFactory {
         report.addSpace();
 
         createTable(report,bills,"All Bills Without Deleted Bills");
+        report.drawLine();
         createTable(report,deletedBillItemList,"Deleted Bills");
         String fileName = "VSP_Detail_Report_" + DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() + ".pdf";
-        report.finishReport(fileName);
+        report.finishReport(fileName,AppConstant.TODAY_DETAIL_FOLDER);
     }
 
     public void downloadDetailPdfByDateRange(String startDate, String endDate,List<BillItemsDetailDto> bills, List<BillItemsDetailDto> deletedBillItemList){
@@ -194,7 +215,7 @@ public class TodayReportFactory {
         createTable(report,bills,"All Bills Without Deleted Bills");
         createTable(report,deletedBillItemList,"Deleted Bills");
         String fileName = "VSP_Detail_Report_" + startDate+"----" +endDate  + ".pdf";
-        report.finishReport(fileName);
+        report.finishReport(fileName,AppConstant.GET_DETAIL_FOLDER);
     }
 
 

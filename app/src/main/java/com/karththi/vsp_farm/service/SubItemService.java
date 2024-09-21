@@ -2,7 +2,6 @@ package com.karththi.vsp_farm.service;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.SubItem;
@@ -27,7 +26,7 @@ public class SubItemService {
         Log.d(TAG, TAG+"::create()::Adding sub item");
         if (subItemRepository.isSubItemExists(subItem.getSubItemName())) {
             Log.d(TAG, TAG+"::create()::Sub item already exists");
-            appConstant.ErrorAlert(AppConstant.ERROR,"Sub Item already exist with the name: "+subItem.getSubItemName());
+            appConstant.ShowAlert(AppConstant.ERROR,"Sub Item already exist with the name: "+subItem.getSubItemName());
             return;
         }
         try {
@@ -53,7 +52,7 @@ public class SubItemService {
     public void update(SubItem subItem, SubItem old) {
         Log.d(TAG, TAG+"::update()::Updating sub item");
         if(isExistByName(subItem.getSubItemName())  && !old.getSubItemName().equals(subItem.getSubItemName())){
-            appConstant.ErrorAlert(AppConstant.ERROR, "Sub Item already exist with the name: " + subItem.getSubItemName());
+            appConstant.ShowAlert(AppConstant.ERROR, "Sub Item already exist with the name: " + subItem.getSubItemName());
         }
         subItemRepository.updateSubItem(subItem);
         Log.d(TAG, TAG+"::update()::Sub item updated successfully");

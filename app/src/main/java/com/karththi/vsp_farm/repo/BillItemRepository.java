@@ -138,11 +138,11 @@ public class BillItemRepository {
                    billItemsDetailDtoList.add(dto);
                 }
             } else {
-                Log.d("getAllBillDtoByDate", "No bills found for date: " + date);
+                Log.d("BillItemRepository", "getAllBillDtoByDate()::No bills found for date: " + date);
             }
 
         } catch (Exception e) {
-            Log.e("getAllBillDtoByDate", "Error fetching bills:", e);
+            Log.e("BillItemRepository", "getAllBillDtoByDate()::Error fetching bills:", e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -200,11 +200,11 @@ public class BillItemRepository {
                     billItemsDetailDtoList.add(dto);
                 }
             } else {
-                Log.d("getAllBillDtoByDate", "No bills found for date: " + startDate + " - " + endDate);
+                Log.d("BillItemRepository", "getAllBillDtoByDateRange()::No bills found for date: " + startDate + " - " + endDate);
             }
 
         } catch (Exception e) {
-            Log.e("getAllBillDtoByDate", "Error fetching bills:", e);
+            Log.e("BillItemRepository", "getAllBillDtoByDateRange()::Error fetching bills:", e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -217,6 +217,69 @@ public class BillItemRepository {
         return billItemsDetailDtoList;
     }
 
+
+    public List<BillItemsDetailDto> getAllBillDtoByDateRangeAndCustomerId(String startDate, String endDate, int customerId) {
+        List<BillItemsDetailDto> billItemsDetailDtoList = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+
+        try {
+            db = dbHelper.getReadableDatabase();
+
+            String sql = "SELECT bill.id, bill.reference_number, bill.status, " +
+                    "bill.payment_methode, bill.created_at, bill.create_time, bill.updated_at, bill.update_time, " +
+                    "cus.name, use.name, bi.quantity, bi.price, (bi.discount * bi.quantity) AS total_discount, " +
+                    "sub.name, it.name " +
+                    "FROM " + AppConstant.BILL_ITEM_TABLE + " bi " +
+                    "INNER JOIN " + AppConstant.BILL_TABLE + " bill ON bi.bill_id = bill.id " +
+                    "INNER JOIN " + AppConstant.SUB_ITEM_TABLE + " sub ON bi.sub_item_id = sub.id " +
+                    "INNER JOIN " + AppConstant.ITEM_TABLE + " it ON sub.item_id = it.id " +
+                    "INNER JOIN " + AppConstant.CUSTOMER_TABLE + " cus ON bill.customer_id = cus.id " +
+                    "INNER JOIN " + AppConstant.USER_TABLE + " use ON bill.user_id = use.id " +
+                    "WHERE bill.created_at BETWEEN ? AND ? " +
+                    "AND cus.id = ? " +
+                    "ORDER BY bill.created_at DESC";
+
+
+            cursor = db.rawQuery(sql, new String[]{startDate, endDate, String.valueOf(customerId)});
+
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    BillItemsDetailDto dto = new BillItemsDetailDto();
+                    dto.setBillId(cursor.getInt(0));
+                    dto.setReferenceNumber(cursor.getString(1));
+                    dto.setStatus(cursor.getString(2));
+                    dto.setPaymentMethod(cursor.getString(3));
+                    dto.setCreatedAt(cursor.getString(4));
+                    dto.setCreateTime(cursor.getString(5));
+                    dto.setUpdateAt(cursor.getString(6));
+                    dto.setUpdateTime(cursor.getString(7));
+                    dto.setCustomerName(cursor.getString(8));
+                    dto.setUserName(cursor.getString(9));
+                    dto.setQuantity(cursor.getDouble(10));
+                    dto.setBillItemPrice(cursor.getDouble(11));
+                    dto.setDiscount(cursor.getDouble(12));
+                    dto.setSubItemName(cursor.getString(13));
+                    dto.setItemName(cursor.getString(14));
+                    billItemsDetailDtoList.add(dto);
+                }
+            } else {
+                Log.d("BillItemRepository", "getAllBillDtoByDateRangeAndCustomerId()::No bills found for date: " + startDate + " - " + endDate);
+            }
+
+        } catch (Exception e) {
+            Log.e("BillItemRepository", "getAllBillDtoByDateRangeAndCustomerId()::Error fetching bills:", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+
+        return billItemsDetailDtoList;
+    }
 
 
 

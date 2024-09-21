@@ -45,10 +45,6 @@ import java.util.Iterator;
 import java.util.List;
 
 
-// ToDO: put the bill items in the ArrayList
-// ToDO:  in bill Payment method Loan or Cash
-// ToDO:  in paid amount Onchange event to calculate the balance want to improve
-
 public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private ItemService itemService;
@@ -119,12 +115,12 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
                 }
 
                 if (selectedCustomer.equals(null) || selectedCustomer == null){
-                    appConstant.ErrorAlert("Error", "Please select a customer");
+                    appConstant.ShowAlert("Error", "Please select a customer");
                     return;
                 }
                 customerId = selectedCustomer.getId();
                 if (customerId ==0 ){
-                    appConstant.ErrorAlert("Error", "Please select a customer");
+                    appConstant.ShowAlert("Error", "Please select a customer");
                     return;
                 }
 
@@ -367,20 +363,20 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
     private void printBill() {
 
         if (inputAmountEditText.getText().toString().isEmpty()) {
-            appConstant.ErrorAlert("Error", "Please enter the amount paid");
+            appConstant.ShowAlert("Error", "Please enter the amount paid");
             return;
         }
 
         if(balance < 0){
-            appConstant.ErrorAlert("Error", "Amount paid is less than the total amount");
+            appConstant.ShowAlert("Error", "Amount paid is less than the total amount");
             return;
         }
         if (customerId == 0) {
-            appConstant.ErrorAlert("Error", "Please select a customer");
+            appConstant.ShowAlert("Error", "Please select a customer");
             return;
         }
         if (billItems == null || billItems.isEmpty()) {
-            appConstant.ErrorAlert("Error", "Please add items to the bill");
+            appConstant.ShowAlert("Error", "Please add items to the bill");
             return;
         }
         printBillButton.setEnabled(false);
@@ -394,11 +390,11 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             return;
         }
         if (customerId == 0) {
-            appConstant.ErrorAlert("Error", "Please select a customer");
+            appConstant.ShowAlert("Error", "Please select a customer");
             return;
         }
         if (billItems == null || billItems.isEmpty()) {
-            appConstant.ErrorAlert("Error", "Please add items to the bill");
+            appConstant.ShowAlert("Error", "Please add items to the bill");
             return;
         }
         loanButton.setEnabled(false);

@@ -43,7 +43,6 @@ public class GetDetailReportActivity extends AppCompatActivity {
     private BillItemService billItemService;
     private List<BillItemsDetailDto> billItemsDetailDtoList, deletedBills;
     private double total, cash, loan, deleteTotal;
-    private TableLayout tableLayout;
     private TextView totalT, cashT, loanT, deleteT;
     private Calendar date1, date2;
     private LoadingDialog loadingDialog;
@@ -81,9 +80,6 @@ public class GetDetailReportActivity extends AppCompatActivity {
 
         detailReportRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         detailReportDeleteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-
 
 
     }

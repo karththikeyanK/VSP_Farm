@@ -34,7 +34,7 @@ public class ItemService {
         Log.i("ItemService", "ItemService::addItem():: is called");
         if (itemRepository.isItemExists(item.getName())) {
             Log.i("ItemService", "ItemService::addItem():: item already exists");
-            appConstant.ErrorAlert(AppConstant.ERROR,"Item already exist with the name: "+item.getName());
+            appConstant.ShowAlert(AppConstant.ERROR,"Item already exist with the name: "+item.getName());
             return;
         }
         try{
@@ -53,7 +53,7 @@ public class ItemService {
         Log.i("ItemService", "ItemService::update():: is called");
         if (itemRepository.isItemExists(name) && !item.getName().equals(name)) {
             Log.i("ItemService", "ItemService::addItem():: item already exists");
-            appConstant.ErrorAlert(AppConstant.ERROR,"Item already exist with the name: "+item.getName());
+            appConstant.ShowAlert(AppConstant.ERROR,"Item already exist with the name: "+item.getName());
             return;
         }
         item.setName(name);

@@ -1,4 +1,4 @@
-package com.karththi.vsp_farm.page.admin.report;
+package com.karththi.vsp_farm.page.admin;
 
 import android.app.DatePickerDialog;
 import android.os.AsyncTask;
@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,27 +19,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.karththi.vsp_farm.Factory.ReportFactory;
 import com.karththi.vsp_farm.R;
-import com.karththi.vsp_farm.dto.BillItemsDetailDto;
+import com.karththi.vsp_farm.dto.LoanPaymentDto;
 import com.karththi.vsp_farm.helper.AppConstant;
-import com.karththi.vsp_farm.helper.adapter.DetailReportAdapter;
+import com.karththi.vsp_farm.helper.adapter.LoanPaymentAdapter;
 import com.karththi.vsp_farm.helper.utils.LoadingDialog;
 import com.karththi.vsp_farm.model.Customer;
 import com.karththi.vsp_farm.service.BillItemService;
 import com.karththi.vsp_farm.service.CustomerService;
+import com.karththi.vsp_farm.service.LoanPaymentService;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class GetCustomerDetailReportActivity extends AppCompatActivity {
+public class GetLoanPaymentActivity extends AppCompatActivity {
 
     private Button date1Button, date2Button, downloadPdfButton;
-    private TextView totalT, cashT, loanT, deleteT;
     private Calendar date1 = null;
     private Calendar date2 = null;
 
@@ -56,28 +53,30 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
 
     private LoadingDialog loadingDialog;
 
-    private List<BillItemsDetailDto> billItemsDetailDtoList, deletedBills,loanBills,cashBills;
+    private RecyclerView loanPaymentReportRecyclerView;
 
-    private double total, cash, loan, deleteTotal;
-
-    private RecyclerView detailReportRecyclerView;
-    private RecyclerView detailReportDeleteRecyclerView;
-
-    private DetailReportAdapter detailReportAdapter;
 
     private ExecutorService executorService;
 
     private ReportFactory reportFactory;
+
+    private LoanPaymentAdapter loanPaymentAdapter;
+
+    private LoanPaymentService loanPaymentService;
+
+    private List<LoanPaymentDto> loanPaymentDtoList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_customer_detail_report);
+        setContentView(R.layout.activity_get_loan_payment);
 
         customerService = new CustomerService(this);
         appConstant = new AppConstant(this);
         billItemService = new BillItemService(this);
         loadingDialog = new LoadingDialog(this);
         reportFactory = new ReportFactory(this);
+        loanPaymentService= new LoanPaymentService(this);
 
         selectedCus = new Customer();
 
@@ -93,7 +92,7 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
                     appConstant.ShowAlert("Error", "Please select a customer");
                     return;
                 };
-                if (selectedCustomer.getId() ==0 ){
+                if (selectedCustomer.getId() ==0 && !selectedCustomer.getName().equals("ALL")){
                     appConstant.ShowAlert("Error", "Please select a customer");
                     return;
                 }
@@ -112,10 +111,6 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
         date1Button = findViewById(R.id.date1Button);
         date2Button = findViewById(R.id.date2Button);
         downloadPdfButton = findViewById(R.id.downloadPdfButton);
-        totalT = findViewById(R.id.total);
-        cashT = findViewById(R.id.cash);
-        loanT = findViewById(R.id.loan);
-        deleteT = findViewById(R.id.delete);
 
         dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         date2 = Calendar.getInstance();
@@ -123,32 +118,12 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
 
         setupDatePickers();
 
-        detailReportRecyclerView = findViewById(R.id.detailReportRecyclerView);
-        detailReportDeleteRecyclerView = findViewById(R.id.deleteDetailReportRecyclerView);
+        loanPaymentReportRecyclerView = findViewById(R.id.loanPaymentReportRecyclerView);
 
-        detailReportRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        detailReportDeleteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        // Use ExecutorService for background task
+        loanPaymentReportRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         executorService = Executors.newSingleThreadExecutor();
         setupDownloadButton();
-
-    }
-
-    private void updateView() {
-        downloadPdfButton.setEnabled(true);
-        if (billItemsDetailDtoList.isEmpty()) {
-            Toast.makeText(this, "No Bills found", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        detailReportAdapter = new DetailReportAdapter(billItemsDetailDtoList);
-        detailReportRecyclerView.setAdapter(detailReportAdapter);
-
-        detailReportAdapter = new DetailReportAdapter(deletedBills);
-        detailReportDeleteRecyclerView.setAdapter(detailReportAdapter);
-
-        updateSummaryTextViews();
-
     }
 
     private void setupDatePickers() {
@@ -171,54 +146,19 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
                 loadingDialog.show("Loading....");
 
                 executorService.execute(() -> {
-                    fetchedBills();  // Run this in background
+                    fetchedLoanPayments();
 
-                    // After fetchedBills(), update the UI on the main thread
+
                     runOnUiThread(() -> {
-                        updateView();    // This runs on UI thread
-                        loadingDialog.dismiss();  // Hide loading dialog once done
+                        updateView();
+                        loadingDialog.dismiss();
                     });
                 });
             }
         }
     }
 
-    private void updateSummaryTextViews() {
-        totalT.setText(appConstant.formatAmount(total));
-        cashT.setText(appConstant.formatAmount(cash));
-        loanT.setText(appConstant.formatAmount(loan));
-        deleteT.setText(appConstant.formatAmount(deleteTotal));
-    }
-
-
-
-    private void fetchedBills(){
-        billItemsDetailDtoList = new ArrayList<>();
-        deletedBills = new ArrayList<>();
-        loanBills = new ArrayList<>();
-        cashBills = new ArrayList<>();
-
-        billItemsDetailDtoList = billItemService.getAllBillDtoByDateRangeAndCustomerId(  date1Button.getText().toString(), date2Button.getText().toString(),selectedCus.getId());
-        total = cash = loan = deleteTotal = 0;
-        Iterator<BillItemsDetailDto> iterator = billItemsDetailDtoList.iterator();
-        while (iterator.hasNext()) {
-            BillItemsDetailDto billItemsDetailDto = iterator.next();
-            if (billItemsDetailDto.getStatus().equals(AppConstant.DELETED)) {
-                deletedBills.add(billItemsDetailDto);
-                deleteTotal += billItemsDetailDto.getBillItemPrice();
-                iterator.remove();
-            }else if (billItemsDetailDto.getPaymentMethod().equals(AppConstant.LOAN)) {
-                loanBills.add(billItemsDetailDto);
-                loan += billItemsDetailDto.getBillItemPrice();
-            }else if (billItemsDetailDto.getPaymentMethod().equals(AppConstant.CASH)) {
-                cashBills.add(billItemsDetailDto);
-                cash += billItemsDetailDto.getBillItemPrice();
-            }
-            total += billItemsDetailDto.getBillItemPrice();
-        }
-    }
-
-    private void showDatePicker(GetCustomerDetailReportActivity.DateSetListener listener) {
+    private void showDatePicker(GetLoanPaymentActivity.DateSetListener listener) {
         final Calendar calendar = Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             Calendar selectedDate = Calendar.getInstance();
@@ -227,9 +167,27 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
+    private void updateView() {
+        loanPaymentAdapter = new LoanPaymentAdapter(loanPaymentDtoList);
+        loanPaymentReportRecyclerView.setAdapter(loanPaymentAdapter);
+    }
+
+    private void fetchedLoanPayments() {
+        loanPaymentDtoList = loanPaymentService.getLoanPaymentListByDateRange(selectedCus.getId(),
+                date1Button.getText().toString(), date2Button.getText().toString());
+    }
+
     private void setupCustomerSpinner() {
+        Customer all = new Customer(999999,"ALL",null,null);
         customerSpinner = findViewById(R.id.customerSpinner);
         List<Customer> customers = customerService.getAllCustomers();
+        for (Customer customer : customers) {
+            if (customer.getName().equals("DEFAULT")) {
+                customers.remove(customer);
+                break;
+            }
+        }
+        customers.add( all);
 
         ArrayAdapter<Customer> customerAdapter = new ArrayAdapter<Customer>(this, android.R.layout.simple_spinner_item, customers) {
             @NonNull
@@ -255,7 +213,7 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
         customerSpinner.setAdapter(customerAdapter);
 
         for (int i = 0; i < customers.size(); i++) {
-            if (customers.get(i).getName().equals("DEFAULT")) {
+            if (customers.get(i).getName().equals("ALL")) {
                 customerSpinner.setSelection(i);
                 break;
             }
@@ -272,10 +230,7 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
 
                     private void downloadPdf() {
                         AsyncTask.execute(() -> {
-                           reportFactory.downloadDetailReportPdfByCustomer(
-                                   date1Button.getText().toString(), date2Button.getText().toString(),
-                                   total,cash,loan,deleteTotal,selectedCus.getName(),
-                                   cashBills,loanBills, deletedBills);
+                            reportFactory.downloadLoanPaymentPdf(selectedCus.getName(),loanPaymentDtoList, date1Button.getText().toString(), date2Button.getText().toString());
                         });
                     }
                 })
@@ -291,5 +246,4 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
         super.onDestroy();
         executorService.shutdown();
     }
-
 }

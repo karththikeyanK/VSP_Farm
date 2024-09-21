@@ -85,7 +85,24 @@ public class CreateReport {
         textPaint.setTextAlign(Paint.Align.LEFT);
         textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         canvas.drawText(headingName, xPos, yPos, textPaint);
+        yPos += 20;
+    }
+
+
+    public void drawLine(){
+        checkPageHeight();
         yPos += 30;
+        canvas.drawLine(40, yPos, pageWidth - 40, yPos, borderPaint);
+        yPos += 10;
+    }
+
+    public void addTableSubHeading(String headingName){
+        checkPageHeight();
+        yPos += 20;
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        textPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+        canvas.drawText(headingName, xPos, yPos, textPaint);
+        yPos += 20;
     }
 
     // Method to add report title and date
@@ -230,20 +247,28 @@ public class CreateReport {
 
 
 
-    public void finishReport(String fileName) {
-        // Finish the current page
-        pdfDocument.finishPage(currentPage);
+    public void finishReport(String fileName, String folderName) {
 
-        // Get the directory where the file will be saved
-        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        // Write the PDF file to storage
-        File pdfFile = new File(directory, fileName);
+        pdfDocument.finishPage(currentPage);
+        File baseDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "VSP");
+
+        File targetDirectory = new File(baseDirectory, folderName);
+
+        // Check if the target folder exists; if not, create it
+        if (!targetDirectory.exists()) {
+            targetDirectory.mkdirs();  // This creates the folder structure if it doesn't exist
+        }
+
+        // Prepare the PDF file path
+        File pdfFile = new File(targetDirectory, fileName);
         int count = 0;
         while (pdfFile.exists()) {
             count++;
             String newFileName = fileName.replace(".pdf", "_" + count + ".pdf");
-            pdfFile = new File(directory, newFileName);
+            pdfFile = new File(targetDirectory, newFileName);
         }
+
+        // Write the PDF file to the storage
         try {
             pdfDocument.writeTo(new FileOutputStream(pdfFile));
             pdfDocument.close();
@@ -251,17 +276,9 @@ public class CreateReport {
             e.printStackTrace();
         }
 
-        // Get a handler for the main thread
+        // Notify on the main thread that the PDF was created successfully
         Handler mainHandler = new Handler(Looper.getMainLooper());
-
-        // Post a runnable to the main thread
-        mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                // Call ErrorAlert on the main thread
-                appConstant.ErrorAlert(AppConstant.SUCCESS,"Pdf created with name "+fileName);
-            }
-        });
-;
+        mainHandler.post(() -> appConstant.ShowAlert(AppConstant.SUCCESS, "PDF created with name " + fileName + " in " + folderName));
     }
+
 }

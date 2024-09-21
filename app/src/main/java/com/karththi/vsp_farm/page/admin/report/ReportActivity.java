@@ -12,7 +12,7 @@ import com.karththi.vsp_farm.page.admin.AdminDashboardActivity;
 
 public class ReportActivity extends AppCompatActivity {
 
-    private Button backButton,todayReportButton,todayDetailReportButton,getSummaryReportButton,getDetailReportButton;
+    private Button backButton,todayReportButton,todayDetailReportButton,getSummaryReportButton,getDetailReportButton,getDetailReportByCustomerButton;
 
     private LoadingDialog loadingDialog;
     @Override
@@ -57,6 +57,12 @@ public class ReportActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        getDetailReportByCustomerButton = findViewById(R.id.getDetailReportByCustomerButton);
+        getDetailReportByCustomerButton.setOnClickListener(v -> {
+            loadingDialog.show("Loading...");
+            Intent intent = new Intent(this, GetCustomerDetailReportActivity.class);
+            startActivity(intent);
+        });
 
     }
 

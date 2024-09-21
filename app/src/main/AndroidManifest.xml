@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-feature android:name="android.hardware.usb.host"/>
-    <uses-permission android:name="android.permission.USB_PERMISSION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
@@ -29,9 +29,18 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"/>
             </intent-filter>
         </activity>
-        <activity android:name=".page.admin.AdminDashboardActivity"/>
+        <activity android:name=".page.admin.AdminDashboardActivity"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+        </activity>
         <activity android:name=".page.cashier.ItemPageActivity"/>
         <activity android:name=".page.admin.ViewUserActivity"/>
         <activity android:name=".page.CreateUserActivity"/>
@@ -55,10 +64,15 @@
         <activity android:name=".page.admin.report.ReportActivity"/>
         <activity android:name=".page.admin.report.TodayReportActivity"/>
         <activity android:name=".page.admin.report.ViewBillActivity"/>
-        <activity android:name=".page.admin.report.TodayDetailReportActivity"/>
+        <activity android:name=".page.admin.report.TodayDetailReportActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".page.admin.report.GetSummaryReportActivity"/>
-        <activity android:name=".page.admin.report.GetDetailReportActivity"/>
+        <activity android:name=".page.admin.report.GetDetailReportActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".page.admin.UserActionActivity"/>
+        <activity android:name=".page.admin.report.GetCustomerDetailReportActivity"
+                  android:screenOrientation="landscape" />
+        <activity android:name=".page.admin.GetLoanPaymentActivity"/>
         <activity
             android:name=".page.PrintActivity"
             android:exported="true">
@@ -66,6 +80,7 @@
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/device_filter"/>
         </activity>
     </application>
 

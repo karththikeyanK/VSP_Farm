@@ -2,6 +2,7 @@ package com.karththi.vsp_farm.helper;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,14 +10,10 @@ import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.widget.TextView;
 
-import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
-
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
-import java.util.function.Function;
 
 public class AppConstant {
     public static final String DATABASE_NAME = "vsp_farm";
@@ -60,18 +57,29 @@ public class AppConstant {
     public static final String ADMIN = "ADMIN";
     public static final String CASHIER = "CASHIER";
 
+    public static final String LOAN_PAYMENT_FOLDER = "LoanPayment";
+    public static final String TODAY_SUMMARY_FOLDER = "TodaySummary";
+    public static final String TODAY_DETAIL_FOLDER = "TodayDetail";
+
+    public static final String GET_SUMMARY_FOLDER = "GetSummary";
+    public static final String GET_DETAIL_FOLDER = "GetDetail";
+
+    public static final String GET_CUSTOMER_FOLDER = "Customer";
+
     private Context context;
 
     public AppConstant(Context context) {
         this.context = context;
     }
 
-    public void ErrorAlert(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.setPositiveButton("OK", null);
-        builder.show();
+    public void ShowAlert(String title, String message) {
+        ((Activity) context).runOnUiThread(() -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(title);
+            builder.setMessage(message);
+            builder.setPositiveButton("OK", null);
+            builder.show();
+        });
     }
 
     public void SuccessAlert(String type,String message, Intent intent) {
