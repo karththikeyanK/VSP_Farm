@@ -75,7 +75,7 @@
         <Button
             android:id="@+id/billingPageButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:text="Billing Page"
             android:textSize="18dp"
             android:onClick="openBillingPage"
@@ -86,7 +86,7 @@
         <Button
             android:id="@+id/billHistoryButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:text="Bill History"
             android:textSize="18dp"
             android:onClick="openBillHistory"
@@ -97,7 +97,7 @@
         <Button
             android:id="@+id/payLoanButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:text="Pay Loan"
             android:textSize="18dp"
             android:onClick="payLoan"

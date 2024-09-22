@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.helper.AppConstant;
+import com.karththi.vsp_farm.helper.utils.LoadingDialog;
 import com.karththi.vsp_farm.page.LoginActivity;
 
 public class CashierDashBoard extends AppCompatActivity {
@@ -17,6 +18,8 @@ public class CashierDashBoard extends AppCompatActivity {
     private AppConstant appConstant;
     
     private TextView userName;
+
+    private LoadingDialog loadingDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +27,7 @@ public class CashierDashBoard extends AppCompatActivity {
         appConstant = new AppConstant(this);
         userName = findViewById(R.id.userNameTextView);
         userName.setText(AppConstant.USER_NAME);
+        loadingDialog = new LoadingDialog(this);
     }
 
     public void logout(View view){
@@ -32,16 +36,19 @@ public class CashierDashBoard extends AppCompatActivity {
     }
 
     public void openBillingPage(View view){
+        loadingDialog.show("Loading...");
         Intent intent = new Intent(this, BillingPageActivity.class);
         startActivity(intent);
     }
 
     public void openBillHistory(View view){
+        loadingDialog.show("Loading...");
         Intent intent = new Intent(this, BillListActivity.class);
         startActivity(intent);
     }
 
     public void payLoan(View view){
+        loadingDialog.show("Loading...");
         Intent intent = new Intent(this, PayLoanActivity.class);
         startActivity(intent);
     }
@@ -50,5 +57,17 @@ public class CashierDashBoard extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadingDialog.dismiss();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loadingDialog.dismiss();
     }
 }

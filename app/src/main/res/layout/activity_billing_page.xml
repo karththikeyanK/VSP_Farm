@@ -26,6 +26,7 @@
         android:padding="16dp">
 
         <LinearLayout
+            android:id="@+id/customerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -40,8 +41,9 @@
             <Spinner
                 android:id="@+id/customerSpinner"
                 android:layout_width="250dp"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:dropDownWidth="match_parent"
+                android:background="@drawable/button"
                 android:layout_marginBottom="16dp" />
         </LinearLayout>
 
@@ -53,10 +55,38 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="5" />
 
+        <Button
+            android:id="@+id/viewBasketButton"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:text="View Basket"
+            android:textSize="24sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_background"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            />
+
+        <Button
+            android:id="@+id/closeBasketButton"
+            android:layout_width="250dp"
+            android:layout_height="80dp"
+            android:text="Close Basket"
+            android:textSize="24sp"
+            android:visibility="gone"
+            android:textColor="@android:color/black"
+            android:background="@drawable/button"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            />
+
+
 
         <!-- Second Section: Billing Section -->
         <ScrollView
+            android:id="@+id/billingScrollView"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="match_parent">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -206,25 +236,44 @@
                         android:textSize="24dp"
                         android:paddingTop="10dp" />
                 </LinearLayout>
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/loanButton"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Loan"
-                    android:visibility="invisible"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="20dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp">
 
-                <!-- Print Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/printBillButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Print Bill"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="20dp"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                    <Button
+                        android:id="@+id/loanButton"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:text="LOAN"
+                        android:visibility="gone"
+                        android:textSize="28sp"
+                        android:layout_gravity="start"
+                        android:textColor="@color/white"
+                        android:background="@drawable/button_background"
+                         />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <!-- Print Button -->
+                    <Button
+                        android:id="@+id/printBillButton"
+                        android:layout_width="150dp"
+                        android:layout_height="100dp"
+                        android:textSize="28sp"
+                        android:text="CASH"
+                        android:textColor="@color/white"
+                        android:layout_gravity="end"
+                        android:background="@drawable/button_background"
+                        />
+
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

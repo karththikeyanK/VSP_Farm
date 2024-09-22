@@ -68,8 +68,8 @@ public class SubItemListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
-        // Optionally, you could add additional logic here
+        Intent intent = new Intent(this, ItemListActivity.class);
+        startActivity(intent);
     }
 
 }

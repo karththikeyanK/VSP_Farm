@@ -48,7 +48,7 @@ public class LoanFacade {
     public void handleLoanPayment(int customerId, double amount) {
         Log.i("LoanFacade", "LoanFacade::handleLoanPayment()::is called");
         Loan loan = loanService.getLoanByCustomerId(customerId);
-        loan.setRemainingAmount(loan.getRemainingAmount() - amount);
+        loan.setRemainingAmount(Math.round((loan.getRemainingAmount() - amount) * 100.0) / 100.0);
         loanService.updateLoan(loan);
         Log.i("LoanFacade", "LoanFacade::handleLoanPayment():: Loan updated with id: "+loan.getId());
         LoanPayment loanPayment = new LoanPayment();

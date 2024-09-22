@@ -58,7 +58,14 @@
         </activity>
         <activity android:name=".page.cashier.BillListActivity"/>
         <activity android:name=".page.cashier.BillDetailsActivity"/>
-        <activity android:name=".page.cashier.PayLoanActivity"/>
+        <activity android:name=".page.cashier.PayLoanActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+        </activity>
         <activity android:name=".page.admin.report.ReportActivity"/>
         <activity android:name=".page.admin.report.TodayReportActivity"/>
         <activity android:name=".page.admin.report.ViewBillActivity"/>

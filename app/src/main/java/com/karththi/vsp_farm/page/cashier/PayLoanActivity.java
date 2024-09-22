@@ -19,6 +19,7 @@ import com.karththi.vsp_farm.facade.LoanFacade;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.Customer;
 import com.karththi.vsp_farm.model.LoanPayment;
+import com.karththi.vsp_farm.printer.EpsonPrinterHelper;
 import com.karththi.vsp_farm.service.CustomerService;
 
 import java.util.ArrayList;
@@ -47,6 +48,9 @@ public class PayLoanActivity extends AppCompatActivity {
 
     private Button backButton;
 
+    private String CUSTOMER_NAME = "";
+    private EpsonPrinterHelper epsonPrinterHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +58,7 @@ public class PayLoanActivity extends AppCompatActivity {
 
         customerService = new CustomerService(this);
         loanFacade = new LoanFacade(this);
+        epsonPrinterHelper = new EpsonPrinterHelper(this);
 
         customerDropdown = findViewById(R.id.customerDropdown);
         remainingLoanAmount = findViewById(R.id.remainingLoanAmount);
@@ -107,6 +112,7 @@ public class PayLoanActivity extends AppCompatActivity {
                     int customerId = findByName(selectedCustomer).getId();
                     if (customerId != 0) {
                         CUSTOMER_ID = customerId;
+                        CUSTOMER_NAME = selectedCustomer;
                         loanDto = loanFacade.getLoanDtoByCustomerId(customerId);
 
                         if (loanDto != null && loanDto.getLoan() != null) {
@@ -173,8 +179,13 @@ public class PayLoanActivity extends AppCompatActivity {
         double paymentAmount = Double.parseDouble(paymentAmountStr);
         if (CUSTOMER_ID != 0) {
             payLoanButton.setEnabled(false);
-            loanFacade.handleLoanPayment(CUSTOMER_ID, paymentAmount);
-            Toast.makeText(this, "Payment processed successfully.", Toast.LENGTH_SHORT).show();
+            if (epsonPrinterHelper.printLoanPaymentReceipt(loanDto,CUSTOMER_NAME, paymentAmount)){
+                loanFacade.handleLoanPayment(CUSTOMER_ID, paymentAmount);
+                Toast.makeText(this, "Payment processed successfully.", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(this, "Printing failed...", Toast.LENGTH_SHORT).show();
+            }
+
         } else {
             Toast.makeText(this, "Please select a customer.", Toast.LENGTH_SHORT).show();
         }

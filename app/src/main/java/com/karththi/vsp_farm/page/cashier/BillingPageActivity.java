@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -41,6 +43,7 @@ import com.karththi.vsp_farm.model.Loan;
 import com.karththi.vsp_farm.model.LoanPayment;
 import com.karththi.vsp_farm.model.Measurement;
 import com.karththi.vsp_farm.model.SubItem;
+import com.karththi.vsp_farm.page.LoginActivity;
 import com.karththi.vsp_farm.printer.EpsonPrinterHelper;
 import com.karththi.vsp_farm.service.CustomerService;
 import com.karththi.vsp_farm.service.ItemService;
@@ -90,6 +93,16 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private EpsonPrinterHelper epsonPrinterHelper;
 
+    private RecyclerView itemsRecycleView;
+
+    private Button viewBasketButton,closeBasketButton;
+
+    private ScrollView billingScrollView;
+
+    private LinearLayout customerLayout;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +123,17 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         printBillButton.setOnClickListener(v -> printBill());
         loanButton.setOnClickListener(v -> LoanButtonClick());
 
+        viewBasketButton = findViewById(R.id.viewBasketButton);
+        closeBasketButton = findViewById(R.id.closeBasketButton);
+        billingScrollView = findViewById(R.id.billingScrollView);
+        customerLayout = findViewById(R.id.customerLayout);
+
         billItems = new ArrayList<>();
+
+        if (AppConstant.USER_NAME == null) {
+            Intent intent = new Intent(BillingPageActivity.this, LoginActivity.class);
+            appConstant.SuccessAlert(AppConstant.ERROR, "Please Login Again", intent);
+        }
 
 
         initializeUIComponents();
@@ -145,10 +168,29 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
             }
         });
+
+        viewBasketButton.setOnClickListener(v -> {
+            billingScrollView.setVisibility(View.VISIBLE);
+            closeBasketButton.setVisibility(View.VISIBLE);
+
+            viewBasketButton.setVisibility(View.GONE);
+            itemsRecycleView.setVisibility(View.GONE);
+            customerLayout.setVisibility(View.GONE);
+            backButton.setVisibility(View.GONE);
+
+        });
+
+        closeBasketButton.setOnClickListener(v -> {
+            billingScrollView.setVisibility(View.GONE);
+            closeBasketButton.setVisibility(View.GONE);
+
+            viewBasketButton.setVisibility(View.VISIBLE);
+            itemsRecycleView.setVisibility(View.VISIBLE);
+            customerLayout.setVisibility(View.VISIBLE);
+            backButton.setVisibility(View.VISIBLE);
+        });
     }
 
-
-    // Method to display a dialog with sub-items for a selected item
     private void showSubItemDialog(Item item) {
         // Get sub-items for the selected item
         List<SubItem> subItems = subItemService.getSubItemsByItemId(item.getId());
@@ -401,7 +443,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             return;
         }
         printBillButton.setEnabled(false);
-
+        loanButton.setEnabled(false);
         String referenceNumber = appConstant.generateReferenceNumber();
         double inputAmount = inputAmountEditText.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(inputAmountEditText.getText().toString());
         if (printBill(billItems, false, totalAmount, inputAmount, balance,referenceNumber)) {
@@ -429,6 +471,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         }
         String referenceNumber = appConstant.generateReferenceNumber();
         loanButton.setEnabled(false);
+        printBillButton.setEnabled(false);
         isLoan = true;
 
         boolean isPrinted = printBill(billItems, true, totalAmount, 0, 0,referenceNumber);
@@ -512,7 +555,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private void setupItemsGridView() {
         List<Item> items = itemService.getAllItems();
-        RecyclerView itemsRecycleView = findViewById(R.id.itemsGridView);
+        itemsRecycleView = findViewById(R.id.itemsGridView);
         ItemRecycleAdapter adapter = new ItemRecycleAdapter(this, items, item -> showSubItemDialog(item));
         itemsRecycleView.setLayoutManager(new GridLayoutManager(this, 3));
         itemsRecycleView.setAdapter(adapter);
