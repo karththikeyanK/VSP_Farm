@@ -3,8 +3,6 @@ package com.karththi.vsp_farm.page.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,16 +11,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.epson.epos2.Epos2Exception;
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.helper.AppConstant;
-import com.karththi.vsp_farm.page.CreateUserActivity;
 import com.karththi.vsp_farm.page.LoginActivity;
-import com.karththi.vsp_farm.page.PrintActivity;
 import com.karththi.vsp_farm.page.admin.item.ItemListActivity;
 import com.karththi.vsp_farm.page.admin.report.ReportActivity;
 import com.karththi.vsp_farm.page.admin.report.ViewBillActivity;
-import com.karththi.vsp_farm.printer.EpsonPrinterHelper;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
@@ -32,21 +26,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private Button viewReportButton,viewBillButton,viewLoanButton;
 
-    private EpsonPrinterHelper printerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
-
-
-        try {
-            printerHelper = new EpsonPrinterHelper(this);
-        } catch (Epos2Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
 
         // Example: Display a welcome message
         TextView welcomeTextView = findViewById(R.id.welcomeTextView);
@@ -68,13 +52,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         viewLoanButton = findViewById(R.id.viewLoanButton);
         viewLoanButton.setOnClickListener(v -> {
-            printerHelper.printText();
-//            try {
-//                printerHelper.printHelloWorld();
-//            } catch (Epos2Exception e) {
-//                Log.e("AdminDashboard", "Print failed", e);
-//                return; // Exit if printing failed to avoid further operations
-//            }
+            Intent intent = new Intent(this, GetLoanPaymentActivity.class);
+            startActivity(intent);
 
         });
 

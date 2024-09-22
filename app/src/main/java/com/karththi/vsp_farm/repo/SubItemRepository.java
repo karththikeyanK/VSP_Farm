@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.karththi.vsp_farm.db.DbHelper;
+import com.karththi.vsp_farm.dto.BillItemsDetailDto;
+import com.karththi.vsp_farm.dto.PrintItemDto;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.SubItem;
 
@@ -97,4 +100,44 @@ public class SubItemRepository {
         db.close();
         return isExists;
     }
+
+
+
+    // get sub item name, sub item price , item measurement
+    public PrintItemDto getPrintItem(int subItemId){
+        PrintItemDto printItemDto = null;
+        Log.d("SubItemRepository", "getPrintItem: subItemId: " + subItemId);
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+
+        try {
+            db = dbHelper.getReadableDatabase();
+            String query = "SELECT si.name, si.price, i.measurement, i.name FROM "+AppConstant.SUB_ITEM_TABLE+" si INNER JOIN "+AppConstant.ITEM_TABLE+" i ON si.item_id = i.id WHERE si.id = ?";
+            cursor = db.rawQuery(query, new String[]{String.valueOf(subItemId)});
+            if (cursor != null && cursor.moveToFirst()) {
+                String subItemName = cursor.getString(0);
+                Double subItemPrice = cursor.getDouble(1);
+                String itemMeasurement = cursor.getString(2);
+                String itemName = cursor.getString(3);
+               printItemDto = new PrintItemDto();
+                printItemDto.setItemName(subItemName);
+                printItemDto.setUnitPrice(subItemPrice);
+                printItemDto.setMeasurement(itemMeasurement);
+                printItemDto.setName(itemName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e("SubItemRepository", "getPrintItem: ", e);
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return printItemDto;
+    }
+
 }

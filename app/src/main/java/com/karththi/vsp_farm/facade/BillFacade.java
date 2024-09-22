@@ -44,7 +44,7 @@ public class BillFacade {
         loanService = new LoanService(context);
     }
 
-    public void addBill(List<BillItem> billItems,boolean isLoan,int customerId, SaveBill saveBill) {
+    public void addBill(List<BillItem> billItems,boolean isLoan,int customerId, SaveBill saveBill,String referenceNumber) {
         Log.i("BillFacade", "BillFacade::addBill()::is called");
 
         double totalAmount = 0;
@@ -54,7 +54,7 @@ public class BillFacade {
         }
 
         Bill bill = new Bill();
-        bill.setReferenceNumber(appConstant.generateReferenceNumber());
+        bill.setReferenceNumber(referenceNumber);
         bill.setTotalAmount(totalAmount);
         bill.setCustomerId(customerId);
         bill.setUserId(AppConstant.USER_TABLE_ID);

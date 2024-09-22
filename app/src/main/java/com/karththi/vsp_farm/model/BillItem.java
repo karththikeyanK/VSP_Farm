@@ -5,6 +5,7 @@ public class BillItem {
     private int billId;
     private int subItemId;
     private Double quantity;
+
     private double price;
 
     private double discount;

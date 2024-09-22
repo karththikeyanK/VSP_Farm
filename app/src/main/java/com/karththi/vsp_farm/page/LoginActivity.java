@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         userRepository = new UserRepository(this);
 
+        AppConstant.PRINTER_TARGET = "";
+
         // Set the login button click listener
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

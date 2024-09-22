@@ -41,6 +41,7 @@ public class AppConstant {
     public static final String SUCCESS = "SUCCESS";
     public static final String ERROR = "ERROR";
 
+    public static  String PRINTER_TARGET = "";
 
     public static Integer USER_TABLE_ID =null;
     public static String USER_ID = "";

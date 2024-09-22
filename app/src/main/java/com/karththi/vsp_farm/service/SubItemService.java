@@ -3,6 +3,7 @@ package com.karththi.vsp_farm.service;
 import android.content.Context;
 import android.util.Log;
 
+import com.karththi.vsp_farm.dto.PrintItemDto;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.SubItem;
 import com.karththi.vsp_farm.repo.SubItemRepository;
@@ -67,6 +68,13 @@ public class SubItemService {
 
     public boolean isExistByName(String name){
         return subItemRepository.isSubItemExists(name);
+    }
+
+    public PrintItemDto getPrintItem(int subItemId){
+        Log.d(TAG, TAG + "::getPrintItem()::Getting print item by sub item id "+subItemId);
+        PrintItemDto printItemDto = subItemRepository.getPrintItem(subItemId);
+        Log.d(TAG, TAG + "::getPrintItem()::Print item fetched successfully");
+        return printItemDto;
     }
 
 }

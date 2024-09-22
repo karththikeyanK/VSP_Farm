@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.callBack.SaveBill;
+import com.karththi.vsp_farm.dto.CustomerPrintDto;
+import com.karththi.vsp_farm.dto.PrintItemDto;
 import com.karththi.vsp_farm.facade.BillFacade;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.adapter.ItemRecycleAdapter;
@@ -35,9 +37,15 @@ import com.karththi.vsp_farm.helper.adapter.SubItemGridAdapter;
 import com.karththi.vsp_farm.model.BillItem;
 import com.karththi.vsp_farm.model.Customer;
 import com.karththi.vsp_farm.model.Item;
+import com.karththi.vsp_farm.model.Loan;
+import com.karththi.vsp_farm.model.LoanPayment;
+import com.karththi.vsp_farm.model.Measurement;
 import com.karththi.vsp_farm.model.SubItem;
+import com.karththi.vsp_farm.printer.EpsonPrinterHelper;
 import com.karththi.vsp_farm.service.CustomerService;
 import com.karththi.vsp_farm.service.ItemService;
+import com.karththi.vsp_farm.service.LoanPaymentService;
+import com.karththi.vsp_farm.service.LoanService;
 import com.karththi.vsp_farm.service.SubItemService;
 
 import java.util.ArrayList;
@@ -46,14 +54,16 @@ import java.util.List;
 
 
 public class BillingPageActivity extends AppCompatActivity implements SaveBill {
-
-    private ItemService itemService;
-
     private AppConstant appConstant;
 
+    private ItemService itemService;
     private CustomerService customerService;
 
     private SubItemService subItemService;
+
+    private LoanService loanService;
+
+    private LoanPaymentService loanPaymentService;
     private TableLayout billingTableLayout;
     private TextView totalPriceTextView;
     private EditText inputAmountEditText;
@@ -62,9 +72,9 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private Spinner customerSpinner;
 
-    private List<BillItem> billItems ;
+    private List<BillItem> billItems;
 
-    private Button backButton, loanButton,printBillButton;
+    private Button backButton, loanButton, printBillButton;
 
     private int customerId;
 
@@ -78,6 +88,8 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private boolean isLoan = false;
 
+    private EpsonPrinterHelper epsonPrinterHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,14 +101,16 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         customerService = new CustomerService(this);
         appConstant = new AppConstant(this);
         billFacade = new BillFacade(this);
+        epsonPrinterHelper = new EpsonPrinterHelper(this);
+        loanService = new LoanService(this);
+        loanPaymentService = new LoanPaymentService(this);
 
         loanButton = findViewById(R.id.loanButton);
         printBillButton = findViewById(R.id.printBillButton);
         printBillButton.setOnClickListener(v -> printBill());
-        loanButton.setOnClickListener(v->LoanButtonClick());
+        loanButton.setOnClickListener(v -> LoanButtonClick());
 
         billItems = new ArrayList<>();
-
 
 
         initializeUIComponents();
@@ -109,31 +123,29 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Customer selectedCustomer = (Customer) parent.getItemAtPosition(position);
-                selectedCus =selectedCustomer;
+                selectedCus = selectedCustomer;
                 if (!selectedCustomer.getName().equals("DEFAULT")) {
                     loanButton.setVisibility(View.VISIBLE);
                 }
 
-                if (selectedCustomer.equals(null) || selectedCustomer == null){
+                if (selectedCustomer.equals(null) || selectedCustomer == null) {
                     appConstant.ShowAlert("Error", "Please select a customer");
                     return;
                 }
                 customerId = selectedCustomer.getId();
-                if (customerId ==0 ){
+                if (customerId == 0) {
                     appConstant.ShowAlert("Error", "Please select a customer");
                     return;
                 }
 
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
     }
-
-
-
 
 
     // Method to display a dialog with sub-items for a selected item
@@ -157,13 +169,12 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // Handle sub-item click
         subItemsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 SubItem selectedSubItem = subItems.get(position);
                 addSubItemToBill(selectedSubItem);
-                dialog.dismiss(); // Close the dialog after selecting a sub-item
+                dialog.dismiss();
             }
         });
     }
@@ -203,7 +214,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             itemDiscount.setEnabled(false);
         }
 
-        updateRowOnFocusChange(itemPrice, itemDiscount, itemQuantity, itemTotal,billId );
+        updateRowOnFocusChange(itemPrice, itemDiscount, itemQuantity, itemTotal, billId);
 
         // Handle row deletion
         deleteItem.setOnClickListener(v -> {
@@ -224,9 +235,6 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         billingTableLayout.addView(row);
         updateTotalAmount();
     }
-
-
-
 
 
     private void updateRowOnFocusChange(TextView itemPrice, EditText itemDiscount, EditText itemQuantity, EditText itemTotal, int billId) {
@@ -277,7 +285,20 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
                 double total = parseDoubleOrDefault(itemTotal.getText().toString());
                 double discount = parseDoubleOrDefault(itemDiscount.getText().toString());
                 double price = parseDoubleOrDefault(itemPrice.getText().toString());
-                double qty = total / (price - discount);
+                double qty = 0.0;
+                if (total == 0) {
+                    itemQuantity.setText("0.0");
+                    itemTotal.setText("0.0");
+                    billItem.setPrice(0.0);
+                    billItem.setQuantity(0.0);
+                    billItem.setDiscount(0.0);
+                    updateBillItem(billItem, billId);
+                    updateTotalAmount();
+                    appConstant.ShowAlert("Error", "Please enter the price");
+                    return;
+                }else {
+                    qty = total / (price - discount);
+                };
                 itemQuantity.setText(String.format("%.3f", qty));
                 billItem.setPrice(total);
                 billItem.setQuantity(Double.parseDouble(String.format("%.3f", qty)));
@@ -318,9 +339,9 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         });
     }
 
-    private void updateBillItem(BillItem billItem, int id){
-        for(BillItem item: billItems){
-            if(item.getId() == id){
+    private void updateBillItem(BillItem billItem, int id) {
+        for (BillItem item : billItems) {
+            if (item.getId() == id) {
                 item.setPrice(billItem.getPrice());
                 item.setQuantity(billItem.getQuantity());
                 item.setDiscount(billItem.getDiscount());
@@ -367,7 +388,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             return;
         }
 
-        if(balance < 0){
+        if (balance < 0) {
             appConstant.ShowAlert("Error", "Amount paid is less than the total amount");
             return;
         }
@@ -380,13 +401,22 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             return;
         }
         printBillButton.setEnabled(false);
-        billFacade.addBill(billItems, false, customerId, this);
+
+        String referenceNumber = appConstant.generateReferenceNumber();
+        double inputAmount = inputAmountEditText.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(inputAmountEditText.getText().toString());
+        if (printBill(billItems, false, totalAmount, inputAmount, balance,referenceNumber)) {
+            billFacade.addBill(billItems, false, customerId, this, referenceNumber);
+            epsonPrinterHelper.closePrinter();
+        } else {
+            failedToPrintBill();
+        }
+
     }
 
-    private void LoanButtonClick(){
-        if (selectedCus.getName().equals(AppConstant.DEFAULT)){
-            Intent intent = new Intent(BillingPageActivity.this,BillingPageActivity.class);
-            appConstant.SuccessAlert(AppConstant.ERROR,"Please Add items Again",intent);
+    private void LoanButtonClick() {
+        if (selectedCus.getName().equals(AppConstant.DEFAULT)) {
+            Intent intent = new Intent(BillingPageActivity.this, BillingPageActivity.class);
+            appConstant.SuccessAlert(AppConstant.ERROR, "Please Add items Again", intent);
             return;
         }
         if (customerId == 0) {
@@ -397,9 +427,79 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             appConstant.ShowAlert("Error", "Please add items to the bill");
             return;
         }
+        String referenceNumber = appConstant.generateReferenceNumber();
         loanButton.setEnabled(false);
-        isLoan =true;
-        billFacade.addBill(billItems, true, customerId, this);
+        isLoan = true;
+
+        boolean isPrinted = printBill(billItems, true, totalAmount, 0, 0,referenceNumber);
+        if (isPrinted) {
+            billFacade.addBill(billItems, true, customerId, this, referenceNumber);
+            epsonPrinterHelper.closePrinter();
+        } else {
+            failedToPrintBill();
+        }
+
+
+    }
+
+    private void failedToPrintBill() {
+        runOnUiThread(() -> {
+            printBillButton.setEnabled(true);
+            loanButton.setEnabled(true);
+            appConstant.ShowAlert("Error", "Failed to print bill");
+        });
+    }
+
+
+    private boolean printBill(List<BillItem> billItems, boolean isLoan, double totalAmount, double inputAmount, double balance,String referenceNumber) {
+        List<PrintItemDto> printItems = new ArrayList<>();
+        boolean  isReprint = false;
+        boolean isDefault = true;
+        for (BillItem billItem : billItems) {
+            PrintItemDto printItemDto = subItemService.getPrintItem(billItem.getSubItemId());
+            printItemDto.setQuantity(billItem.getQuantity());
+            printItemDto.setTotal(billItem.getPrice());
+            printItemDto.setDiscount(billItem.getDiscount());
+            printItems.add(printItemDto);
+
+            if (billItem.getPrice() == 0) {
+                appConstant.ShowAlert("Error", "Please enter the total for " + printItemDto.getItemName());
+                return false;
+            }
+
+            if (printItemDto.getMeasurement().equals(Measurement.LITRE.name())){
+                printItemDto.setMeasurement("L");
+            }else if (printItemDto.getMeasurement().equals(Measurement.PIECE.name())) {
+                printItemDto.setMeasurement("PC");
+            }
+
+            if (printItemDto.getName().toLowerCase().equals("chicken") || printItemDto.getName().toLowerCase().equals("mutton")) {
+                isReprint = true;
+            }
+        }
+        CustomerPrintDto customerPrintDto = new CustomerPrintDto();
+        customerPrintDto.setCustomerName(selectedCus.getName());
+        customerPrintDto.setReferenceNumber(referenceNumber);
+        customerPrintDto.setBalance(balance);
+        if (!selectedCus.getName().equals(AppConstant.DEFAULT)) {
+            Loan loan = loanService.getLoanByCustomerId(customerId);
+            if (loan != null) {
+                LoanPayment loanPayment = loanPaymentService.getLastPaymentByLoanId(loan.getId());
+                customerPrintDto.setTotalRemainingAmount(loan.getRemainingAmount());
+                if (loanPayment != null) {
+                    customerPrintDto.setLastPaymentAmount(loanPayment.getPaymentAmount());
+                    customerPrintDto.setLastPaymentDate(loanPayment.getPaymentDate());
+                }
+            }
+            isDefault = false;
+        }
+        customerPrintDto.setTotalAmount(totalAmount);
+        if (!isLoan) {
+            customerPrintDto.setTotalPaidAmount(inputAmount);
+            customerPrintDto.setTotalRemainingAmount(balance);
+
+        }
+        return epsonPrinterHelper.printBill(printItems, customerPrintDto, isLoan, isDefault,isReprint);
     }
 
 
@@ -512,9 +612,9 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             @Override
             public void run() {
                 Intent intent = new Intent(BillingPageActivity.this, BillingPageActivity.class);
-                if(isLoan){
+                if (isLoan) {
                     startActivity(intent);
-                }else {
+                } else {
                     appConstant.showBalancePopup("Balance", String.format("Balance: %.2f", balance), () -> startActivity(intent));
                 }
             }
@@ -523,6 +623,13 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     @Override
     public void onSaveBillError(String message) {
-
+//        appConstant.ShowAlert("Error", "Failed to save bill. Please add this your Note");
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        epsonPrinterHelper.closePrinter();
+    }
+
 }
