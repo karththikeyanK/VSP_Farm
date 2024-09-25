@@ -128,7 +128,7 @@ public class TodayReportFactory {
         }
         report.addTotalAndQuantity(cashTotal,cashDiscount);
 
-        report.addTableHeading("Loan Sales");
+        report.addTableHeading("Credit Sales");
 
         report.addTableHeader( detail_header, detail_col_width,0);
 
@@ -150,7 +150,7 @@ public class TodayReportFactory {
         report.addTotalAndQuantity(loanTotal,loanDiscount);
 
         List<LoanDto> loanDtoList = loanFacade.getAllLoanDto();
-        report.addTableHeading("Loan Details : ("+DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() +")");
+        report.addTableHeading("Credit Details : ("+DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() +")");
         String[] loanHeaders = {"Customer","Last Payment", "Last pay Date","Remaining"};
         int[] loan_col_widths = {150, 120, 130, 130};
         report.addTableHeader(loanHeaders,loan_col_widths,0);
@@ -169,7 +169,7 @@ public class TodayReportFactory {
         report.addCustomTotal("Remaining Total",remainingLoan);
 
         List<LoanPaymentDto> loanPaymentList = loanPaymentService.getAllCustomerLoanPaymentsByDate(DateTimeUtils.getCurrentDate());
-        report.addTableHeading("Loan Payments");
+        report.addTableHeading(" Received Cash form Debtors");
         String[] loanPaymentHeaders = {"Customer","Payment Date", "Amount"};
         int[] loanPayment_col_widths = {150, 150, 130};
         report.addTableHeader(loanPaymentHeaders,loanPayment_col_widths,0);

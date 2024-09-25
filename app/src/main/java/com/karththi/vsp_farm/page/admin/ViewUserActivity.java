@@ -24,7 +24,7 @@ public class ViewUserActivity extends AppCompatActivity {
     private UserAdapter userAdapter;
     private UserRepository userRepository;
 
-    private Button backButton;
+    private Button backButton,editButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

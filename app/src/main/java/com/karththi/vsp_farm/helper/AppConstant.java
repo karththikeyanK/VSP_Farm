@@ -35,7 +35,7 @@ public class AppConstant {
 
     public static final String LOAN_PAYMENT_TABLE = "LoanPayment";
     public static final String COMPANY_NAME = "VSP Farm";
-    public static final String LOAN = "LOAN";
+    public static final String LOAN = "CREDIT";
     public static final String CASH = "CASH";
     public static final String DEFAULT = "DEFAULT";
     public static final String SUCCESS = "SUCCESS";

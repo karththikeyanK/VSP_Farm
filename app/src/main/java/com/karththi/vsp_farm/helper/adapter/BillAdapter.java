@@ -75,6 +75,7 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
             // Send the bill ID to BillDetailsActivity
             Intent intent = new Intent(context, BillDetailsActivity.class);
             intent.putExtra("bill_id", bill.getId());  // Pass the bill ID
+            intent.putExtra("customer_id", customer.getId());
             intent.putExtra("customer_name", customer.getName());
             intent.putExtra("reference_number", bill.getReferenceNumber());
             intent.putExtra("total_amount", bill.getTotalAmount().toString());

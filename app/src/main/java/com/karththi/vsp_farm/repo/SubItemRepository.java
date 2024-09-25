@@ -140,4 +140,20 @@ public class SubItemRepository {
         return printItemDto;
     }
 
+    public List<SubItem> getAllSubItems() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(AppConstant.SUB_ITEM_TABLE, null, null, null, null, null, "item_id ASC");
+        List<SubItem> subItemList = new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                Double price = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
+                int itemId = cursor.getInt(cursor.getColumnIndexOrThrow("item_id"));
+                subItemList.add(new SubItem(id, name, price, itemId));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return subItemList;
+    }
 }

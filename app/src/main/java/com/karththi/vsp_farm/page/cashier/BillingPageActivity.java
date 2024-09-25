@@ -2,7 +2,10 @@ package com.karththi.vsp_farm.page.cashier;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +57,7 @@ import com.karththi.vsp_farm.service.SubItemService;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 
 public class BillingPageActivity extends AppCompatActivity implements SaveBill {
@@ -93,13 +97,14 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private EpsonPrinterHelper epsonPrinterHelper;
 
-    private RecyclerView itemsRecycleView;
 
     private Button viewBasketButton,closeBasketButton;
 
     private ScrollView billingScrollView;
 
     private LinearLayout customerLayout;
+
+    private RecyclerView itemsGridView;
 
 
 
@@ -174,9 +179,9 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             closeBasketButton.setVisibility(View.VISIBLE);
 
             viewBasketButton.setVisibility(View.GONE);
-            itemsRecycleView.setVisibility(View.GONE);
             customerLayout.setVisibility(View.GONE);
             backButton.setVisibility(View.GONE);
+            itemsGridView.setVisibility(View.GONE);
 
         });
 
@@ -185,42 +190,11 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             closeBasketButton.setVisibility(View.GONE);
 
             viewBasketButton.setVisibility(View.VISIBLE);
-            itemsRecycleView.setVisibility(View.VISIBLE);
             customerLayout.setVisibility(View.VISIBLE);
             backButton.setVisibility(View.VISIBLE);
+            itemsGridView.setVisibility(View.VISIBLE);
         });
     }
-
-    private void showSubItemDialog(Item item) {
-        // Get sub-items for the selected item
-        List<SubItem> subItems = subItemService.getSubItemsByItemId(item.getId());
-
-        // Create a dialog to show the sub-items
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Sub-item");
-
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_sub_items, null);
-        GridView subItemsGridView = dialogView.findViewById(R.id.subItemsGridView);
-
-        // Set up adapter for the sub-items GridView
-        SubItemGridAdapter adapter = new SubItemGridAdapter(this, subItems);
-        subItemsGridView.setAdapter(adapter);
-
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        subItemsGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SubItem selectedSubItem = subItems.get(position);
-                addSubItemToBill(selectedSubItem);
-                dialog.dismiss();
-            }
-        });
-    }
-
     private void addSubItemToBill(SubItem subItem) {
         LayoutInflater inflater = LayoutInflater.from(this);
         TableRow row = (TableRow) inflater.inflate(R.layout.billing_row, billingTableLayout, false);
@@ -355,22 +329,27 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
                 double qty = parseDoubleOrDefault(itemQuantity.getText().toString());
                 double discount = parseDoubleOrDefault(itemDiscount.getText().toString());
                 double price = parseDoubleOrDefault(itemPrice.getText().toString());
-                double total = qty * (price - discount);
+                double total = parseDoubleOrDefault(itemTotal.getText().toString());
+                double newTotal = (price - discount) * qty;
+                if (qty !=0 && ((total - newTotal) > 1 || (total - newTotal) < -1 )){
+                    total = (price - discount) * qty;
+                }
                 itemTotal.setText(String.format("%.2f", total));
                 billItem.setPrice(total);
                 billItem.setQuantity(Double.parseDouble(String.format("%.3f", qty)));
                 billItem.setDiscount(Double.parseDouble(String.format("%.3f", discount)));
                 updateBillItem(billItem, billId);
                 updateTotalAmount();
+
             }
         });
 
         itemDiscount.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 double price = parseDoubleOrDefault(itemPrice.getText().toString());
-                double discount = parseDoubleOrDefault(itemDiscount.getText().toString());
-                double qty = parseDoubleOrDefault(itemQuantity.getText().toString());
-                double total = qty * (price - discount);
+                double discount = parseDoubleOrDefault(itemDiscount.getText().toString());;
+                double total = parseDoubleOrDefault(itemTotal.getText().toString());
+                double qty = total / (price - discount);
                 itemTotal.setText(String.format("%.2f", total));
                 billItem.setPrice(total);
                 billItem.setQuantity(Double.parseDouble(String.format("%.3f", qty)));
@@ -409,7 +388,10 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         for (int i = 1; i < billingTableLayout.getChildCount(); i++) {
             TableRow row = (TableRow) billingTableLayout.getChildAt(i);
             EditText itemTotal = row.findViewById(R.id.itemTotal);
-            totalAmount += Double.parseDouble(itemTotal.getText().toString());
+            String itemTotalStr = itemTotal.getText().toString();
+            if (!itemTotalStr.isEmpty()) {
+                totalAmount += Double.parseDouble(itemTotalStr);
+            }
         }
         totalPriceTextView.setText(String.format("Total: %.2f", totalAmount));
         calculateBalance();
@@ -424,13 +406,17 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
     }
 
     private void printBill() {
-
+        validateBill();
+        if (AppConstant.USER_NAME == null) {
+            Intent intent = new Intent(BillingPageActivity.this, LoginActivity.class);
+            appConstant.SuccessAlert(AppConstant.ERROR, "Please Login Again", intent);
+        }
         if (inputAmountEditText.getText().toString().isEmpty()) {
             appConstant.ShowAlert("Error", "Please enter the amount paid");
             return;
         }
 
-        if (balance < 0) {
+        if ( balance <= -20) {
             appConstant.ShowAlert("Error", "Amount paid is less than the total amount");
             return;
         }
@@ -456,6 +442,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
     }
 
     private void LoanButtonClick() {
+        validateBill();
         if (selectedCus.getName().equals(AppConstant.DEFAULT)) {
             Intent intent = new Intent(BillingPageActivity.this, BillingPageActivity.class);
             appConstant.SuccessAlert(AppConstant.ERROR, "Please Add items Again", intent);
@@ -488,9 +475,19 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
     private void failedToPrintBill() {
         runOnUiThread(() -> {
             printBillButton.setEnabled(true);
-            loanButton.setEnabled(true);
+           if (selectedCus.getName().equals(AppConstant.DEFAULT)) {
+               loanButton.setEnabled(true);
+           }
             appConstant.ShowAlert("Error", "Failed to print bill");
         });
+    }
+
+    private void validateBill() {
+        for (BillItem billItem : billItems) {
+            billItem.setQuantity(Double.parseDouble(String.format(Locale.US, "%.3f", billItem.getQuantity())));
+            billItem.setPrice(Double.parseDouble(String.format(Locale.US, "%.2f", billItem.getPrice())));
+            billItem.setDiscount(Double.parseDouble(String.format(Locale.US, "%.2f", billItem.getDiscount())));
+        }
     }
 
 
@@ -542,7 +539,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             customerPrintDto.setTotalRemainingAmount(balance);
 
         }
-        return epsonPrinterHelper.printBill(printItems, customerPrintDto, isLoan, isDefault,isReprint);
+        return epsonPrinterHelper.printBill(printItems, customerPrintDto, isLoan, isDefault,isReprint,false);
     }
 
 
@@ -554,11 +551,12 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
     }
 
     private void setupItemsGridView() {
-        List<Item> items = itemService.getAllItems();
-        itemsRecycleView = findViewById(R.id.itemsGridView);
-        ItemRecycleAdapter adapter = new ItemRecycleAdapter(this, items, item -> showSubItemDialog(item));
-        itemsRecycleView.setLayoutManager(new GridLayoutManager(this, 3));
-        itemsRecycleView.setAdapter(adapter);
+         itemsGridView = findViewById(R.id.itemsGridView);
+        List<SubItem> subItemList = subItemService.getAllSubItems();
+        SubItemAdapter adapter = new SubItemAdapter(subItemList, this);
+        itemsGridView.setAdapter(adapter);
+        itemsGridView.setLayoutManager(new GridLayoutManager(this, 5)); // 5 columns
+
     }
 
     private void setupInputAmountEditText() {
@@ -579,18 +577,21 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                tv.setTextSize(20);
+                tv.setTextSize(24);
                 tv.setText(getItem(position).getName());  // Display the customer's name
                 return view;
             }
 
             @Override
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.dropdown_item, parent, false);
+                }
+                TextView tv = convertView.findViewById(R.id.dropdown_text);
                 tv.setText(getItem(position).getName());  // Display the customer's name
-                return view;
+                return convertView;
             }
+
         };
 
         customerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -674,5 +675,242 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         super.onDestroy();
         epsonPrinterHelper.closePrinter();
     }
+
+    public class SubItemAdapter extends RecyclerView.Adapter<SubItemAdapter.ViewHolder> {
+        private List<SubItem> subItemList;
+        private Context context;
+
+        public SubItemAdapter(List<SubItem> subItemList, Context context) {
+            this.subItemList = subItemList;
+            this.context = context;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_sub, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            SubItem subItem = subItemList.get(position);
+            holder.subItemName.setText(subItem.getSubItemName());
+            holder.subItemPrice.setText( subItem.getPrice()+" LKR");
+
+            holder.itemView.setOnClickListener(v -> showPopup(subItem));
+        }
+
+        @Override
+        public int getItemCount() {
+            return subItemList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            TextView subItemName, subItemPrice;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                subItemName = itemView.findViewById(R.id.subItemName);
+                subItemPrice = itemView.findViewById(R.id.subItemPrice);
+            }
+        }
+
+        private void showPopup(SubItem subItem) {
+            // Inflate the popup layout
+            View popupView = LayoutInflater.from(context).inflate(R.layout.popup_layout, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setView(popupView);
+
+            TextView discountLabel = popupView.findViewById(R.id.discountLabel);
+            TextView itemName = popupView.findViewById(R.id.itemName);
+            EditText priceInput = popupView.findViewById(R.id.priceInput);
+            EditText qtyInput = popupView.findViewById(R.id.qtyInput);
+            EditText discountInput = popupView.findViewById(R.id.discountInput);
+            Button addButton = popupView.findViewById(R.id.addButton);
+
+            itemName.setText(subItem.getSubItemName() + " - " + subItem.getPrice() + " LKR");
+            qtyInput.setText("1");
+
+            if (selectedCus.getName().equals(AppConstant.DEFAULT)) {
+                discountInput.setEnabled(false);
+                discountInput.setVisibility(View.GONE);
+                discountLabel.setVisibility(View.GONE);
+            } else {
+                discountInput.setEnabled(true);
+                discountInput.setVisibility(View.VISIBLE);
+                discountLabel.setVisibility(View.VISIBLE);
+                discountInput.setText("0.0");
+            }
+
+            priceInput.setText(String.valueOf(subItem.getPrice()));
+
+            // Clear the field when touched
+            priceInput.setOnTouchListener((v, event) -> {
+                priceInput.getText().clear();
+                return false;
+            });
+
+            qtyInput.setOnTouchListener((v, event) -> {
+                qtyInput.getText().clear();
+                return false;
+            });
+
+            discountInput.setOnTouchListener((v, event) -> {
+                discountInput.getText().clear();
+                return false;
+            });
+
+            priceInput.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    double price = parseDoubleSafely(priceInput, subItem.getPrice());
+                    double discount = parseDoubleSafely(discountInput, 0.0);
+
+                    // Calculate quantity based on the new price
+                    double qty = price / (subItem.getPrice() - discount);
+                    qtyInput.setText(String.valueOf(Double.parseDouble(String.format("%.3f", qty))));
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+
+            qtyInput.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    double qty = parseDoubleSafely(qtyInput, 1.0);
+                    double discount = parseDoubleSafely(discountInput, 0.0);
+
+                    double price = qty * (subItem.getPrice() - discount);
+                    discountInput.setText(String.valueOf(discount));
+                    qtyInput.setText(String.valueOf(qty));
+                    priceInput.setText(String.valueOf(price));
+                }
+            });
+
+            discountInput.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    double qty = parseDoubleSafely(qtyInput, 1.0);
+                    double discount = parseDoubleSafely(discountInput, 0.0);
+
+                    double price = qty * (subItem.getPrice() - discount);
+                    discountInput.setText(String.valueOf(discount));
+                    qtyInput.setText(String.valueOf(qty));
+                    priceInput.setText(String.valueOf(price));
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            addButton.setOnClickListener(v -> {
+                double price = parseDoubleSafely(priceInput, subItem.getPrice());
+                double qty = parseDoubleSafely(qtyInput, 1.0);
+                double discount = parseDoubleSafely(discountInput, 0.0);
+
+                if ((price + 1)  < (subItem.getPrice() - discount) * qty)  {
+                    price = (subItem.getPrice() - discount) * qty;
+                } else if (price == 0 && qty == 0) {
+                    appConstant.ShowAlert("Error", "Please enter the price or quantity");
+                    return;
+                } else if (price > (subItem.getPrice() - discount) * qty) {
+                    qty = price / (subItem.getPrice() - discount);
+                    qty = Double.parseDouble(String.format("%.3f", qty));
+                }
+                price = Double.parseDouble(String.format("%.2f", price));
+                addItemToCart(subItem, price, qty, discount);
+                dialog.dismiss();
+            });
+        }
+
+
+
+        private double parseDoubleSafely(EditText editText, double defaultValue) {
+            String text = editText.getText().toString().trim();
+            if (text.isEmpty()) {
+                return defaultValue; // Return default if the input is empty
+            } else {
+                return Double.parseDouble(text); // Parse the value if it's not empty
+            }
+        }
+
+        private void addItemToCart(SubItem subItem, double price, double qty, double discount) {
+            BillItem billItem = new BillItem();
+            billItem.setSubItemId(subItem.getId());
+            billItem.setPrice(price);
+            billItem.setQuantity(qty);
+            billItem.setDiscount(discount);
+
+            LayoutInflater inflater = LayoutInflater.from(context);
+            TableRow row = (TableRow) inflater.inflate(R.layout.billing_row, billingTableLayout, false);
+
+            TextView itemName = row.findViewById(R.id.itemName);
+            TextView itemPrice = row.findViewById(R.id.itemPrice);
+            EditText itemDiscount = row.findViewById(R.id.itemDiscount);
+            EditText itemQuantity = row.findViewById(R.id.itemQuantity);
+            EditText itemTotal = row.findViewById(R.id.itemTotal);
+            TextView deleteItem = row.findViewById(R.id.deleteItem);
+            itemDiscount.setOnTouchListener((v, event) -> {
+                itemDiscount.getText().clear();
+                return false;
+            });
+
+            itemQuantity.setOnTouchListener((v, event) -> {
+                itemQuantity.getText().clear();
+                return false;
+            });
+
+            itemTotal.setOnTouchListener((v, event) -> {
+                itemTotal.getText().clear();
+                return false;
+            });
+
+
+            if (selectedCus.getName().equals(AppConstant.DEFAULT)) {
+                itemDiscount.setEnabled(false);
+            }
+            // Create and add BillItem to the list
+            billId++;
+            billItem.setId(billId);
+            billItems.add(billItem);
+            row.setTag(billId);
+
+            itemDiscount.setText(String.valueOf(discount));
+            itemName.setText(subItem.getSubItemName());
+            itemPrice.setText(String.valueOf(subItem.getPrice()));
+            itemQuantity.setText(String.valueOf(qty));
+            itemTotal.setText(String.valueOf(price ));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                itemTotal.getFocusable();
+            }
+            updateRowOnFocusChange(itemPrice, itemDiscount, itemQuantity, itemTotal, billId);
+
+            // Handle row deletion
+            deleteItem.setOnClickListener(v -> {
+                int id = (int) row.getTag();
+                Iterator<BillItem> iterator = billItems.iterator();
+                while (iterator.hasNext()) {
+                    BillItem billItem1 = iterator.next();
+                    if (billItem1.getId() == id) {
+                        iterator.remove();
+                        billingTableLayout.removeView(row);
+                        updateTotalAmount();
+                        break;
+                    }
+                }
+
+            });
+
+            billingTableLayout.addView(row);
+            updateTotalAmount();
+
+        }
+
+
+    }
+
 
 }

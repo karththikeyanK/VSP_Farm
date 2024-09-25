@@ -3,8 +3,11 @@ package com.karththi.vsp_farm.page.admin.report;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,13 +43,17 @@ public class ViewBillActivity extends AppCompatActivity {
     private Calendar date2 = null;
 
     private Button allButton,cashButton,loanButton,deletedButton;
+
+    private List<Bill> bills;
     private List<Bill> allBills;
     private List<Bill> cashBills;
     private List<Bill> loanBills;
     private List<Bill> deletedBills;
 
     private TableLayout tableLayout;
-    private double total, totalCash, totalLoan, totalDeleted;
+
+    private EditText searchBar;
+
 
     private TextView totalT,cashT,loanT,deleteT;
 
@@ -65,6 +72,7 @@ public class ViewBillActivity extends AppCompatActivity {
         appConstant = new AppConstant(this);
         backButton = findViewById(R.id.backButton);
         deletedBills = new ArrayList<>();
+        bills = new ArrayList<>();
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, AdminDashboardActivity.class);
             startActivity(intent);
@@ -82,6 +90,20 @@ public class ViewBillActivity extends AppCompatActivity {
         cashT = findViewById(R.id.cash);
         loanT = findViewById(R.id.loan);
         deleteT = findViewById(R.id.delete);
+
+        searchBar = findViewById(R.id.search_bar);
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterBills(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -131,6 +153,26 @@ public class ViewBillActivity extends AppCompatActivity {
         initialFilterClicks();
     }
 
+    private void filterBills(String query) {
+        List<Bill> filteredBills = new ArrayList<>();
+        for (Bill bill : bills) {
+            if (bill.getReferenceNumber().toLowerCase().contains(query.toLowerCase())) {
+                filteredBills.add(bill);
+            }
+        }
+
+        if (!filteredBills.isEmpty()) {
+            BillAdapter adapter = new BillAdapter(this, filteredBills);
+            recyclerView.setAdapter(adapter);
+        } else {
+            recyclerView.setAdapter(null); // Clear the adapter if no bills match
+            Toast.makeText(this, "No matching bills found", Toast.LENGTH_SHORT).show();
+        }
+        if (query.isEmpty()){
+            loadBills();
+        }
+    }
+
 
     private void loadBills() {
         allBills = new ArrayList<>();
@@ -138,10 +180,12 @@ public class ViewBillActivity extends AppCompatActivity {
         loanBills = new ArrayList<>();
         deletedBills = new ArrayList<>();
         
-        List<Bill> bills = billService.getBillsBetweenDates(
-                date1Button.getText().toString(),
-                date2Button.getText().toString()
-        );
+        if (bills.isEmpty()){
+            bills = billService.getBillsBetweenDates(
+                    date1Button.getText().toString(),
+                    date2Button.getText().toString()
+            );
+        }
 
         if (bills.size() > 0) {
             // Reverse the list

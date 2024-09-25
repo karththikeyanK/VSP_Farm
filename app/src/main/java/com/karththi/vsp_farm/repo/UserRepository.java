@@ -52,6 +52,38 @@ public class UserRepository {
         return null;
     }
 
+    // get by id
+    public User getUserById(int id) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(AppConstant.USER_TABLE, null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            try {
+                String username = cursor.getString(cursor.getColumnIndexOrThrow("username"));
+                String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
+                String password = cursor.getString(cursor.getColumnIndexOrThrow("password"));
+                String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));
+                cursor.close();
+                return new User(id,username, name, password, role);
+            } catch (IllegalArgumentException e) {
+                // Handle the exception here
+                Log.e("UserRepository", "Column does not exist", e);
+            }
+        }
+        return null;
+    }
+
+    // update
+    public void updateUser(User user) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("username", user.getUsername());
+        values.put("name", user.getName());
+        values.put("password", user.getPassword());
+        values.put("role", user.getRole());
+        db.update(AppConstant.USER_TABLE, values, "id = ?", new String[]{String.valueOf(user.getId())});
+        db.close();
+    }
+
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -67,7 +99,7 @@ public class UserRepository {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("username"));
+                Integer id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String username = cursor.getString(cursor.getColumnIndexOrThrow("username"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 String role = cursor.getString(cursor.getColumnIndexOrThrow("role"));

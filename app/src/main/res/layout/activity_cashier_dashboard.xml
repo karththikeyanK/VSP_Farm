@@ -67,43 +67,134 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center"
+        android:paddingHorizontal="20dp"
         android:paddingTop="100dp">
 
-        <!-- Billing Page Button -->
-        <Button
-            android:id="@+id/billingPageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:text="Billing Page"
-            android:textSize="18dp"
-            android:onClick="openBillingPage"
-            android:textColor="@android:color/white"
-            android:background="@drawable/border" />
+        <!-- Row 1 with two buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
 
-        <!-- Bill History Button -->
-        <Button
-            android:id="@+id/billHistoryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:text="Bill History"
-            android:textSize="18dp"
-            android:onClick="openBillHistory"
-            android:textColor="@android:color/white"
-            android:background="@drawable/border"
-            android:layout_marginLeft="16dp" />
+            <Button
+                android:id="@+id/billingPageButton"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:text="Billing Page"
+                android:textSize="24dp"
+                android:onClick="openBillingPage"
+                android:textColor="@android:color/white"
+                android:background="@drawable/border"
+                android:layout_margin="8dp" />
 
-        <Button
-            android:id="@+id/payLoanButton"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:text="Pay Loan"
-            android:textSize="18dp"
-            android:onClick="payLoan"
-            android:textColor="@android:color/white"
-            android:background="@drawable/border"
-            android:layout_marginLeft="16dp" />
+            <Button
+                android:id="@+id/billHistoryButton"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:text="Bill History"
+                android:textSize="24dp"
+                android:onClick="openBillHistory"
+                android:textColor="@android:color/white"
+                style="@style/BoxButton"
+                android:layout_margin="8dp" />
+        </LinearLayout>
+
+        <!-- Row 2 with two buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/payLoanButton"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:text="Pay Credits"
+                android:textSize="24dp"
+                android:onClick="payLoan"
+                android:textColor="@android:color/white"
+                style="@style/BoxButton"
+                android:layout_margin="8dp" />
+
+            <Button
+                android:id="@+id/viewReportButton"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:text="View Report"
+                android:textSize="24dp"
+                android:textColor="@android:color/white"
+                style="@style/BoxButton"
+                android:layout_margin="8dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/addCustomerButton"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:textSize="24sp"
+                android:text="Add Customer"
+                android:layout_margin="8dp"
+                android:onClick="addCustomer" />
+
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewCustomerButton"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:textSize="24sp"
+                android:text="View Customer"
+                android:layout_margin="8dp"
+                android:onClick="viewCustomers" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewItemsButton"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:textSize="24sp"
+                android:text="View Items"
+                android:layout_margin="8dp"
+                android:onClick="addCustomer" />
+
+            <Button
+                style="@style/BoxButton"
+                android:id="@+id/viewBuutin"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:textSize="24sp"
+                android:text="View Customer"
+                android:visibility="invisible"
+                android:layout_margin="8dp"
+                android:onClick="viewCustomers" />
+
+        </LinearLayout>
+
+
+
     </LinearLayout>
+
 
 </LinearLayout>

@@ -15,7 +15,9 @@ import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.adapter.ItemListAdapter;
 import com.karththi.vsp_farm.model.Item;
+import com.karththi.vsp_farm.page.LoginActivity;
 import com.karththi.vsp_farm.page.admin.AdminDashboardActivity;
+import com.karththi.vsp_farm.page.cashier.CashierDashBoard;
 import com.karththi.vsp_farm.repo.ItemRepository;
 
 import java.util.List;
@@ -63,8 +65,16 @@ public class ItemListActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ItemListActivity.this, AdminDashboardActivity.class);
-                startActivity(intent);
+                if (AppConstant.USER_ROLE.equals(AppConstant.ADMIN)) {
+                    Intent intent = new Intent(ItemListActivity.this, AdminDashboardActivity.class);
+                    startActivity(intent);
+                } else if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+                    Intent intent = new Intent(ItemListActivity.this, CashierDashBoard.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(ItemListActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -80,8 +90,17 @@ public class ItemListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
-        // Optionally, you could add additional logic here
+        if (AppConstant.USER_ROLE.equals(AppConstant.ADMIN)) {
+            Intent intent = new Intent(ItemListActivity.this, AdminDashboardActivity.class);
+            startActivity(intent);
+        } else if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+            Intent intent = new Intent(ItemListActivity.this, CashierDashBoard.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(ItemListActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
     }
 
 }

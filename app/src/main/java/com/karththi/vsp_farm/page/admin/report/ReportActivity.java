@@ -7,8 +7,11 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.utils.LoadingDialog;
+import com.karththi.vsp_farm.page.LoginActivity;
 import com.karththi.vsp_farm.page.admin.AdminDashboardActivity;
+import com.karththi.vsp_farm.page.cashier.CashierDashBoard;
 
 public class ReportActivity extends AppCompatActivity {
 
@@ -25,8 +28,16 @@ public class ReportActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> {
             loadingDialog.show("Loading...");
-            Intent intent = new Intent(this, AdminDashboardActivity.class);
-            startActivity(intent);
+            if(AppConstant.USER_ROLE.equals(AppConstant.ADMIN)){
+                Intent intent = new Intent(this, AdminDashboardActivity.class);
+                startActivity(intent);
+            }else if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)){
+                Intent intent = new Intent(this, CashierDashBoard.class);
+                startActivity(intent);
+            }else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }
         });
 
         todayReportButton = findViewById(R.id.todayReportButton);
@@ -68,8 +79,16 @@ public class ReportActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, AdminDashboardActivity.class);
-        startActivity(intent);
+       if(AppConstant.USER_ROLE.equals(AppConstant.ADMIN)){
+           Intent intent = new Intent(this, AdminDashboardActivity.class);
+           startActivity(intent);
+       }else if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)){
+           Intent intent = new Intent(this, CashierDashBoard.class);
+           startActivity(intent);
+       }else {
+           Intent intent = new Intent(this, LoginActivity.class);
+           startActivity(intent);
+       }
     }
 
     @Override

@@ -192,7 +192,7 @@ public class CreateReport {
             String d = data[i];
             if (d.equals(AppConstant.LOAN) || d.equals(AppConstant.DELETED)){
                 changeColour("red");
-            }else if (d.equals(AppConstant.LOAN)){
+            }else if (d.equals(AppConstant.CASH)){
                 changeColour("bule");
             }
             canvas.drawText(d, startX, yPos, textPaint);

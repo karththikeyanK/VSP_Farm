@@ -157,7 +157,7 @@ public class ReportFactory {
         CreateReport report = new CreateReport(context);
         report.startPage(595, 842); // A4 size
         report.addCenteredHeader("VSP FARM", "Theniyambai, Valvettithurai, Sri Lanka", "077 023 8493");
-        report.addReportTitle("Loan Payment Report", date1+" ---> "+date2);
+        report.addReportTitle(" Received Cash form Debtors", date1+" ---> "+date2);
         report.addTableHeading("Customer: "+cusName);
         String[] headers = {"Date","Customer" ,"Amount"};
         int[] colWidth = {100, 100, 100};
@@ -182,7 +182,7 @@ public class ReportFactory {
         report.addReportTitle("Sales Report - "+customer, startDate+" ---> "+endDate);
 
         report.addTableHeading("Summary");
-        String[] summary_headers = {"Total", "Cash", "Loan", "Deleted"};
+        String[] summary_headers = {"Total", "Cash", "Credit", "Deleted"};
         int[] summary_col_width = {120, 120, 100, 120};
         report.addTableHeader(summary_headers,summary_col_width,0);
         String[] summary = {
@@ -195,7 +195,7 @@ public class ReportFactory {
 
         createTable(report,cashList,"Cash Bills");
         report.drawLine();
-        createTable(report,loanList,"Loan Bills");
+        createTable(report,loanList,"Credit Bills");
         report.drawLine();
         createTable(report,deletedBillItemList,"Deleted Bills");
 
@@ -205,7 +205,7 @@ public class ReportFactory {
 
     private void addSummary(CreateReport report,List<Sale> saleList){
         report.addTableHeading("Summary");
-        String[] summary_headers = {"Total", "Cash", "Loan", "Deleted"};
+        String[] summary_headers = {"Total", "Cash", "Credit", "Deleted"};
         int[] summary_col_width = {120, 120, 100, 120};
         report.addTableHeader(summary_headers,summary_col_width,0);
         double total =0;
@@ -229,7 +229,7 @@ public class ReportFactory {
         report.addTableRow(summary,summary_col_width,0);
 
         report.addTableHeading("Detail Summary by Date");
-        String[] detailSummary = {"Date","Total", "Cash", "Loan", "Deleted"};
+        String[] detailSummary = {"Date","Total", "Cash", "Credit", "Deleted"};
         int[] detailSummaryColWidth = {100, 100, 100, 100, 100};
         report.addTableHeader(detailSummary,detailSummaryColWidth,0);
 

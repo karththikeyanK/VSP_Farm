@@ -40,7 +40,7 @@
 
             <Spinner
                 android:id="@+id/customerSpinner"
-                android:layout_width="250dp"
+                android:layout_width="450dp"
                 android:layout_height="100dp"
                 android:dropDownWidth="match_parent"
                 android:background="@drawable/button"
@@ -52,8 +52,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:layout_gravity="center"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="5" />
+            app:spanCount="3" />
 
         <Button
             android:id="@+id/viewBasketButton"
@@ -64,7 +65,7 @@
             android:textColor="@android:color/white"
             android:background="@drawable/button_background"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="40dp"
             />
 
         <Button
@@ -188,7 +189,7 @@
                     </TableRow>
 
 
-                    <!-- Dynamic Rows: Will be added programmatically -->
+
                 </TableLayout>
 
                 <!-- Total Price Row -->
@@ -247,7 +248,7 @@
                         android:id="@+id/loanButton"
                         android:layout_width="150dp"
                         android:layout_height="100dp"
-                        android:text="LOAN"
+                        android:text="Debtors"
                         android:visibility="gone"
                         android:textSize="28sp"
                         android:layout_gravity="start"

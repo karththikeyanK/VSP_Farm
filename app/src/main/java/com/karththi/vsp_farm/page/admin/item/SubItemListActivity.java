@@ -68,6 +68,7 @@ public class SubItemListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         Intent intent = new Intent(this, ItemListActivity.class);
         startActivity(intent);
     }

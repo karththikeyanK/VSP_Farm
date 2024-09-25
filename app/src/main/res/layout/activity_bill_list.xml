@@ -20,12 +20,24 @@
             android:text="Back"
             android:textColor="@android:color/black" />
 
+        <!-- Search Bar -->
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_below="@id/backButton"
+            android:layout_marginTop="10dp"
+            android:hint="Search by Reference ID"
+            android:inputType="number"
+            android:padding="10dp"
+            android:background="@android:color/white" />
+
         <!-- Table Header -->
         <TableLayout
             android:id="@+id/tableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/backButton"
+            android:layout_below="@id/search_bar"
             android:layout_marginTop="20dp"
             android:stretchColumns="1, 2, 3, 4">
 

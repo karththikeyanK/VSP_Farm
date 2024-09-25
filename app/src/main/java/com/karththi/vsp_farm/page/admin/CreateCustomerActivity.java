@@ -13,7 +13,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
+import com.karththi.vsp_farm.page.LoginActivity;
 import com.karththi.vsp_farm.page.admin.item.EditSubItemActivity;
+import com.karththi.vsp_farm.page.cashier.CashierDashBoard;
 import com.karththi.vsp_farm.service.CustomerService;
 
 public class CreateCustomerActivity extends AppCompatActivity {
@@ -41,8 +44,17 @@ public class CreateCustomerActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CreateCustomerActivity.this, UserActionActivity.class);
-                startActivity(intent);
+                if(AppConstant.USER_ROLE.equals(AppConstant.ADMIN)){
+                    Intent intent = new Intent(CreateCustomerActivity.this, UserActionActivity.class);
+                    startActivity(intent);
+                }else if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+                    Intent intent = new Intent(CreateCustomerActivity.this, CashierDashBoard.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(CreateCustomerActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 
@@ -70,8 +82,16 @@ public class CreateCustomerActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        Intent intent = new Intent(this, UserActionActivity.class);
-        startActivity(intent);
+        if(AppConstant.USER_ROLE.equals(AppConstant.ADMIN)){
+            Intent intent = new Intent(CreateCustomerActivity.this, UserActionActivity.class);
+            startActivity(intent);
+        }else if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+            Intent intent = new Intent(CreateCustomerActivity.this, CashierDashBoard.class);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(CreateCustomerActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

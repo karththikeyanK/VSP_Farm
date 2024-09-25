@@ -17,6 +17,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Username -->
         <TextView
             android:id="@+id/usernameTextView"
             android:layout_width="wrap_content"
@@ -25,6 +26,7 @@
             android:textSize="16sp"
             android:textStyle="bold"/>
 
+        <!-- Name -->
         <TextView
             android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
@@ -33,6 +35,7 @@
             android:textSize="16sp"
             android:layout_marginTop="4dp"/>
 
+        <!-- Role -->
         <TextView
             android:id="@+id/roleTextView"
             android:layout_width="wrap_content"
@@ -40,6 +43,20 @@
             android:text="Role: Admin"
             android:textSize="16sp"
             android:layout_marginTop="4dp"/>
+
+        <!-- Edit Button -->
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_background"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:layout_gravity="end"
+            android:padding="8dp"
+            android:onClick="onEditButtonClick"/> <!-- Define the onClick method -->
 
     </LinearLayout>
 

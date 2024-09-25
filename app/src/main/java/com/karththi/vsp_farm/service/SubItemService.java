@@ -77,4 +77,10 @@ public class SubItemService {
         return printItemDto;
     }
 
+    public List<SubItem> getAllSubItems() {
+        Log.d(TAG, TAG + "::getAllSubItems()::Getting all sub items");
+        List<SubItem> subItems = subItemRepository.getAllSubItems();
+        Log.d(TAG, TAG + "::getAllSubItems()::Sub items fetched successfully");
+        return subItems;
+    }
 }

@@ -14,6 +14,8 @@ import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.CustomerAdapter;
 import com.karththi.vsp_farm.model.Customer;
+import com.karththi.vsp_farm.page.LoginActivity;
+import com.karththi.vsp_farm.page.cashier.CashierDashBoard;
 import com.karththi.vsp_farm.service.CustomerService;
 
 import java.util.List;
@@ -55,8 +57,16 @@ public class CustomerListActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CustomerListActivity.this, AdminDashboardActivity.class);
-                startActivity(intent);
+                if(AppConstant.USER_ROLE.equals(AppConstant.ADMIN)){
+                    Intent intent = new Intent(CustomerListActivity.this, UserActionActivity.class);
+                    startActivity(intent);
+                }else if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+                    Intent intent = new Intent(CustomerListActivity.this, CashierDashBoard.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(CustomerListActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -66,7 +76,16 @@ public class CustomerListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, UserActionActivity.class);
-        startActivity(intent);
+        super.onBackPressed();
+        if(AppConstant.USER_ROLE.equals(AppConstant.ADMIN)){
+            Intent intent = new Intent(CustomerListActivity.this, UserActionActivity.class);
+            startActivity(intent);
+        }else if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+            Intent intent = new Intent(CustomerListActivity.this, CashierDashBoard.class);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(CustomerListActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 }
