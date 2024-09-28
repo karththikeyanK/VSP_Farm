@@ -18,7 +18,6 @@ VSP Farm is a management system designed to handle customer billing, item manage
 
 <table align="center">
   <tr>
-  
     <td align="center">
       <img src="screenshots/posMachine.png" alt="billing_page.jpeg" width="200"/>
       <br>
