@@ -16,6 +16,24 @@ For any further questions or clarifications, please feel free to reach out!
 
 VSP Farm is a management system designed to handle customer billing, item management, and loan reports. It has two main user roles: **Admin** and **Cashier**, each with their specific functionalities.
 
+<table align="center">
+  <tr>
+  
+    <td align="center">
+      <img src="screenshots/posMachine.png" alt="billing_page.jpeg" width="200"/>
+      <br>
+      <em>POS Machine</em>
+    </td>
+    <td align="center">
+      <img src="screenshots/sample_bill.jpeg" alt="view_bill.jpeg" width="200"/>
+      <br>
+      <em>Sample Bills</em>
+    </td>
+  </tr>
+</table>
+
+
+
 ## Functionalities
 
 ### Admin
