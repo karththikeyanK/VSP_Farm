@@ -62,7 +62,9 @@ public class EditSubItemActivity extends AppCompatActivity {
                 Double subItemPrice = Double.parseDouble(subItemPriceStr);
 
                 SubItem updateSubItem = new SubItem();
+                updateSubItem.setId(subItem.getId());
                 updateSubItem.setSubItemName(subItemName);
+                updateSubItem.setItemId(subItem.getItemId());
                 updateSubItem.setPrice(subItemPrice);
                 subItemService.update(updateSubItem,subItem);
 
