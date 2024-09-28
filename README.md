@@ -1,5 +1,17 @@
 # VSP Farm
 
+## EpsonPrinterHelper!!
+
+**Important Notice:** Due to the sensitive nature of the billing format contained within the `EpsonPrinterHelper` class, I am unable to provide the complete code for this component. However, you can refer to the documentation available in the document folder for guidance on creating this class. It includes essential information on the required methods and formatting.
+[EpsonPdf](ePOS_SDK_Android.pdf)
+
+Or
+
+[Epson official docs](https://download4.epson.biz/sec_pubs/pos/reference_en/epos_and/index.html)
+
+For any further questions or clarifications, please feel free to reach out!
+
+
 ## Overview
 
 VSP Farm is a management system designed to handle customer billing, item management, and loan reports. It has two main user roles: **Admin** and **Cashier**, each with their specific functionalities.
