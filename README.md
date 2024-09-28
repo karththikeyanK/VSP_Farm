@@ -35,24 +35,36 @@ VSP Farm is a management system designed to handle customer billing, item manage
 
 ## Functionalities
 
-### Admin
-The Admin has full control over users, customers, and items. The Admin functionalities include:
+## Admin Functionalities
 
-1. **Create User (Admin/Cashier)**
-    - Admin can create new users with Admin or Cashier roles.
+1. **Generate PDF Reports**
+   - Current Day Summary (including credit payments)
+   - Current Day Details (all relevant details)
+   - Summary Report within a Date Range
+   - Detailed Report within a Date Range
+   - Report by Customer
+   - Loan Payments Report by Customer
 
-2. **Create Customer**
-    - Only customers registered by the Admin are eligible for discounts and can opt to pay later.
-    - Default customers do not receive any discount.
+2. **User Management**
+   - **Create User (Admin/Cashier)**
+     - Admin can create new users with designated roles.
+   - **Delete Users**
+     - Admin has the authority to remove users from the system.
 
-3. **Manage Items and Sub-items**
-    - Admin can create, edit, or delete items and their associated sub-items.
+3. **Customer Management**
+   - **Create Customer**
+     - Only customers registered by the Admin are eligible for discounts and can opt to pay later.
+     - Default customers do not receive any discount.
 
-4. **View Bill and Loan Reports**
-    - Admin can view detailed reports of all bills and loans.
+4. **Item Management**
+   - **Manage Items and Sub-items**
+     - Admin can create, edit, or delete items and their associated sub-items.
 
-5. **Delete Bills and Users**
-    - Admin has the authority to delete bills and users from the system.
+5. **Report Viewing**
+   - **View Bill and Loan Reports**
+     - Admin can view detailed reports of all bills and loans.
+   - **Delete Bills**
+     - Admin can delete bills from the system.
 
 ### Cashier
 The Cashier primarily handles billing and loan payments. The Cashier functionalities include:
