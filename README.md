@@ -42,24 +42,37 @@ For any questions or clarifications, feel free to reach out!
 
 VSP Farm is designed to streamline operations for customer billing, item management, and loan reports. Below is an outline of the functionalities available for each role:
 
-### **Admin Functionalities**
 
-1. **User Management**  
-   - Create new users with Admin or Cashier roles.
-   - Delete existing users.
+## Admin Functionalities
 
-2. **Customer Management**  
-   - Register customers eligible for discounts and pay-later options.
-   - Manage default customers (no discounts available).
+1. **Generate PDF Reports**
+   - Current Day Summary (including credit payments)
+   - Current Day Details (all relevant details)
+   - Summary Report within a Date Range
+   - Detailed Report within a Date Range
+   - Report by Customer
+   - Loan Payments Report by Customer
 
-3. **Item Management**  
-   - Create, edit, or delete items and their sub-items.
+2. **User Management**
+   - **Create User (Admin/Cashier)**
+     - Admin can create new users with designated roles.
+   - **Delete Users**
+     - Admin has the authority to remove users from the system.
 
-4. **Reports**  
-   - View detailed reports of bills and loans.
+3. **Customer Management**
+   - **Create Customer**
+     - Only customers registered by the Admin are eligible for discounts and can opt to pay later.
+     - Default customers do not receive any discount.
 
-5. **Bill Management**  
-   - Delete bills (marked as **DELETED** in the database).
+4. **Item Management**
+   - **Manage Items and Sub-items**
+     - Admin can create, edit, or delete items and their associated sub-items.
+
+5. **Report Viewing**
+   - **View Bill and Loan Reports**
+     - Admin can view detailed reports of all bills and loans.
+   - **Delete Bills**
+     - Admin can delete bills from the system.
 
 ---
 
@@ -71,7 +84,6 @@ VSP Farm is designed to streamline operations for customer billing, item managem
 2. **View and Manage Bills**  
    - View bills generated on the current day.
    - Delete bills (marked as **DELETED** in the database).
-
 3. **Loan Payments**  
    - Process customer loan payments, including partial payments.
 
