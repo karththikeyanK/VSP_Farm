@@ -21,12 +21,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.karththi.vsp_farm.Factory.ReportFactory;
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
+import com.karththi.vsp_farm.dto.LoanPaymentDto;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.adapter.DetailReportAdapter;
+import com.karththi.vsp_farm.helper.adapter.LoanPaymentAdapter;
 import com.karththi.vsp_farm.helper.utils.LoadingDialog;
 import com.karththi.vsp_farm.model.Customer;
 import com.karththi.vsp_farm.service.BillItemService;
 import com.karththi.vsp_farm.service.CustomerService;
+import com.karththi.vsp_farm.service.LoanPaymentService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ import java.util.concurrent.Executors;
 public class GetCustomerDetailReportActivity extends AppCompatActivity {
 
     private Button date1Button, date2Button, downloadPdfButton;
-    private TextView totalT, cashT, loanT, deleteT;
+    private TextView totalT, cashT, loanT, loanPayment;
     private Calendar date1 = null;
     private Calendar date2 = null;
 
@@ -68,6 +71,14 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
     private ExecutorService executorService;
 
     private ReportFactory reportFactory;
+
+    private List<LoanPaymentDto> loanPaymentDtoList;
+
+    private LoanPaymentService loanPaymentService;
+
+    private LoanPaymentAdapter loanPaymentAdapter;
+
+    private RecyclerView loanPaymentReportRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +89,7 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
         billItemService = new BillItemService(this);
         loadingDialog = new LoadingDialog(this);
         reportFactory = new ReportFactory(this);
+        loanPaymentService = new LoanPaymentService(this);
 
         selectedCus = new Customer();
 
@@ -115,7 +127,7 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
         totalT = findViewById(R.id.total);
         cashT = findViewById(R.id.cash);
         loanT = findViewById(R.id.loan);
-        deleteT = findViewById(R.id.delete);
+        loanPayment = findViewById(R.id.loanPayment);
 
         dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         date2 = Calendar.getInstance();
@@ -125,6 +137,11 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
 
         detailReportRecyclerView = findViewById(R.id.detailReportRecyclerView);
         detailReportDeleteRecyclerView = findViewById(R.id.deleteDetailReportRecyclerView);
+
+        loanPaymentReportRecyclerView = findViewById(R.id.loanPaymentReportRecyclerView);
+
+        loanPaymentReportRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         detailReportRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         detailReportDeleteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -146,6 +163,9 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
 
         detailReportAdapter = new DetailReportAdapter(deletedBills);
         detailReportDeleteRecyclerView.setAdapter(detailReportAdapter);
+
+        loanPaymentAdapter = new LoanPaymentAdapter(loanPaymentDtoList);
+        loanPaymentReportRecyclerView.setAdapter(loanPaymentAdapter);
 
         updateSummaryTextViews();
 
@@ -184,10 +204,14 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
     }
 
     private void updateSummaryTextViews() {
+        double total_loan_payment = 0;
+        for (LoanPaymentDto loanPaymentDto : loanPaymentDtoList) {
+            total_loan_payment += loanPaymentDto.getPaymentAmount();
+        }
         totalT.setText(appConstant.formatAmount(total));
         cashT.setText(appConstant.formatAmount(cash));
         loanT.setText(appConstant.formatAmount(loan));
-        deleteT.setText(appConstant.formatAmount(deleteTotal));
+        loanPayment.setText(appConstant.formatAmount(total_loan_payment));
     }
 
 
@@ -197,7 +221,9 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
         deletedBills = new ArrayList<>();
         loanBills = new ArrayList<>();
         cashBills = new ArrayList<>();
+        loanPaymentDtoList = new ArrayList<>();
 
+        loanPaymentDtoList = loanPaymentService.getLoanPaymentListByDateRange(selectedCus.getId(),date1Button.getText().toString(), date2Button.getText().toString());
         billItemsDetailDtoList = billItemService.getAllBillDtoByDateRangeAndCustomerId(  date1Button.getText().toString(), date2Button.getText().toString(),selectedCus.getId());
         total = cash = loan = deleteTotal = 0;
         Iterator<BillItemsDetailDto> iterator = billItemsDetailDtoList.iterator();
@@ -275,7 +301,7 @@ public class GetCustomerDetailReportActivity extends AppCompatActivity {
                            reportFactory.downloadDetailReportPdfByCustomer(
                                    date1Button.getText().toString(), date2Button.getText().toString(),
                                    total,cash,loan,deleteTotal,selectedCus.getName(),
-                                   cashBills,loanBills, deletedBills);
+                                   cashBills,loanBills, deletedBills,loanPaymentDtoList);
                         });
                     }
                 })

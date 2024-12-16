@@ -40,23 +40,26 @@ public class SubItemService {
     public List<SubItem> getSubItemsByItemId(int itemId) {
         Log.d(TAG, TAG+"::getSubItemsByItemId()::Getting sub items by item id");
         List<SubItem> subItems = subItemRepository.getAllByItemId(itemId);
-        Log.d(TAG, TAG+"::getSubItemsByItemId()::Sub items fetched successfully");
+        Log.d(TAG, TAG+"::getSubItemsByItemId()::Sub items fetched successfully with size: "+subItems.size());
         return subItems;
     }
 
-    public void delete(SubItem subItem) {
+    public boolean delete(SubItem subItem) {
         Log.d(TAG, TAG+"::delete()::Deleting sub item");
         subItemRepository.deleteSubItem(subItem);
         Log.d(TAG, TAG+"::delete()::Sub item deleted successfully");
+        return true;
     }
 
-    public void update(SubItem subItem, SubItem old) {
+    public boolean update(SubItem subItem, SubItem old) {
         Log.d(TAG, TAG+"::update()::Updating sub item");
         if(isExistByName(subItem.getSubItemName())  && !old.getSubItemName().equals(subItem.getSubItemName())){
             appConstant.ShowAlert(AppConstant.ERROR, "Sub Item already exist with the name: " + subItem.getSubItemName());
+            return false;
         }
         subItemRepository.updateSubItem(subItem);
         Log.d(TAG, TAG+"::update()::Sub item updated successfully");
+        return true;
     }
 
     public SubItem getSubItemById(int id) {

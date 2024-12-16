@@ -41,18 +41,30 @@ public class LoanPaymentRepository {
     // using loanId i want to get last payment
 
     public LoanPayment getLastPaymentByLoanId(int loanId) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+AppConstant.LOAN_PAYMENT_TABLE+" WHERE loan_id = ? ORDER BY id DESC LIMIT 1", new String[]{String.valueOf(loanId)});
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
         LoanPayment loanPayment = null;
-        if (cursor.moveToFirst()) {
-            loanPayment = new LoanPayment();
-            loanPayment.setId(cursor.getInt(0));
-            loanPayment.setLoanId(cursor.getInt(1));
-            loanPayment.setPaymentAmount(cursor.getDouble(2));
-            loanPayment.setPaymentDate(cursor.getString(3));
+
+        try {
+            db = dbHelper.getReadableDatabase();
+            cursor = db.rawQuery("SELECT * FROM " + AppConstant.LOAN_PAYMENT_TABLE + " WHERE loan_id = ? ORDER BY id DESC LIMIT 1", new String[]{String.valueOf(loanId)});
+
+            if (cursor.moveToFirst()) {
+                loanPayment = new LoanPayment();
+                loanPayment.setId(cursor.getInt(0));
+                loanPayment.setLoanId(cursor.getInt(1));
+                loanPayment.setPaymentAmount(cursor.getDouble(2));
+                loanPayment.setPaymentDate(cursor.getString(3));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
         }
-        cursor.close();
-        db.close();
+
         return loanPayment;
     }
 

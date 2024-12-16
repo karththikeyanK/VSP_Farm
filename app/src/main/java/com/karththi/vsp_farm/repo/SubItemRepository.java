@@ -30,6 +30,7 @@ public class SubItemRepository {
             values.put("item_id", subItem.getItemId());
             values.put("name", subItem.getSubItemName());
             values.put("price", subItem.getPrice());
+            values.put("status", subItem.getStatus());
             db.insert(AppConstant.SUB_ITEM_TABLE, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
@@ -52,6 +53,7 @@ public class SubItemRepository {
         values.put("item_id", subItem.getItemId());
         values.put("name", subItem.getSubItemName());
         values.put("price", subItem.getPrice());
+        values.put("status", subItem.getStatus());
         db.update(AppConstant.SUB_ITEM_TABLE, values, "id = ?", new String[]{String.valueOf(subItem.getId())});
         db.close();
     }
@@ -65,8 +67,9 @@ public class SubItemRepository {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 Double price = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
                 int itemId = cursor.getInt(cursor.getColumnIndexOrThrow("item_id"));
+                String status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
                 cursor.close();
-                return new SubItem(subItemId, name, price, itemId);
+                return new SubItem(subItemId, name, price, itemId, status);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
@@ -83,7 +86,8 @@ public class SubItemRepository {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 Double price = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
-                subItemList.add(new SubItem(id, name, price, itemId));
+                String status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
+                subItemList.add(new SubItem(id, name, price, itemId, status));
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -142,7 +146,22 @@ public class SubItemRepository {
 
     public List<SubItem> getAllSubItems() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(AppConstant.SUB_ITEM_TABLE, null, null, null, null, null, "item_id ASC");
+
+        // Add WHERE clause for status = 'ENABLE'
+        String selection = "status = ?";
+        String[] selectionArgs = { "ENABLE" }; // Filter for ENABLE status
+
+        // Query the database with the selection
+        Cursor cursor = db.query(
+                AppConstant.SUB_ITEM_TABLE,      // Table name
+                null,                            // Select all columns
+                selection,                       // WHERE clause
+                selectionArgs,                   // Arguments for the WHERE clause
+                null,                            // GROUP BY
+                null,                            // HAVING
+                "item_id ASC"                    // ORDER BY item_id ASC
+        );
+
         List<SubItem> subItemList = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -150,10 +169,12 @@ public class SubItemRepository {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 Double price = cursor.getDouble(cursor.getColumnIndexOrThrow("price"));
                 int itemId = cursor.getInt(cursor.getColumnIndexOrThrow("item_id"));
-                subItemList.add(new SubItem(id, name, price, itemId));
+                String status = cursor.getString(cursor.getColumnIndexOrThrow("status"));
+                subItemList.add(new SubItem(id, name, price, itemId, status));
             } while (cursor.moveToNext());
             cursor.close();
         }
         return subItemList;
     }
+
 }

@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class AppConstant {
     public static final String DATABASE_NAME = "vsp_farm";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public static final String USER_TABLE = "users";
 
@@ -33,8 +33,12 @@ public class AppConstant {
 
     public static final String LOAN_TABLE = "Loan";
 
+    public static final String EXPENSE_TABLE = "Expense";
+
+    public static final String PERMISSION_TABLE = "Permission";
     public static final String LOAN_PAYMENT_TABLE = "LoanPayment";
     public static final String COMPANY_NAME = "VSP Farm";
+
     public static final String LOAN = "CREDIT";
     public static final String CASH = "CASH";
     public static final String DEFAULT = "DEFAULT";
@@ -66,6 +70,24 @@ public class AppConstant {
     public static final String GET_DETAIL_FOLDER = "GetDetail";
 
     public static final String GET_CUSTOMER_FOLDER = "Customer";
+
+
+    public static boolean TODAY_SUMMARY_REPORT_PERMISSION = false;
+    public static  boolean TODAY_DETAIL_REPORT_PERMISSION = false;
+    public static  boolean GET_SUMMARY_REPORT_PERMISSION = false;
+    public static  boolean GET_DETAIL_REPORT_PERMISSION = false;
+    public static boolean GET_CUSTOMER_REPORT_PERMISSION = false;
+    public static boolean ADD_CUSTOMER_PERMISSION = false;
+    public static boolean EDIT_CUSTOMER_PERMISSION = false;
+
+    public static boolean ADD_ITEM_PERMISSION = false;
+    public static boolean EDIT_ITEM_PERMISSION = false;
+    public static boolean ADD_SUB_ITEM_PERMISSION = false;
+    public static boolean EDIT_SUB_ITEM_PERMISSION = false;
+    public static boolean DISABLE_OR_ENABLE_ITEM_PERMISSION = false;
+    public static boolean VIEW_LOAN_PAYMENT_PERMISSION = false;
+
+    public static Context CONTEXT;
 
     private Context context;
 

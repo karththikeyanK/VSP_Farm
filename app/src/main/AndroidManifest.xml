@@ -76,16 +76,14 @@
         <activity android:name=".page.admin.report.ReportActivity"/>
         <activity android:name=".page.admin.report.TodayReportActivity"/>
         <activity android:name=".page.admin.report.ViewBillActivity"/>
-        <activity android:name=".page.admin.report.TodayDetailReportActivity"
-            android:screenOrientation="landscape" />
+        <activity android:name=".page.admin.report.TodayDetailReportActivity" />
         <activity android:name=".page.admin.report.GetSummaryReportActivity"/>
-        <activity android:name=".page.admin.report.GetDetailReportActivity"
-            android:screenOrientation="landscape" />
+        <activity android:name=".page.admin.report.GetDetailReportActivity" />
         <activity android:name=".page.admin.UserActionActivity"/>
-        <activity android:name=".page.admin.report.GetCustomerDetailReportActivity"
-                  android:screenOrientation="landscape" />
+        <activity android:name=".page.admin.report.GetCustomerDetailReportActivity" />
         <activity android:name=".page.admin.GetLoanPaymentActivity"/>
         <activity android:name=".page.admin.EditUserActivity"/>
+        <activity android:name=".page.admin.PermissionActivity"/>
         <activity
             android:name=".page.PrintActivity"
             android:exported="true">

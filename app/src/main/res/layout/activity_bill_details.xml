@@ -5,16 +5,38 @@
     android:padding="16dp"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:textColor="@android:color/black"
-        android:background="@drawable/button"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="10dp"
-        />
+    <LinearLayout
+        android:id="@+id/backButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Back"
+            android:textColor="@android:color/black"
+            android:background="@drawable/button"
+            android:layout_gravity="start" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/reconnectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Reconnect Printer"
+            android:layout_marginLeft="40sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/button"
+            android:layout_gravity="end" />
+    </LinearLayout>
 
     <!-- Reference Number -->
     <LinearLayout

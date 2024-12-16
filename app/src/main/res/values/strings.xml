@@ -4,6 +4,10 @@
         <item>CASHIER</item>
         <item>ADMIN</item>
     </string-array>
+    <string-array name="status_array">
+        <item>ENABLE</item>
+        <item>DISABLE</item>
+    </string-array>
     <string name="delete_item">delete</string>
     <string name="select_customer">Select Customer</string>
     <string name="title_target">Target</string>
@@ -21,6 +25,14 @@
     <string name="title_err_method">Method</string>
     <string name="title_msg_result">Result</string>
     <string name="title_msg_description">Description</string>
+
+
+    <string name="remaining_loan_amount">Remaining Loan Amount</string>
+    <string name="last_payment_amount">Last Payment Amount</string>
+    <string name="last_payment_date">Last Payment Date</string>
+    <string name="payment_amount">Payment Amount</string>
+    <string name="pay_loan">Pay Loan</string>
+    <string name="close">Close</string>
 
     <string name="handlingmsg_warn_receipt_near_end">Roll paper is nearly end.\n</string>
     <string name="handlingmsg_warn_battery_near_end">Battery level of printer is low.\n</string>

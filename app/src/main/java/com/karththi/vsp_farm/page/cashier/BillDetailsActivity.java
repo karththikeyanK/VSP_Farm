@@ -67,6 +67,8 @@ public class BillDetailsActivity extends AppCompatActivity {
     private CustomerService customerService;
 
     private Button rePrintButton;
+
+    private Button reconnectButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,6 +142,12 @@ public class BillDetailsActivity extends AppCompatActivity {
             printBill(billItems, r_paymentMethod.equals(AppConstant.LOAN), Double.parseDouble(r_totalAmount), Double.parseDouble(r_totalAmount), 0,r_referenceNumber);
         });
 
+        reconnectButton = findViewById(R.id.reconnectButton);
+        reconnectButton.setOnClickListener(v -> {
+            if (epsonPrinterHelper != null) {
+                epsonPrinterHelper.reConnect(); // Reconnect to the printer
+            }
+        });
     }
 
 
@@ -199,8 +207,34 @@ public class BillDetailsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finish();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (epsonPrinterHelper != null) {
+            epsonPrinterHelper.closePrinter(); // Ensure cleanup on activity destruction
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (epsonPrinterHelper == null) {
+            epsonPrinterHelper = new EpsonPrinterHelper(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (epsonPrinterHelper != null) {
+            epsonPrinterHelper.closePrinter(); // Close the printer when leaving the activity
+        }
+    }
+
 }
 
 

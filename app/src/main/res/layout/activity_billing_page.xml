@@ -8,16 +8,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".page.cashier.BillingPageActivity">
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:textColor="@android:color/black"
-        android:background="@drawable/button"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="10dp"
-        />
+
+    <LinearLayout
+        android:id="@+id/backButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Back"
+            android:textColor="@android:color/black"
+            android:background="@drawable/button"
+            android:layout_gravity="start" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/reconnectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Reconnect Printer"
+            android:layout_marginLeft="40sp"
+            android:textColor="@android:color/black"
+            android:background="@drawable/button"
+            android:layout_gravity="end" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,12 +54,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Customer :"
-                android:textSize="20dp"
-                android:layout_marginEnd="10dp" />
 
             <Spinner
                 android:id="@+id/customerSpinner"
@@ -44,7 +61,21 @@
                 android:layout_height="100dp"
                 android:dropDownWidth="match_parent"
                 android:background="@drawable/button"
+                android:gravity="start"
                 android:layout_marginBottom="16dp" />
+
+            <Button
+                android:id="@+id/payLoanPopupButton"
+                android:layout_width="250dp"
+                android:layout_height="100dp"
+                android:text="Pay Loan"
+                android:layout_marginLeft="30sp"
+                android:textSize="24sp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/button_background"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

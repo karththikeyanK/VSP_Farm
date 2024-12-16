@@ -22,11 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.karththi.vsp_farm.Factory.TodayReportFactory;
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.dto.BillItemsDetailDto;
+import com.karththi.vsp_farm.dto.LoanPaymentDto;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.adapter.DetailReportAdapter;
 import com.karththi.vsp_farm.helper.utils.DateTimeUtils;
 import com.karththi.vsp_farm.helper.utils.LoadingDialog;
 import com.karththi.vsp_farm.service.BillItemService;
+import com.karththi.vsp_farm.service.LoanPaymentService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +59,10 @@ public class GetDetailReportActivity extends AppCompatActivity {
     private RecyclerView detailReportDeleteRecyclerView;
     private DetailReportAdapter detailReportAdapter;
 
+    private List<LoanPaymentDto> loanPaymentDtoList ;
+
+    private LoanPaymentService loanPaymentService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +70,14 @@ public class GetDetailReportActivity extends AppCompatActivity {
 
         appConstant = new AppConstant(this);
         todayReportFactory = new TodayReportFactory(this);
+        loanPaymentService = new LoanPaymentService(this);
 
         initViews();
         setupDatePickers();
         setupDownloadButton();
 
         billItemsDetailDtoList = new ArrayList<>();
+        loanPaymentDtoList = new ArrayList<>();
         deletedBills = new ArrayList<>();
         downloadPdfButton.setEnabled(false);
 
@@ -160,6 +168,9 @@ public class GetDetailReportActivity extends AppCompatActivity {
                     date1Button.getText().toString(), date2Button.getText().toString()
             );
 
+            loanPaymentDtoList = loanPaymentService.getLoanPaymentListByDateRange(999999,
+                    date1Button.getText().toString(), date2Button.getText().toString());
+
             handler.post(() -> {
                 updateView();
                 loadingDialog.dismiss();
@@ -214,7 +225,7 @@ public class GetDetailReportActivity extends AppCompatActivity {
     private void downloadPdf() {
         todayReportFactory.downloadDetailPdfByDateRange(
                 date1Button.getText().toString(), date2Button.getText().toString(),
-                billItemsDetailDtoList, deletedBills
+                billItemsDetailDtoList, deletedBills,loanPaymentDtoList
         );
     }
 

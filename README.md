@@ -1,39 +1,47 @@
 # VSP Farm
 
-## EpsonPrinterHelper!!
+VSP Farm is a management system designed to handle customer billing, item management, and loan reports. It supports two main user roles: **Admin** and **Cashier**, each with specific functionalities.
 
-**Important Notice:** Due to the sensitive nature of the billing format contained within the `EpsonPrinterHelper` class, I am unable to provide the complete code for this component. However, you can refer to the documentation available in the document folder for guidance on creating this class. It includes essential information on the required methods and formatting.
-[EpsonPdf](ePOS_SDK_Android.pdf)
+---
 
-Or
+## EpsonPrinterHelper
 
-[Epson official docs](https://download4.epson.biz/sec_pubs/pos/reference_en/epos_and/index.html)
+**Important Notice:**  
+Due to the sensitive nature of the billing format contained within the `EpsonPrinterHelper` class, the complete code for this component cannot be provided. For guidance on creating this class, refer to the documentation available in the `document` folder:  
 
-For any further questions or clarifications, please feel free to reach out!
+- [Epson SDK PDF Documentation](ePOS_SDK_Android.pdf)  
+- [Epson Official Documentation](https://download4.epson.biz/sec_pubs/pos/reference_en/epos_and/index.html)  
 
+For any questions or clarifications, feel free to reach out!
+
+---
+
+## Version 2 Features
+
+1. **Add User Permissions**  
+   Introduced enhanced controls for managing user roles and access rights.
+
+2. **Product Deletion**  
+   Admins can now delete products directly from the system.
+
+3. **Add Expense Tracking**  
+   A new feature to log and track expenses.
+
+4. **Improved Printing Functionality**  
+   Optimized the printing process for better performance and reliability.
+
+5. **Bug Fix: Printing**  
+   Resolved issues causing printing failures.
+
+6. **Updated Loan Payment Method**  
+   Users can now pay loans in partial amounts.
+
+---
 
 ## Overview
 
-VSP Farm is a management system designed to handle customer billing, item management, and loan reports. It has two main user roles: **Admin** and **Cashier**, each with their specific functionalities.
+VSP Farm is designed to streamline operations for customer billing, item management, and loan reports. Below is an outline of the functionalities available for each role:
 
-<table align="center">
-  <tr>
-    <td align="center">
-      <img src="screenshots/posMachine.png" alt="billing_page.jpeg" width="200"/>
-      <br>
-      <em>POS Machine</em>
-    </td>
-    <td align="center">
-      <img src="screenshots/sample_bill.jpeg" alt="view_bill.jpeg" width="200"/>
-      <br>
-      <em>Sample Bills</em>
-    </td>
-  </tr>
-</table>
-
-
-
-## Functionalities
 
 ## Admin Functionalities
 
@@ -66,18 +74,18 @@ VSP Farm is a management system designed to handle customer billing, item manage
    - **Delete Bills**
      - Admin can delete bills from the system.
 
-### Cashier
-The Cashier primarily handles billing and loan payments. The Cashier functionalities include:
+---
 
-1. **Generate Bills for Items**
-    - Cashier can generate bills for the items being purchased by customers.
+### **Cashier Functionalities**
 
-2. **View and Delete Current Day Bills**
-    - Cashier can view the bills generated on the current day and has the option to delete them.
-    - **Note:** When a bill is deleted, it is not removed from the database. Instead, the status of the bill is updated to **DELETED**.
+1. **Billing**  
+   - Generate bills for customer purchases.
 
-3. **Process Loan Payments**
-    - Cashier can process loan payments from customers.
+2. **View and Manage Bills**  
+   - View bills generated on the current day.
+   - Delete bills (marked as **DELETED** in the database).
+3. **Loan Payments**  
+   - Process customer loan payments, including partial payments.
 
 ---
 
@@ -85,8 +93,7 @@ The Cashier primarily handles billing and loan payments. The Cashier functionali
 
 1. Clone the repository:
    ```bash
-   https://github.com/karththikeyanK/VSP_Farm.git
-   ```
+   git clone https://github.com/karththikeyanK/VSP_Farm.git
 
 ## Screenshots
 

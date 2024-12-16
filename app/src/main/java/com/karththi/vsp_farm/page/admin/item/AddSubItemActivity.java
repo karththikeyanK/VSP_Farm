@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.karththi.vsp_farm.R;
@@ -23,6 +25,8 @@ public class AddSubItemActivity extends AppCompatActivity {
 
     private Button backButton;
 
+    private Spinner statusSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,11 @@ public class AddSubItemActivity extends AppCompatActivity {
         subItemPriceEditText = findViewById(R.id.subItemPriceEditText);
         saveSubItemButton = findViewById(R.id.saveSubItemButton);
         backButton = findViewById(R.id.backButton);
+        statusSpinner = findViewById(R.id.statusSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.status_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusSpinner.setAdapter(adapter);
 
         subItemService = new SubItemService(this);
 
@@ -42,6 +51,7 @@ public class AddSubItemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String subItemName = subItemNameEditText.getText().toString();
                 String subItemPriceStr = subItemPriceEditText.getText().toString();
+                String status = statusSpinner.getSelectedItem().toString();
 
                 if (subItemName.isEmpty() || subItemPriceStr.isEmpty()) {
                     Toast.makeText(AddSubItemActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
@@ -54,6 +64,7 @@ public class AddSubItemActivity extends AppCompatActivity {
                 subItem.setSubItemName(subItemName);
                 subItem.setPrice(subItemPrice);
                 subItem.setItemId(itemId);
+                subItem.setStatus(status);
 
                 subItemService.create(subItem);
 

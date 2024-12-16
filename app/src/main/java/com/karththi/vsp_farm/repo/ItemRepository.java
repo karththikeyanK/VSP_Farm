@@ -65,6 +65,13 @@ public class ItemRepository {
                 return new Item(id, name, Measurement.valueOf(measurement), image);
             } catch (IllegalArgumentException e) {
                 Log.e("ItemRepository", "Column does not exist", e);
+            }finally {
+                if (db != null) {
+                    if (db.inTransaction()) {
+                        db.endTransaction();
+                    }
+                    db.close();
+                }
             }
         }
         return null;
@@ -82,6 +89,13 @@ public class ItemRepository {
                 return new Item(id,name, Measurement.valueOf(measurement), image);
             } catch (IllegalArgumentException e) {
                 Log.e("ItemRepository", "Column does not exist", e);
+            }finally {
+                if (db != null) {
+                    if (db.inTransaction()) {
+                        db.endTransaction();
+                    }
+                    db.close();
+                }
             }
         }
         return null;

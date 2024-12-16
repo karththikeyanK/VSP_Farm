@@ -123,6 +123,7 @@
                 android:onClick="payLoan"
                 android:textColor="@android:color/white"
                 style="@style/BoxButton"
+                android:visibility="gone"
                 android:layout_margin="8dp" />
 
             <Button
@@ -131,6 +132,16 @@
                 android:layout_height="150dp"
                 android:layout_weight="1"
                 android:text="View Report"
+                android:textSize="24dp"
+                android:textColor="@android:color/white"
+                style="@style/BoxButton"
+                android:layout_margin="8dp" />
+            <Button
+                android:id="@+id/viewItemsButton"
+                android:layout_width="0dp"
+                android:layout_height="150dp"
+                android:layout_weight="1"
+                android:text="View Items"
                 android:textSize="24dp"
                 android:textColor="@android:color/white"
                 style="@style/BoxButton"
@@ -171,28 +182,26 @@
             android:layout_marginBottom="16dp">
             <Button
                 style="@style/BoxButton"
-                android:id="@+id/viewItemsButton"
+                android:id="@+id/getDetailReportByCustomerButton"
                 android:layout_height="150dp"
                 android:layout_weight="1"
                 android:textSize="24sp"
-                android:text="View Items"
+                android:text="Get A Detail Report By Customer"
                 android:layout_margin="8dp"
                 android:onClick="addCustomer" />
 
+
             <Button
                 style="@style/BoxButton"
-                android:id="@+id/viewBuutin"
+                android:id="@+id/viewLoanButton"
                 android:layout_height="150dp"
                 android:layout_weight="1"
                 android:textSize="24sp"
-                android:text="View Customer"
-                android:visibility="invisible"
+                android:text="View Credit Payment"
                 android:layout_margin="8dp"
                 android:onClick="viewCustomers" />
 
         </LinearLayout>
-
-
 
     </LinearLayout>
 

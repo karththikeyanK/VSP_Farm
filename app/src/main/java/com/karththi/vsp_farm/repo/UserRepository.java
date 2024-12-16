@@ -47,6 +47,10 @@ public class UserRepository {
             } catch (IllegalArgumentException e) {
                 // Handle the exception here
                 Log.e("UserRepository", "Column does not exist", e);
+            }finally {
+                if (db != null) {
+                    db.close();
+                }
             }
         }
         return null;
@@ -67,6 +71,13 @@ public class UserRepository {
             } catch (IllegalArgumentException e) {
                 // Handle the exception here
                 Log.e("UserRepository", "Column does not exist", e);
+            }finally {
+                if (db != null) {
+                    if (db.inTransaction()) {
+                        db.endTransaction();
+                    }
+                    db.close();
+                }
             }
         }
         return null;

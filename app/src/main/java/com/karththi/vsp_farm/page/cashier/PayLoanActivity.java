@@ -147,29 +147,6 @@ public class PayLoanActivity extends AppCompatActivity {
         payLoanButton.setOnClickListener(v -> processLoanPayment());
     }
 
-    private void loadLoanStatus(int customerId) {
-        // Fetch loan details for the selected customer
-        loanDto = loanFacade.getLoanDtoByCustomerId(customerId);
-
-        if (loanDto != null && loanDto.getLoan() != null) {
-            remainingLoanAmount.setText(String.valueOf(loanDto.getLoan().getRemainingAmount()));
-
-            LoanPayment lastPayment = loanDto.getLastPayment();
-            if (lastPayment != null) {
-                lastPaymentAmount.setText(String.valueOf(lastPayment.getPaymentAmount()));
-                lastPaymentDate.setText(lastPayment.getPaymentDate());
-            } else {
-                lastPaymentAmount.setText("N/A");
-                lastPaymentDate.setText("N/A");
-            }
-
-            loanStatusSection.setVisibility(View.VISIBLE);
-        } else {
-            Toast.makeText(this, "No loan found for the selected customer.", Toast.LENGTH_SHORT).show();
-            loanStatusSection.setVisibility(View.GONE);
-        }
-    }
-
     private void processLoanPayment() {
         String paymentAmountStr = paymentAmountInput.getText().toString().trim();
         if (paymentAmountStr.isEmpty()) {
@@ -181,6 +158,7 @@ public class PayLoanActivity extends AppCompatActivity {
             payLoanButton.setEnabled(false);
             if (epsonPrinterHelper.printLoanPaymentReceipt(loanDto,CUSTOMER_NAME, paymentAmount)){
                 loanFacade.handleLoanPayment(CUSTOMER_ID, paymentAmount);
+                resetAll();
                 Toast.makeText(this, "Payment processed successfully.", Toast.LENGTH_SHORT).show();
             }else {
                 Toast.makeText(this, "Printing failed...", Toast.LENGTH_SHORT).show();
@@ -189,6 +167,17 @@ public class PayLoanActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Please select a customer.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    private void resetAll(){
+        remainingLoanAmount.setText("");
+        lastPaymentAmount.setText("");
+        lastPaymentDate.setText("");
+        paymentAmountInput.setText("");
+        loanStatusSection.setVisibility(View.GONE);
+        payLoanButton.setEnabled(true);
+        customerDropdown.setSelection(0);
     }
 
     private Customer findByName(String name){
@@ -203,6 +192,24 @@ public class PayLoanActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Toast.makeText(this, "Back button is disabled", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        epsonPrinterHelper = null;
+        epsonPrinterHelper = new EpsonPrinterHelper(this);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        epsonPrinterHelper.closePrinter();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        epsonPrinterHelper.closePrinter();
     }
 
 }

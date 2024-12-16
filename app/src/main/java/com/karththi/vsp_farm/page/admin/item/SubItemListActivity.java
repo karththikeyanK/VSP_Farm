@@ -64,6 +64,10 @@ public class SubItemListActivity extends AppCompatActivity {
         });
 
         userNameTextView.setText(AppConstant.USER_NAME);
+        if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER) && !AppConstant.ADD_SUB_ITEM_PERMISSION) {
+            addNewSubItemButton.setVisibility(View.GONE);
+        }
+
     }
 
     @Override

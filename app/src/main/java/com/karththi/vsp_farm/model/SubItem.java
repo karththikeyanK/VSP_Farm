@@ -4,17 +4,27 @@ public class SubItem {
     private int id;
     private String SubItemName;
     private Double price;
-
     private int ItemId;
+    private String status;
 
     public SubItem() {
     }
 
-    public SubItem(int id, String subItemName, Double price, int itemId) {
+    public SubItem(int id, String subItemName, Double price, int itemId, String status) {
         this.id = id;
-        SubItemName = subItemName;
+        this.SubItemName = subItemName;
         this.price = price;
-        ItemId = itemId;
+        this.ItemId = itemId;
+        this.status = status;
+    }
+
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getId() {

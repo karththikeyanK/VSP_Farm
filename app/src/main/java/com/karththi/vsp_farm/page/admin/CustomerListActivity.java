@@ -49,7 +49,7 @@ public class CustomerListActivity extends AppCompatActivity {
 
         // Add new customer button logic
         addNewCustomerButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, UserActionActivity.class);
+            Intent intent = new Intent(this, CreateCustomerActivity.class);
             startActivity(intent);
         });
 
@@ -71,6 +71,12 @@ public class CustomerListActivity extends AppCompatActivity {
         });
 
         userNameTextView.setText(AppConstant.USER_NAME);
+
+        if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER) && !AppConstant.ADD_CUSTOMER_PERMISSION){
+            addNewCustomerButton.setEnabled(false);
+        }else {
+            addNewCustomerButton.setEnabled(true);
+        }
 
     }
 
