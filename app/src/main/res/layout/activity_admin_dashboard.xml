@@ -147,25 +147,21 @@
             <!-- Third Row: View Loan -->
             <Button
                 android:id="@+id/viewLoanButton"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="100dp"
-                android:textSize="20sp"
                 android:layout_weight="1"
+                android:textSize="20sp"
                 style="@style/BoxButton"
-                android:layout_marginTop="8dp"
                 android:layout_marginRight="20dp"
                 android:text="View Loan Payments" />
             <Button
-                android:id="@+id/non"
-                android:layout_width="match_parent"
+                android:id="@+id/permissionButton"
+                android:layout_width="0dp"
                 android:layout_height="100dp"
-                android:textSize="20sp"
                 android:layout_weight="1"
+                android:textSize="20sp"
                 style="@style/BoxButton"
-                android:visibility="invisible"
-                android:layout_marginTop="8dp"
-                android:text="View Loan" />
-
+                android:text="Permission" />
         </LinearLayout>
 
         </LinearLayout>

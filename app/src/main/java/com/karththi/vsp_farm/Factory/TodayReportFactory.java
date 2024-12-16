@@ -95,7 +95,7 @@ public class TodayReportFactory {
         for (BillSummary summary : getTodayTotalSummary()) {
             String[] row = {
                     summary.getItemName(),
-                    String.valueOf(summary.getTotalQuantity()),
+                    String.format("%.2f", summary.getTotalQuantity()),
                     String.valueOf(summary.getTotalDiscount()),
                     String.format("%.2f", summary.getTotalPrice())
             };
@@ -105,6 +105,21 @@ public class TodayReportFactory {
         }
 
         report.addTotalAndQuantity(totalPrice,totalDiscount);
+        List<LoanPaymentDto> loanPaymentList = loanPaymentService.getAllCustomerLoanPaymentsByDate(DateTimeUtils.getCurrentDate());
+        report.addTableHeading(" Received Cash form Debtors");
+        String[] loanPaymentHeaders = {"Customer","Payment Date", "Amount"};
+        int[] loanPayment_col_widths = {150, 150, 130};
+        report.addTableHeader(loanPaymentHeaders,loanPayment_col_widths,0);
+
+        if (loanPaymentList!=null){
+            double totalLoanPayment = 0;
+            for (LoanPaymentDto dto : loanPaymentList){
+                String[] row = {dto.getCustomerName(),dto.getPaymentDate(),formatAmount(dto.getPaymentAmount())};
+                report.addTableRow(row,loanPayment_col_widths,12);
+                totalLoanPayment += dto.getPaymentAmount();
+            }
+            report.addCustomTotal("Total Loan Payment",totalLoanPayment);
+        }
 
         report.addTableHeading("Cash Sales");
         String[] detail_header = {"Item", "Sub Item", "Quantity", "Discount", "Total"};
@@ -117,7 +132,7 @@ public class TodayReportFactory {
             String[] row = {
                     cashSummary.getItemName(),
                     cashSummary.getSubItemName(),
-                    String.valueOf(cashSummary.getTotalQuantity()),
+                    String.format("%.2f", cashSummary.getTotalQuantity()),
                     String.valueOf(cashSummary.getTotalDiscount()),
                     String.valueOf(cashSummary.getTotalPrice())
             };
@@ -139,7 +154,7 @@ public class TodayReportFactory {
             String[] row = {
                     loanSummary.getItemName(),
                     loanSummary.getSubItemName(),
-                    String.valueOf(loanSummary.getTotalQuantity()),
+                    String.format("%.2f", loanSummary.getTotalQuantity()),
                     String.valueOf(loanSummary.getTotalDiscount()),
                     String.valueOf(loanSummary.getTotalPrice())
             };
@@ -150,7 +165,7 @@ public class TodayReportFactory {
         report.addTotalAndQuantity(loanTotal,loanDiscount);
 
         List<LoanDto> loanDtoList = loanFacade.getAllLoanDto();
-        report.addTableHeading("Credit Details : ("+DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() +")");
+        report.addTableHeading("Credit Details ALL Customer until: ("+DateTimeUtils.getCurrentDate()+" "+DateTimeUtils.getCurrentTime() +")");
         String[] loanHeaders = {"Customer","Last Payment", "Last pay Date","Remaining"};
         int[] loan_col_widths = {150, 120, 130, 130};
         report.addTableHeader(loanHeaders,loan_col_widths,0);
@@ -167,22 +182,6 @@ public class TodayReportFactory {
             remainingLoan += dto.getLoan().getRemainingAmount();
         }
         report.addCustomTotal("Remaining Total",remainingLoan);
-
-        List<LoanPaymentDto> loanPaymentList = loanPaymentService.getAllCustomerLoanPaymentsByDate(DateTimeUtils.getCurrentDate());
-        report.addTableHeading(" Received Cash form Debtors");
-        String[] loanPaymentHeaders = {"Customer","Payment Date", "Amount"};
-        int[] loanPayment_col_widths = {150, 150, 130};
-        report.addTableHeader(loanPaymentHeaders,loanPayment_col_widths,0);
-
-        if (loanPaymentList!=null){
-            double totalLoanPayment = 0;
-            for (LoanPaymentDto dto : loanPaymentList){
-                String[] row = {dto.getCustomerName(),dto.getPaymentDate(),formatAmount(dto.getPaymentAmount())};
-                report.addTableRow(row,loanPayment_col_widths,12);
-                totalLoanPayment += dto.getPaymentAmount();
-            }
-            report.addCustomTotal("Total Loan Payment",totalLoanPayment);
-        }
     }
 
 
@@ -195,7 +194,16 @@ public class TodayReportFactory {
         addTodaySummary(report);
 
         report.addSpace();
-
+        report.drawLine();
+        List<BillItemsDetailDto> creditBills = new ArrayList<>();
+        for (BillItemsDetailDto dto : bills){
+            if (dto.getPaymentMethod().equals(AppConstant.LOAN)){
+                creditBills.add(dto);
+            }
+        }
+        createTable(report,creditBills,"Credit Bills");
+        report.addSpace();
+        report.drawLine();
         createTable(report,bills,"All Bills Without Deleted Bills");
         report.drawLine();
         createTable(report,deletedBillItemList,"Deleted Bills");
@@ -203,7 +211,7 @@ public class TodayReportFactory {
         report.finishReport(fileName,AppConstant.TODAY_DETAIL_FOLDER);
     }
 
-    public void downloadDetailPdfByDateRange(String startDate, String endDate,List<BillItemsDetailDto> bills, List<BillItemsDetailDto> deletedBillItemList){
+    public void downloadDetailPdfByDateRange(String startDate, String endDate,List<BillItemsDetailDto> bills, List<BillItemsDetailDto> deletedBillItemList, List<LoanPaymentDto> loanPaymentDtoList){
         CreateReport report = new CreateReport(context);
         report.startPage(842, 595); // A4 size
 
@@ -211,6 +219,21 @@ public class TodayReportFactory {
         report.addReportTitle("Sales Report", startDate + " --> "+endDate);
 
         report.addSpace();
+        report.drawLine();
+        report.addTableHeading(" Received Cash form Debtors");
+        String[] l_headers = {"Date","Customer" ,"Amount"};
+        int[] l_colWidth = {100, 100, 100};
+        report.addTableHeader(l_headers, l_colWidth, 0);
+        for (LoanPaymentDto dto: loanPaymentDtoList){
+            String[] row = {
+                    dto.getPaymentDate(),
+                    dto.getCustomerName(),
+                    formatAmount(dto.getPaymentAmount())
+            };
+            report.addTableRow(row, l_colWidth, 0);
+        }
+
+        report.drawLine();
 
         createTable(report,bills,"All Bills Without Deleted Bills");
         createTable(report,deletedBillItemList,"Deleted Bills");

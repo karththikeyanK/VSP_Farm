@@ -96,20 +96,31 @@ public class LoanRepository {
         return loans;
     }
 
-    public Loan getLoansByCustomerId(int customerId){
-        List<Loan> loans = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(AppConstant.LOAN_TABLE, null, "customer_id = ?", new String[]{String.valueOf(customerId)}, null, null, null);
+    public Loan getLoansByCustomerId(int customerId) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
         Loan loan = null;
-        if (cursor.moveToFirst()) {
-            loan = new Loan();
-            loan.setId(cursor.getInt(0));
-            loan.setCustomerId(cursor.getInt(1));
-            loan.setRemainingAmount(cursor.getDouble(2));
-            loan.setUpdatedDate(cursor.getString(3));
+
+        try {
+            db = dbHelper.getReadableDatabase();
+            cursor = db.query(AppConstant.LOAN_TABLE, null, "customer_id = ?", new String[]{String.valueOf(customerId)}, null, null, null);
+
+            if (cursor.moveToFirst()) {
+                loan = new Loan();
+                loan.setId(cursor.getInt(0));
+                loan.setCustomerId(cursor.getInt(1));
+                loan.setRemainingAmount(cursor.getDouble(2));
+                loan.setUpdatedDate(cursor.getString(3));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
         }
-        cursor.close();
-        db.close();
+
         return loan;
     }
 

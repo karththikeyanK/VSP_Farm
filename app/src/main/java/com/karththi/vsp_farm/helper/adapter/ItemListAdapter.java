@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.Item;
 import com.karththi.vsp_farm.page.admin.item.EditItemActivity;
 import com.karththi.vsp_farm.page.admin.item.SubItemListActivity;
@@ -123,6 +124,14 @@ public class ItemListAdapter extends BaseAdapter {
             }
 
         });
+
+        if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER) && !AppConstant.EDIT_ITEM_PERMISSION){
+            deleteButton.setEnabled(false);
+            editButton.setEnabled(false);
+        }else {
+            deleteButton.setEnabled(true);
+            editButton.setEnabled(true);
+        }
 
         return convertView;
     }

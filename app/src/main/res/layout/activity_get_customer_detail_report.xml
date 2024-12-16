@@ -148,7 +148,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Deleted"
+                        android:text="Loan Payment"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:gravity="center" />
@@ -191,7 +191,7 @@
                         android:gravity="center" />
 
                     <TextView
-                        android:id="@+id/delete"
+                        android:id="@+id/loanPayment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -205,6 +205,25 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/detailReportRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:layout_marginTop="20dp"
+                android:padding="8dp"
+                tools:listitem="@layout/detail_report_row"/>
+
+            <TextView
+                android:id="@+id/creditPaymentReportHeading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Credit Payments Report"
+                android:textSize="18sp"
+                android:layout_marginTop="20dp"
+                android:textColor="@android:color/black"
+                android:paddingBottom="16dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/loanPaymentReportRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border"
@@ -230,7 +249,6 @@
                 tools:listitem="@layout/detail_report_row"/>
 
         </LinearLayout>
-
 
     </ScrollView>
 </LinearLayout>

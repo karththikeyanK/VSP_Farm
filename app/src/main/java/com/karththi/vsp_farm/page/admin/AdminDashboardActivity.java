@@ -24,7 +24,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private TextView userName;
 
-    private Button viewReportButton,viewBillButton,viewLoanButton;
+    private Button viewReportButton,viewBillButton,viewLoanButton,permissionButton;
 
 
     @Override
@@ -32,14 +32,21 @@ public class AdminDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
 
+        appConstant = new AppConstant(this);
+        if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            appConstant.ConfirmAlert("Permission Denied", "You don't have permission to access this page", () -> startActivity(intent));
+        }
+
         // Example: Display a welcome message
         TextView welcomeTextView = findViewById(R.id.welcomeTextView);
         welcomeTextView.setText("Welcome to the Admin Dashboard!");
-        appConstant = new AppConstant(this);
+
         userName = findViewById(R.id.userNameTextView);
         userName.setText(AppConstant.USER_NAME);
         viewReportButton = findViewById(R.id.viewReportButton);
         viewBillButton = findViewById(R.id.viewBillButton);
+        permissionButton = findViewById(R.id.permissionButton);
         viewReportButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, ReportActivity.class);
             startActivity(intent);
@@ -57,9 +64,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         });
 
-
-
-
+        permissionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PermissionActivity.class);
+            startActivity(intent);
+        });
 
     }
 

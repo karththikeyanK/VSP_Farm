@@ -16,13 +16,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.PasswordUtils;
+import com.karththi.vsp_farm.model.Permission;
 import com.karththi.vsp_farm.model.User;
 import com.karththi.vsp_farm.page.admin.AdminDashboardActivity;
 import com.karththi.vsp_farm.page.cashier.CashierDashBoard;
-import com.karththi.vsp_farm.page.cashier.ItemPageActivity;
+import com.karththi.vsp_farm.repo.PermissionRepository;
 import com.karththi.vsp_farm.repo.UserRepository;
 
 import java.util.List;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private AppConstant appConstant;
 
+    private PermissionRepository permissionRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
         userRepository = new UserRepository(this);
-
+        permissionRepository = new PermissionRepository(this);
+        fetchedPermission();
         AppConstant.PRINTER_TARGET = "";
 
         // Set the login button click listener
@@ -58,6 +63,58 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void fetchedPermission() {
+        List<Permission> permissions = permissionRepository.getAll();
+        for (Permission permission : permissions) {
+            if (permission.getIsGranted() == 1) {
+                switch (permission.getPermission()) {
+                    case "ADD_CUSTOMER_PERMISSION":
+                        AppConstant.ADD_CUSTOMER_PERMISSION = true;
+                        break;
+                    case "EDIT_CUSTOMER_PERMISSION":
+                        AppConstant.EDIT_CUSTOMER_PERMISSION = true;
+                        break;
+                    case "ADD_ITEM_PERMISSION":
+                        AppConstant.ADD_ITEM_PERMISSION = true;
+                        break;
+                    case "EDIT_ITEM_PERMISSION":
+                        AppConstant.EDIT_ITEM_PERMISSION = true;
+                        break;
+                    case "ADD_SUB_ITEM_PERMISSION":
+                        AppConstant.ADD_SUB_ITEM_PERMISSION = true;
+                        break;
+                    case "EDIT_SUB_ITEM_PERMISSION":
+                        AppConstant.EDIT_SUB_ITEM_PERMISSION = true;
+                        break;
+                    case "DISABLE_OR_ENABLE_ITEM_PERMISSION":
+                        AppConstant.DISABLE_OR_ENABLE_ITEM_PERMISSION = true;
+                        break;
+                    case "TODAY_SUMMARY_REPORT_PERMISSION":
+                        AppConstant.TODAY_SUMMARY_REPORT_PERMISSION = true;
+                        break;
+                    case "TODAY_DETAIL_REPORT_PERMISSION":
+                        AppConstant.TODAY_DETAIL_REPORT_PERMISSION = true;
+                        break;
+                    case "GET_SUMMARY_REPORT_PERMISSION":
+                        AppConstant.GET_SUMMARY_REPORT_PERMISSION = true;
+                        break;
+                    case "GET_DETAIL_REPORT_PERMISSION":
+                        AppConstant.GET_DETAIL_REPORT_PERMISSION = true;
+                        break;
+                    case "GET_CUSTOMER_REPORT_PERMISSION":
+                        AppConstant.GET_CUSTOMER_REPORT_PERMISSION = true;
+                        break;
+                    case "VIEW_LOAN_PAYMENT_PERMISSION":
+                        AppConstant.VIEW_LOAN_PAYMENT_PERMISSION = true;
+                        break;
+                    default:
+                        // Handle unknown permission if necessary
+                        break;
+                }
+            }
+        }
+    }
+
     private void performLogin() {
         String username = usernameEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
@@ -67,10 +124,6 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        List<User> users = userRepository.getAllUsers();
-
-        // Get the user from the database
 
         User user = userRepository.getUserByUsername(username);
 

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.karththi.vsp_farm.R;
+import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.model.SubItem;
 import com.karththi.vsp_farm.page.admin.item.EditSubItemActivity;
 import com.karththi.vsp_farm.service.SubItemService;
@@ -60,13 +61,43 @@ public class SubItemListAdapter extends BaseAdapter {
 
         TextView subItemNameTextView = convertView.findViewById(R.id.subItemNameTextView);
         TextView subItemPriceTextView = convertView.findViewById(R.id.subItemPriceTextView);
+        TextView subItemStatusTextView = convertView.findViewById(R.id.subItemStatusTextView);
         Button editButton = convertView.findViewById(R.id.editButton);
+        Button statusButton = convertView.findViewById(R.id.statusButton);
         Button deleteButton = convertView.findViewById(R.id.deleteButton);
-
         final SubItem subItem = subItems.get(position);
 
         subItemNameTextView.setText(subItem.getSubItemName());
         subItemPriceTextView.setText(String.valueOf(subItem.getPrice()));
+        subItemStatusTextView.setText(subItem.getStatus());
+
+        if ("ENABLE".equals(subItem.getStatus())) {
+            statusButton.setText("DISABLE");
+            statusButton.setTextColor(context.getResources().getColor(R.color.holo_red_dark));
+        } else {
+            statusButton.setText("ENABLE");
+            statusButton.setTextColor(context.getResources().getColor(R.color.green));
+        }
+
+        statusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SubItem updatedSubItem = new SubItem();
+                updatedSubItem.setId(subItem.getId());
+                updatedSubItem.setSubItemName(subItem.getSubItemName());
+                updatedSubItem.setPrice(subItem.getPrice());
+                updatedSubItem.setItemId(subItem.getItemId());
+                if ("ENABLE".equals(subItem.getStatus())) {
+                    updatedSubItem.setStatus("DISABLE");
+                } else {
+                    updatedSubItem.setStatus("ENABLE");
+                }
+                if (subItemService.update(updatedSubItem, subItem)) {
+                    subItems.set(position, updatedSubItem);
+                }
+                notifyDataSetChanged();
+            }
+        });
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,22 +111,44 @@ public class SubItemListAdapter extends BaseAdapter {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(context)
-                        .setTitle("Delete Sub-Item")
-                        .setMessage("Are you sure you want to delete this sub-item?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                subItemService.delete(subItem);
-                                subItems.remove(position);
-                                notifyDataSetChanged();
-                                Toast.makeText(context, "Sub-Item deleted", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Delete Sub Item");
+                builder.setMessage("Are you sure you want to delete this sub item?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (subItemService.delete(subItem)) {
+                            subItems.remove(position);
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Sub Item deleted successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Failed to delete sub item", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("No", null);
+                builder.show();
             }
         });
+
+        if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+            if (!AppConstant.EDIT_SUB_ITEM_PERMISSION) {
+                editButton.setEnabled(false);
+            } else {
+                editButton.setEnabled(true);
+            }
+
+            if (!AppConstant.DISABLE_OR_ENABLE_ITEM_PERMISSION) {
+                statusButton.setEnabled(false);
+            } else {
+                statusButton.setEnabled(true);
+            }
+            deleteButton.setEnabled(false);
+        }else {
+            editButton.setEnabled(true);
+            statusButton.setEnabled(true);
+            deleteButton.setEnabled(true);
+        }
 
         return convertView;
     }

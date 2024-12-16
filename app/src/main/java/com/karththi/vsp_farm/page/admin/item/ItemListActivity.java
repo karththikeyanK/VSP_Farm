@@ -79,6 +79,10 @@ public class ItemListActivity extends AppCompatActivity {
         });
 
         userNameTextView.setText(AppConstant.USER_NAME);
+
+        if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER) && !AppConstant.ADD_ITEM_PERMISSION) {
+            addNewItemButton.setVisibility(View.GONE);
+        }
     }
 
     private void displayItems() {

@@ -73,6 +73,7 @@ public class BillFacade {
 
         for (BillItem billItem : billItems) {
             billItem.setBillId(billId);
+            billItem.setQuantity(Double.parseDouble(String.format(Locale.US, "%.3f", billItem.getQuantity())));
             billItemService.addBillItem(billItem);
         }
         Toast.makeText(context, "Bill added successfully", Toast.LENGTH_SHORT).show();

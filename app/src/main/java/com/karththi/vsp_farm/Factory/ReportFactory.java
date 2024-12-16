@@ -64,8 +64,8 @@ public class ReportFactory {
             List<BillSummary> summaryList,
             List<BillSummary> subItemSummary,
             List<BillSummary> summaryListByDate,
-            List<BillSummary> subItemSummaryByDate
-
+            List<BillSummary> subItemSummaryByDate,
+            List<LoanPaymentDto> loanPaymentDtoList
     ) {
         CreateReport report = new CreateReport(context);
         report.startPage(595, 842); // A4 size
@@ -73,6 +73,20 @@ public class ReportFactory {
         report.addReportTitle("Sales Report", startDate+" ---> "+endDate);
         addSummary(report,saleList);
 
+        report.addTableHeading(" Received Cash form Debtors");
+        String[] l_headers = {"Date","Customer" ,"Amount"};
+        int[] l_colWidth = {100, 100, 100};
+        report.addTableHeader(l_headers, l_colWidth, 0);
+        for (LoanPaymentDto dto: loanPaymentDtoList){
+            String[] row = {
+                    dto.getPaymentDate(),
+                    dto.getCustomerName(),
+                    formatAmount(dto.getPaymentAmount())
+            };
+            report.addTableRow(row, l_colWidth, 0);
+        }
+
+        report.drawLine();
         report.addTableHeading("Summary by Item");
         String[] headers = {"Item", "Quantity", "Discount", "total"};
         int[] colWidth = {120, 120, 120, 120};
@@ -174,7 +188,7 @@ public class ReportFactory {
         report.finishReport(fileName,AppConstant.LOAN_PAYMENT_FOLDER);
     }
 
-    public void downloadDetailReportPdfByCustomer(String startDate, String endDate, double total,double cash,double loan,double deleted,String customer,List<BillItemsDetailDto> cashList, List<BillItemsDetailDto> loanList,List<BillItemsDetailDto> deletedBillItemList) {
+    public void downloadDetailReportPdfByCustomer(String startDate, String endDate, double total,double cash,double loan,double deleted,String customer,List<BillItemsDetailDto> cashList, List<BillItemsDetailDto> loanList,List<BillItemsDetailDto> deletedBillItemList, List<LoanPaymentDto> loanPaymentDtoList) {
         CreateReport report = new CreateReport(context);
         report.startPage(842, 595); // A4 size
 
@@ -192,6 +206,20 @@ public class ReportFactory {
                 formatAmount(deleted)
         };
         report.addTableRow(summary,summary_col_width,0);
+
+        report.drawLine();
+        report.addTableHeading(" Received Cash form Debtors");
+        String[] headers = {"Date","Customer" ,"Amount"};
+        int[] colWidth = {100, 100, 100};
+        report.addTableHeader(headers, colWidth, 0);
+        for (LoanPaymentDto dto: loanPaymentDtoList){
+            String[] row = {
+                    dto.getPaymentDate(),
+                    dto.getCustomerName(),
+                    formatAmount(dto.getPaymentAmount())
+            };
+            report.addTableRow(row, colWidth, 0);
+        }
 
         createTable(report,cashList,"Cash Bills");
         report.drawLine();

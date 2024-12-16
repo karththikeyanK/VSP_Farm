@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.PasswordUtils;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final String ITEM_TABLE = AppConstant.ITEM_TABLE;
@@ -25,6 +28,10 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final String LOAN_PAYMENT_TABLE = AppConstant.LOAN_PAYMENT_TABLE;
 
+    public static final String EXPENSE_TABLE = AppConstant.EXPENSE_TABLE;
+
+    public static final String PERMISSION_TABLE = AppConstant.PERMISSION_TABLE;
+
     public DbHelper(Context context) {
         super(context, AppConstant.DATABASE_NAME, null, AppConstant.DATABASE_VERSION);
     }
@@ -40,6 +47,7 @@ public class DbHelper extends SQLiteOpenHelper {
             "name TEXT, " +
             "price DOUBLE, " +
             "item_id INTEGER, " +
+            "status TEXT, "+
             "FOREIGN KEY(item_id) REFERENCES " + ITEM_TABLE + "(id) " +
             "ON DELETE CASCADE ON UPDATE CASCADE)";
 
@@ -101,6 +109,22 @@ public class DbHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(loan_id) REFERENCES " + LOAN_TABLE + "(id) " +
             "ON DELETE CASCADE ON UPDATE CASCADE)";
 
+    private static final String CREATE_EXPENSE_TABLE = "CREATE TABLE " + EXPENSE_TABLE + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "expense_name TEXT, " +
+            "expense_amount REAL, " +
+            "expense_date TEXT, " +
+            "expense_time TEXT, " +
+            "user_id INTEGER, " +
+            "FOREIGN KEY(user_id) REFERENCES " + USER_TABLE + "(id) " +
+            "ON DELETE CASCADE ON UPDATE CASCADE)";
+
+
+    private static final String CREATE_PERMISSION_TABLE = "CREATE TABLE " + PERMISSION_TABLE + " (" +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            "permission TEXT, " +
+            "is_enabled INTEGER DEFAULT 0)";
+
 
 
     @Override
@@ -113,21 +137,20 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_BILL_ITEM_TABLE);
         db.execSQL(CREATE_LOAN_TABLE);
         db.execSQL(CREATE_LOAN_PAYMENT_TABLE);
+        db.execSQL(CREATE_EXPENSE_TABLE);
+        db.execSQL(CREATE_PERMISSION_TABLE);
         createDefaultAdminUser(db);
         insertDefaultCustomer(db);
+        insertPermission(db);
+//        testData(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + SUB_ITEM_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+CUSTOMER_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+BILL_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+BILL_ITEM_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+LOAN_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS "+LOAN_PAYMENT_TABLE);
-        onCreate(db);
+        ContentValues values = new ContentValues();
+        values.put("permission", "VIEW_LOAN_PAYMENT_PERMISSION");
+        values.put("is_enabled", 0);
+        db.insert(PERMISSION_TABLE, null, values);
     }
 
     private void createDefaultAdminUser(SQLiteDatabase db) {
@@ -171,4 +194,88 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put("mobile", "0000000000");
         db.insert(CUSTOMER_TABLE, null, values);
     }
+
+    public void insertPermission(SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+
+        List<String> permissions = Arrays.asList(
+                "TODAY_SUMMARY_REPORT_PERMISSION",
+                "TODAY_DETAIL_REPORT_PERMISSION",
+                "GET_SUMMARY_REPORT_PERMISSION",
+                "GET_DETAIL_REPORT_PERMISSION",
+                "GET_CUSTOMER_REPORT_PERMISSION",
+                "ADD_CUSTOMER_PERMISSION",
+                "EDIT_CUSTOMER_PERMISSION",
+                "ADD_ITEM_PERMISSION",
+                "EDIT_ITEM_PERMISSION",
+                "ADD_SUB_ITEM_PERMISSION",
+                "EDIT_SUB_ITEM_PERMISSION",
+                "DISABLE_OR_ENABLE_ITEM_PERMISSION",
+                "VIEW_LOAN_PAYMENT_PERMISSION"
+        );
+
+        for (String permission : permissions) {
+            values.put("permission", permission);
+            values.put("is_enabled", 0);
+            db.insert(PERMISSION_TABLE, null, values);
+            values.clear(); // Clear values for the next iteration to avoid data overlap
+        }
+    }
+
+
+    public void testData(SQLiteDatabase db) {
+        // Insert role: CASHIER
+        ContentValues userValues = new ContentValues();
+        String cashierPassword = PasswordUtils.hashPassword("0000"); // Ensure passwords are hashed
+        userValues.put("username", "1111");
+        userValues.put("name", "Cashier");
+        userValues.put("password", cashierPassword);
+        userValues.put("role", "CASHIER");
+        db.insert(USER_TABLE, null, userValues);
+
+        // Insert 3 customers
+        String[] customerNames = {"Customer A", "Customer B", "Customer C"};
+        for (String customerName : customerNames) {
+            ContentValues customerValues = new ContentValues();
+            customerValues.put("name", customerName);
+            customerValues.put("description", "Description of " + customerName);
+            customerValues.put("mobile", "1234567890"); // Mock phone number
+            db.insert(CUSTOMER_TABLE, null, customerValues);
+        }
+
+        // Insert Item: Chicken
+        ContentValues chickenValues = new ContentValues();
+        chickenValues.put("name", "Chicken");
+        chickenValues.put("measurement", "KG"); // Assuming measurement is weight-based
+        long chickenItemId = db.insert(ITEM_TABLE, null, chickenValues);
+
+        String[] chickenSubItems = {"Broiler", "Kalperd", "Parents"};
+        for (String subItemName : chickenSubItems) {
+            ContentValues subItemValues = new ContentValues();
+            subItemValues.put("name", subItemName);
+            subItemValues.put("price", 0.0); // Default price
+            subItemValues.put("item_id", chickenItemId);
+            subItemValues.put("status", "ACTIVE");
+            db.insert(SUB_ITEM_TABLE, null, subItemValues);
+        }
+
+        // Insert Item: Egg
+        ContentValues eggValues = new ContentValues();
+        eggValues.put("name", "Egg");
+        eggValues.put("measurement", "PIECE"); // Assuming measurement is quantity-based
+        long eggItemId = db.insert(ITEM_TABLE, null, eggValues);
+
+        // Insert sub-items for Egg
+        String[] eggSubItems = {"White", "Village"};
+        for (String subItemName : eggSubItems) {
+            ContentValues subItemValues = new ContentValues();
+            subItemValues.put("name", subItemName);
+            subItemValues.put("price", 45); // Default price
+            subItemValues.put("item_id", eggItemId);
+            subItemValues.put("status", "ACTIVE");
+            db.insert(SUB_ITEM_TABLE, null, subItemValues);
+        }
+    }
+
+
 }

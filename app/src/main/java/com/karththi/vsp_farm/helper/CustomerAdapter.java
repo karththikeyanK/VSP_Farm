@@ -76,6 +76,11 @@ public class CustomerAdapter extends ArrayAdapter<Customer> {
             });
         });
 
+        if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER) && !AppConstant.EDIT_CUSTOMER_PERMISSION){
+            deleteButton.setVisibility(View.GONE);
+            editButton.setVisibility(View.GONE);
+        }
+
         return rowView;
     }
 }

@@ -1,7 +1,10 @@
 package com.karththi.vsp_farm.page.cashier;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -34,8 +37,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.callBack.SaveBill;
 import com.karththi.vsp_farm.dto.CustomerPrintDto;
+import com.karththi.vsp_farm.dto.LoanDto;
 import com.karththi.vsp_farm.dto.PrintItemDto;
 import com.karththi.vsp_farm.facade.BillFacade;
+import com.karththi.vsp_farm.facade.LoanFacade;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.adapter.ItemRecycleAdapter;
 import com.karththi.vsp_farm.helper.adapter.SubItemGridAdapter;
@@ -62,9 +67,6 @@ import java.util.Locale;
 
 public class BillingPageActivity extends AppCompatActivity implements SaveBill {
     private AppConstant appConstant;
-
-    private ItemService itemService;
-    private CustomerService customerService;
 
     private SubItemService subItemService;
 
@@ -95,7 +97,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private boolean isLoan = false;
 
-    private EpsonPrinterHelper epsonPrinterHelper;
+    private EpsonPrinterHelper epsonPrinterHelper = null;
 
 
     private Button viewBasketButton,closeBasketButton;
@@ -106,6 +108,18 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
     private RecyclerView itemsGridView;
 
+    private CustomerService customerService;
+    private LoanFacade loanFacade;
+    private List<Customer> customerList = new ArrayList<>();
+    private List<String> customerNames = new ArrayList<>();
+    private LoanDto loanDto;
+    private int CUSTOMER_ID = 0;
+    private String CUSTOMER_NAME = "";
+
+    private Dialog payLoanDialog;
+
+    private Button reconnectButton;
+
 
 
     @Override
@@ -113,13 +127,10 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billing_page);
 
-
-        itemService = new ItemService(this);
         subItemService = new SubItemService(this);
         customerService = new CustomerService(this);
         appConstant = new AppConstant(this);
         billFacade = new BillFacade(this);
-        epsonPrinterHelper = new EpsonPrinterHelper(this);
         loanService = new LoanService(this);
         loanPaymentService = new LoanPaymentService(this);
 
@@ -132,6 +143,13 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         closeBasketButton = findViewById(R.id.closeBasketButton);
         billingScrollView = findViewById(R.id.billingScrollView);
         customerLayout = findViewById(R.id.customerLayout);
+        loanFacade = new LoanFacade(this);
+
+        payLoanDialog = new Dialog(this);
+        payLoanDialog.setContentView(R.layout.dialog_pay_loan);
+
+        Button payLoanPopupButton = findViewById(R.id.payLoanPopupButton);
+        payLoanPopupButton.setOnClickListener(v -> showPayLoanPopup());
 
         billItems = new ArrayList<>();
 
@@ -175,84 +193,43 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         });
 
         viewBasketButton.setOnClickListener(v -> {
-            billingScrollView.setVisibility(View.VISIBLE);
-            closeBasketButton.setVisibility(View.VISIBLE);
-
-            viewBasketButton.setVisibility(View.GONE);
-            customerLayout.setVisibility(View.GONE);
-            backButton.setVisibility(View.GONE);
-            itemsGridView.setVisibility(View.GONE);
-
+            openBasket();
         });
 
         closeBasketButton.setOnClickListener(v -> {
-            billingScrollView.setVisibility(View.GONE);
-            closeBasketButton.setVisibility(View.GONE);
-
-            viewBasketButton.setVisibility(View.VISIBLE);
-            customerLayout.setVisibility(View.VISIBLE);
-            backButton.setVisibility(View.VISIBLE);
-            itemsGridView.setVisibility(View.VISIBLE);
+            setCloseBasket();
         });
-    }
-    private void addSubItemToBill(SubItem subItem) {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        TableRow row = (TableRow) inflater.inflate(R.layout.billing_row, billingTableLayout, false);
 
-        TextView itemName = row.findViewById(R.id.itemName);
-        TextView itemPrice = row.findViewById(R.id.itemPrice);
-        EditText itemDiscount = row.findViewById(R.id.itemDiscount);
-        EditText itemQuantity = row.findViewById(R.id.itemQuantity);
-        EditText itemTotal = row.findViewById(R.id.itemTotal);
-        TextView deleteItem = row.findViewById(R.id.deleteItem);
 
-        itemDiscount.setText("0.0");
+        epsonPrinterHelper = new EpsonPrinterHelper(this);
 
-        // Create and add BillItem to the list
-        billId++;
-        BillItem billItem = new BillItem();
-        billItem.setId(billId);
-        billItem.setSubItemId(subItem.getId());
-        billItem.setPrice(subItem.getPrice());
-        billItem.setQuantity(1.0);
-        billItem.setDiscount(0.0);
-
-        billItems.add(billItem);
-        row.setTag(billId); // Store BillItem object in row tag
-
-        itemName.setText(subItem.getSubItemName());
-        itemPrice.setText(String.valueOf(subItem.getPrice()));
-        itemQuantity.setText("1");
-        itemTotal.setText(String.valueOf(subItem.getPrice()));
-
-        Customer selectedCustomer = (Customer) customerSpinner.getSelectedItem();
-        if (selectedCustomer.getName().equals("DEFAULT")) {
-            itemDiscount.setEnabled(false);
-        }
-
-        updateRowOnFocusChange(itemPrice, itemDiscount, itemQuantity, itemTotal, billId);
-
-        // Handle row deletion
-        deleteItem.setOnClickListener(v -> {
-            int id = (int) row.getTag();
-            Iterator<BillItem> iterator = billItems.iterator();
-            while (iterator.hasNext()) {
-                BillItem billItem1 = iterator.next();
-                if (billItem1.getId() == id) {
-                    iterator.remove();
-                    billingTableLayout.removeView(row);
-                    updateTotalAmount();
-                    break;
-                }
+        reconnectButton = findViewById(R.id.reconnectButton);
+        reconnectButton.setOnClickListener(v -> {
+            if (epsonPrinterHelper != null) {
+                epsonPrinterHelper.reConnect(); // Reconnect to the printer
             }
-
         });
 
-        billingTableLayout.addView(row);
-        updateTotalAmount();
     }
 
+    private void openBasket(){
+        billingScrollView.setVisibility(View.VISIBLE);
+        closeBasketButton.setVisibility(View.VISIBLE);
 
+        viewBasketButton.setVisibility(View.GONE);
+        customerLayout.setVisibility(View.GONE);
+        backButton.setVisibility(View.GONE);
+        itemsGridView.setVisibility(View.GONE);
+    }
+    private void setCloseBasket(){
+        billingScrollView.setVisibility(View.GONE);
+        closeBasketButton.setVisibility(View.GONE);
+
+        viewBasketButton.setVisibility(View.VISIBLE);
+        customerLayout.setVisibility(View.VISIBLE);
+        backButton.setVisibility(View.VISIBLE);
+        itemsGridView.setVisibility(View.VISIBLE);
+    }
     private void updateRowOnFocusChange(TextView itemPrice, EditText itemDiscount, EditText itemQuantity, EditText itemTotal, int billId) {
         customerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -278,9 +255,9 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
                         itemDiscount.setText("0.0");
                         itemDiscount.setEnabled(false);  // Disable editing
                         double price = parseDoubleOrDefault(itemPrice.getText().toString());
-                        double qty = parseDoubleOrDefault(itemQuantity.getText().toString());
-                        double total = qty * price;
-                        itemTotal.setText(String.format("%.2f", total));
+                        double total = parseDoubleOrDefault(itemTotal.getText().toString());
+                        double qty = total / price;
+                        itemQuantity.setText(String.format("%.3f", qty));
                         updateTotalAmount();
                     } else {
                         itemDiscount.setEnabled(true); // Enable editing
@@ -434,8 +411,8 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         double inputAmount = inputAmountEditText.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(inputAmountEditText.getText().toString());
         if (printBill(billItems, false, totalAmount, inputAmount, balance,referenceNumber)) {
             billFacade.addBill(billItems, false, customerId, this, referenceNumber);
-            epsonPrinterHelper.closePrinter();
         } else {
+            printBillButton.setEnabled(true);
             failedToPrintBill();
         }
 
@@ -464,8 +441,8 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         boolean isPrinted = printBill(billItems, true, totalAmount, 0, 0,referenceNumber);
         if (isPrinted) {
             billFacade.addBill(billItems, true, customerId, this, referenceNumber);
-            epsonPrinterHelper.closePrinter();
         } else {
+            loanButton.setEnabled(true);
             failedToPrintBill();
         }
 
@@ -551,7 +528,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
     }
 
     private void setupItemsGridView() {
-         itemsGridView = findViewById(R.id.itemsGridView);
+        itemsGridView = findViewById(R.id.itemsGridView);
         List<SubItem> subItemList = subItemService.getAllSubItems();
         SubItemAdapter adapter = new SubItemAdapter(subItemList, this);
         itemsGridView.setAdapter(adapter);
@@ -650,17 +627,44 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
         }
     }
 
+
+    private void resetAll(){
+        billItems.clear();
+
+        View firstRow = billingTableLayout.getChildAt(0);
+        billingTableLayout.removeAllViews();
+        billingTableLayout.addView(firstRow);
+
+        totalAmount = 0.0;
+        totalPriceTextView.setText("Total: 0.0");
+        inputAmountEditText.setText("");
+        balanceTextView.setText("Balance: 0.0");
+        customerId = 0;
+        selectedCus = null;
+        billId = 0;
+        balance = 0;
+        isLoan = false;
+        printBillButton.setEnabled(true);
+        loanButton.setEnabled(true);
+        setupCustomerSpinner();
+        setCloseBasket();
+    }
+
     @Override
     public void onSaveBillSuccess() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Intent intent = new Intent(BillingPageActivity.this, BillingPageActivity.class);
-                if (isLoan) {
-                    startActivity(intent);
-                } else {
-                    appConstant.showBalancePopup("Balance", String.format("Balance: %.2f", balance), () -> startActivity(intent));
-                }
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                resetAll();
+
+//                if (isLoan) {
+//                    startActivity(intent);
+//                } else {
+//                    appConstant.showBalancePopup("Balance", String.format("Balance: %.2f", balance), () -> startActivity(intent));
+//                }
             }
         });
     }
@@ -670,12 +674,121 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 //        appConstant.ShowAlert("Error", "Failed to save bill. Please add this your Note");
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        epsonPrinterHelper.closePrinter();
+    private void showPayLoanPopup() {
+
+        if (payLoanDialog.getWindow() != null) {
+            payLoanDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            payLoanDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        }
+
+        Spinner customerDropdown = payLoanDialog.findViewById(R.id.customerDropdown);
+        TextView remainingLoanAmount = payLoanDialog.findViewById(R.id.remainingLoanAmount);
+        TextView lastPaymentAmount = payLoanDialog.findViewById(R.id.lastPaymentAmount);
+        TextView lastPaymentDate = payLoanDialog.findViewById(R.id.lastPaymentDate);
+        EditText paymentAmountInput = payLoanDialog.findViewById(R.id.paymentAmountInput);
+        Button payLoanButton = payLoanDialog.findViewById(R.id.payLoanButton);
+        Button closeButton = payLoanDialog.findViewById(R.id.closeButton);
+        View loanStatusSection = payLoanDialog.findViewById(R.id.loanStatusSection);
+
+        loadCustomers(customerDropdown);
+
+        customerDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String selectedCustomer = (String) adapterView.getItemAtPosition(position);
+                if (selectedCustomer != null && !selectedCustomer.equals("Select Customer")) {
+                    Customer customer = findByName(selectedCustomer);
+                    if (customer != null) {
+                        CUSTOMER_ID = customer.getId();
+                        CUSTOMER_NAME = selectedCustomer;
+                        loanDto = loanFacade.getLoanDtoByCustomerId(CUSTOMER_ID);
+
+                        if (loanDto != null && loanDto.getLoan() != null) {
+                            remainingLoanAmount.setText(String.valueOf(loanDto.getLoan().getRemainingAmount()));
+
+                            LoanPayment lastPayment = loanDto.getLastPayment();
+                            if (lastPayment != null) {
+                                lastPaymentAmount.setText(String.valueOf(lastPayment.getPaymentAmount()));
+                                lastPaymentDate.setText(lastPayment.getPaymentDate());
+                            } else {
+                                lastPaymentAmount.setText("N/A");
+                                lastPaymentDate.setText("N/A");
+                            }
+                            loanStatusSection.setVisibility(View.VISIBLE);
+                            paymentAmountInput.setVisibility(View.VISIBLE);
+                            payLoanButton.setVisibility(View.VISIBLE);
+                        } else {
+                            Toast.makeText(BillingPageActivity.this, "No loan found for the selected customer.", Toast.LENGTH_SHORT).show();
+                            loanStatusSection.setVisibility(View.GONE);
+                        }
+                    }
+                } else {
+                    loanStatusSection.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                loanStatusSection.setVisibility(View.GONE);
+            }
+        });
+
+        payLoanButton.setOnClickListener(v -> {
+            String paymentAmountStr = paymentAmountInput.getText().toString().trim();
+            if (paymentAmountStr.isEmpty()) {
+                Toast.makeText(this, "Please enter a payment amount.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            double paymentAmount = Double.parseDouble(paymentAmountStr);
+            if (CUSTOMER_ID != 0) {
+                if (epsonPrinterHelper.printLoanPaymentReceipt(loanDto,CUSTOMER_NAME, paymentAmount)) {
+                    loanFacade.handleLoanPayment(CUSTOMER_ID, paymentAmount);
+                    resetFields(payLoanDialog, customerDropdown, remainingLoanAmount, lastPaymentAmount, lastPaymentDate);
+                    Toast.makeText(this, "Payment processed successfully.", Toast.LENGTH_SHORT).show();
+                    paymentAmountInput.setText("");
+                    payLoanDialog.dismiss();
+                }
+            } else {
+                Toast.makeText(this, "Please select a customer.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        closeButton.setOnClickListener(v -> payLoanDialog.dismiss());
+
+        payLoanDialog.show();
     }
 
+    private void loadCustomers(Spinner customerDropdown) {
+        customerList = customerService.getAllCustomers();
+        customerNames.clear();
+        customerNames.add("Select Customer");
+        Iterator<Customer> iterator = customerList.iterator();
+        while (iterator.hasNext()) {
+            Customer customer = iterator.next();
+            if (!customer.getName().equals(AppConstant.DEFAULT)) {
+                customerNames.add(customer.getName());
+            }
+        }
+        ArrayAdapter<String> customerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, customerNames);
+        customerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        customerDropdown.setAdapter(customerAdapter);
+    }
+
+    private void resetFields(Dialog dialog, Spinner customerDropdown, TextView remainingLoanAmount, TextView lastPaymentAmount, TextView lastPaymentDate) {
+        remainingLoanAmount.setText("");
+        lastPaymentAmount.setText("");
+        lastPaymentDate.setText("");
+        customerDropdown.setSelection(0);
+    }
+
+    private Customer findByName(String name) {
+        for (Customer customer : customerList) {
+            if (customer.getName().equals(name)) {
+                return customer;
+            }
+        }
+        return null;
+    }
     public class SubItemAdapter extends RecyclerView.Adapter<SubItemAdapter.ViewHolder> {
         private List<SubItem> subItemList;
         private Context context;
@@ -728,6 +841,7 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
             EditText qtyInput = popupView.findViewById(R.id.qtyInput);
             EditText discountInput = popupView.findViewById(R.id.discountInput);
             Button addButton = popupView.findViewById(R.id.addButton);
+            Button basketButton = popupView.findViewById(R.id.basketButton);
 
             itemName.setText(subItem.getSubItemName() + " - " + subItem.getPrice() + " LKR");
             qtyInput.setText("1");
@@ -805,6 +919,25 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
             AlertDialog dialog = builder.create();
             dialog.show();
+            basketButton.setOnClickListener(v -> {
+                double price = parseDoubleSafely(priceInput, subItem.getPrice());
+                double qty = parseDoubleSafely(qtyInput, 1.0);
+                double discount = parseDoubleSafely(discountInput, 0.0);
+
+                if ((price + 1)  < (subItem.getPrice() - discount) * qty)  {
+                    price = (subItem.getPrice() - discount) * qty;
+                } else if (price == 0 && qty == 0) {
+                    appConstant.ShowAlert("Error", "Please enter the price or quantity");
+                    return;
+                } else if (price > (subItem.getPrice() - discount) * qty) {
+                    qty = price / (subItem.getPrice() - discount);
+                    qty = Double.parseDouble(String.format("%.3f", qty));
+                }
+                price = Double.parseDouble(String.format("%.2f", price));
+                addItemToCart(subItem, price, qty, discount);
+                dialog.dismiss();
+                openBasket();
+            });
 
             addButton.setOnClickListener(v -> {
                 double price = parseDoubleSafely(priceInput, subItem.getPrice());
@@ -911,6 +1044,34 @@ public class BillingPageActivity extends AppCompatActivity implements SaveBill {
 
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (epsonPrinterHelper != null) {
+            epsonPrinterHelper.closePrinter(); // Ensure cleanup on activity destruction
+        }
+        if (payLoanDialog != null && payLoanDialog.isShowing()) {
+            payLoanDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (epsonPrinterHelper == null) {
+            epsonPrinterHelper = new EpsonPrinterHelper(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (epsonPrinterHelper != null) {
+            epsonPrinterHelper.closePrinter(); // Close the printer when leaving the activity
+        }
+    }
+
 
 
 }

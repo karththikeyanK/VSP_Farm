@@ -1,0 +1,189 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="20sp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="60dp"
+        android:background="#F0F0F0">
+
+        <!-- Customer Dropdown -->
+        <TextView
+            android:id="@+id/customerLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Customer:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/customerDropdown"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/input_background"
+            android:layout_marginBottom="16dp"
+            android:spinnerMode="dropdown"
+            android:prompt="@string/select_customer" />
+
+        <TableLayout
+            android:id="@+id/loanStatusSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="1"
+            android:padding="10dp"
+            android:background="@drawable/login_background"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <!-- Remaining Loan Amount Row -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/remainingLoanLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Remaining Loan Amount"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/remainingLoanAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0.00"
+                    android:textSize="30sp"
+                    android:textColor="#FF000000"
+                    android:padding="8dp" />
+            </TableRow>
+
+            <!-- Last Payment Amount Row -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/lastPaymentLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Last Payment Amount:"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/lastPaymentAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="0.00"
+                    android:textSize="24sp"
+                    android:textColor="#000000"
+                    android:padding="8dp" />
+            </TableRow>
+
+            <!-- Last Payment Date Row -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/lastPaymentDateLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Last Payment Date:"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
+                    android:padding="8dp" />
+
+                <TextView
+                    android:id="@+id/lastPaymentDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="N/A"
+                    android:textSize="24sp"
+                    android:textColor="#000000"
+                    android:padding="8dp" />
+            </TableRow>
+
+        </TableLayout>
+
+
+
+
+        <!-- Payment Input -->
+        <EditText
+            android:id="@+id/paymentAmountInput"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:hint="Enter Payment Amount"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:layout_marginTop="20sp"
+            android:visibility="gone"
+            android:textSize="20sp"
+            android:background="@drawable/input_background"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp">
+
+            <!-- Close Button -->
+            <Button
+                android:id="@+id/closeButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Close"
+                android:background="@drawable/button_cancel"
+                android:textColor="@android:color/white"
+                android:padding="12dp" />
+
+            <!-- Space between buttons -->
+            <View
+                android:layout_width="16dp"
+                android:layout_height="0dp" />
+
+            <!-- Pay Loan Button -->
+            <Button
+                android:id="@+id/payLoanButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pay Loan"
+                android:textAlignment="center"
+                android:background="@drawable/button_flat"
+                android:textColor="@android:color/white"
+                android:padding="12dp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

@@ -18,11 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.karththi.vsp_farm.Factory.ReportFactory;
 import com.karththi.vsp_farm.R;
 import com.karththi.vsp_farm.dto.BillSummary;
+import com.karththi.vsp_farm.dto.LoanPaymentDto;
 import com.karththi.vsp_farm.dto.Sale;
 import com.karththi.vsp_farm.helper.AppConstant;
 import com.karththi.vsp_farm.helper.utils.LoadingDialog;
 import com.karththi.vsp_farm.service.BillItemService;
 import com.karththi.vsp_farm.service.BillService;
+import com.karththi.vsp_farm.service.LoanPaymentService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,10 +59,10 @@ public class GetSummaryReportActivity extends AppCompatActivity {
     private ExecutorService executorService;
     private Handler mainHandler;
 
-
-
-
+    private List<LoanPaymentDto> loanPaymentDtoList;
     private double sum_total = 0, sum_cash = 0, sum_loan = 0, sum_delete = 0;
+
+    private LoanPaymentService loanPaymentService;
 
 
     @Override
@@ -72,6 +74,7 @@ public class GetSummaryReportActivity extends AppCompatActivity {
         billService = new BillService(this);
         reportFactory = new ReportFactory(this);
         loadingDialog = new LoadingDialog(this);
+        loanPaymentService = new LoanPaymentService(this);
 
         date1Button = findViewById(R.id.date1Button);
         date2Button = findViewById(R.id.date2Button);
@@ -88,7 +91,7 @@ public class GetSummaryReportActivity extends AppCompatActivity {
         subItemSummary = new ArrayList<>();
         summaryListByDate = new ArrayList<>();
         subItemSummaryByDate = new ArrayList<>();
-
+        loanPaymentDtoList = new ArrayList<>();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -152,7 +155,8 @@ public class GetSummaryReportActivity extends AppCompatActivity {
                             summaryList,
                             subItemSummary,
                             summaryListByDate,
-                            subItemSummaryByDate
+                            subItemSummaryByDate,
+                            loanPaymentDtoList
                         );
                     }
                 });
@@ -188,6 +192,8 @@ public class GetSummaryReportActivity extends AppCompatActivity {
         summaryListByDate = billService.getDetailedSummaryByDateRange(date1Button.getText().toString(), date2Button.getText().toString());
         subItemSummaryByDate = billService.getSubItemDetailSummaryByDateRange(date1Button.getText().toString(), date2Button.getText().toString());
         saleList = billService.getSalesByDateRange(date1Button.getText().toString(), date2Button.getText().toString());
+        loanPaymentDtoList = loanPaymentService.getLoanPaymentListByDateRange(999999,
+                date1Button.getText().toString(), date2Button.getText().toString());
     }
 
 

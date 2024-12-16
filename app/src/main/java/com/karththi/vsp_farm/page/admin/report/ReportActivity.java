@@ -75,6 +75,40 @@ public class ReportActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
+        if (AppConstant.USER_ROLE.equals(AppConstant.CASHIER)) {
+            if (AppConstant.TODAY_SUMMARY_REPORT_PERMISSION) {
+                todayReportButton.setEnabled(true);
+            } else {
+                todayReportButton.setEnabled(false);
+            }
+
+            if (AppConstant.TODAY_DETAIL_REPORT_PERMISSION) {
+                todayDetailReportButton.setEnabled(true);
+            } else {
+                todayDetailReportButton.setEnabled(false);
+            }
+
+            if (AppConstant.GET_SUMMARY_REPORT_PERMISSION) {
+                getSummaryReportButton.setEnabled(true);
+            } else {
+                getSummaryReportButton.setEnabled(false);
+            }
+
+            if (AppConstant.GET_DETAIL_REPORT_PERMISSION) {
+                getDetailReportButton.setEnabled(true);
+            } else {
+                getDetailReportButton.setEnabled(false);
+            }
+
+            if (AppConstant.GET_CUSTOMER_REPORT_PERMISSION) {
+                getDetailReportByCustomerButton.setEnabled(true);
+            } else {
+                getDetailReportByCustomerButton.setEnabled(false);
+            }
+
+        }
+
     }
 
     @Override

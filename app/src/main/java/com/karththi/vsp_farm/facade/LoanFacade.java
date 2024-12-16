@@ -45,7 +45,7 @@ public class LoanFacade {
     }
 
 
-    public void handleLoanPayment(int customerId, double amount) {
+    public boolean handleLoanPayment(int customerId, double amount) {
         Log.i("LoanFacade", "LoanFacade::handleLoanPayment()::is called");
         Loan loan = loanService.getLoanByCustomerId(customerId);
         loan.setRemainingAmount(Math.round((loan.getRemainingAmount() - amount) * 100.0) / 100.0);
@@ -55,8 +55,7 @@ public class LoanFacade {
         loanPayment.setPaymentAmount(amount);
         loanPayment.setLoanId(loan.getId());
         loanPaymentService.addLoanPayment(loanPayment);
-        Intent intent = new Intent(context, PayLoanActivity.class);
-        appConstant.SuccessAlert(AppConstant.SUCCESS,"Payment Successful", intent);
+        return true;
     }
 
 
